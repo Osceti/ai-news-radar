@@ -1,0 +1,12 @@
+[project]
+name = "ai-news-radar"
+version = "0.1.0"
+description = "A daily AI news digest built on the Hacker News API and classified with Gemini."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
