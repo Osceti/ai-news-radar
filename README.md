@@ -72,7 +72,32 @@ A [CI workflow](.github/workflows/ci.yml) runs the tests on every push and pull 
 
 ## Example digest
 
-Every digest is in [`digests/`](digests/).
+An excerpt of [`digests/2026-11-12.md`](digests/2026-11-12.md), the first digest
+(every digest is in [`digests/`](digests/)):
+
+> # AI News Radar — 2026-11-12
+>
+> Top 10 of 125 AI-related stories posted on Hacker News in the 24 hours to 08:43 UTC, ranked by points + comments and grouped by theme.
+>
+> ## Agents
+>
+> - **[My AI agents found an unmapped Maya site?](https://pietromiotti.com/latest/maya-site)** (pietromiotti.com)\
+>   AI agents allegedly found an unmapped Maya site according to a personal blog post.\
+>   980 points · 357 comments · [discussion](https://news.ycombinator.com/item?id=50452455)
+>
+> ## RAG
+>
+> - **[Faster Retrieval for Better, More Efficient RAG](https://machinelearning.apple.com/research/faster-retrieval)** (machinelearning.apple.com)\
+>   Apple machine learning researchers explore faster retrieval methods for more efficient RAG.\
+>   204 points · 37 comments · [discussion](https://news.ycombinator.com/item?id=50455633)
+>
+> ## Business
+>
+> - **[United Airlines bans AI agents from booking flights on behalf of travelers](https://www.cbsnews.com/news/united-airlines-bans-ai-agents-booking-flights/)** (cbsnews.com)\
+>   United Airlines has banned AI agents from booking flights on behalf of travelers.\
+>   538 points · 522 comments · [discussion](https://news.ycombinator.com/item?id=50458900)
+>
+> *…*
 
 ## Run it locally
 
