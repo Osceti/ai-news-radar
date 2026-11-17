@@ -16,9 +16,10 @@ from radar import evaluation
 from radar.digest import previous_day
 from radar.hn import HackerNewsClient
 from radar.pipeline import classify, collect, make_digest
+from radar.site import SITE_DIR, write_site
 from radar.storage import load_posts
 
-PIPELINE_COMMANDS = ["collect", "classify", "digest", "run"]
+PIPELINE_COMMANDS = ["collect", "classify", "digest", "site", "run"]
 EVAL_COMMANDS = ["eval-sample", "eval-label", "eval-prompt", "eval-classify", "eval-report"]
 
 log = logging.getLogger("radar")
@@ -114,13 +115,15 @@ def run_evaluation(args: argparse.Namespace) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m radar", description=__doc__)
     parser.add_argument("command", choices=PIPELINE_COMMANDS + EVAL_COMMANDS,
-                        help="'run' chains collect, classify and digest")
+                        help="'run' chains collect, classify, digest and site")
     parser.add_argument("--data", type=Path, default=DATA_FILE, help="posts CSV file")
     parser.add_argument("--digests", type=Path, default=DIGEST_DIR, help="digest directory")
     parser.add_argument("--window-hours", type=int, default=COLLECT_WINDOW_HOURS,
                         help="collect stories posted in the last N hours (default: %(default)s)")
     parser.add_argument("--date", type=date.fromisoformat, default=None,
                         help="UTC day of the digest, YYYY-MM-DD (default: yesterday)")
+    parser.add_argument("--site-dir", type=Path, default=SITE_DIR,
+                        help="output directory of the HTML dashboard (default: docs/)")
     parser.add_argument("--eval-dir", type=Path, default=evaluation.EVAL_DIR,
                         help="directory of the evaluation files")
     parser.add_argument("--reference", type=Path, default=None,
@@ -153,6 +156,10 @@ def main(argv: list[str] | None = None) -> int:
         run_classification(args.data)
     if args.command in ("digest", "run"):
         print(make_digest(args.data, args.digests, day))
+    if args.command in ("site", "run"):
+        # The dashboard quotes the accuracy measured on the held-out test sample.
+        path = write_site(args.data, args.site_dir, now.date(), evaluation.EVAL_DIR / "test")
+        print(path or "Not enough complete days yet for the dashboard")
     return 0
 
 

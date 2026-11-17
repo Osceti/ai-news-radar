@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
-    paths-ignore: ["data/**", "digests/**"]
+    paths-ignore: ["data/**", "digests/**", "docs/**"]
   pull_request:
 
 permissions:

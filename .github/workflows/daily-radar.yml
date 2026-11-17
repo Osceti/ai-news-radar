@@ -35,20 +35,20 @@ jobs:
       - name: Run tests
         run: pytest
 
-      - name: Collect, classify and write the digest
+      - name: Collect, classify, write the digest and the dashboard
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
           DIGEST_DATE: ${{ inputs.date }}
         run: python -m radar run ${DIGEST_DATE:+--date "$DIGEST_DATE"}
 
-      - name: Commit data and digest
+      - name: Commit data, digest and dashboard
         env:
           DIGEST_DATE: ${{ inputs.date }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data digests
+          git add data digests docs
           if git diff --staged --quiet; then
             echo "Nothing to commit"
             exit 0

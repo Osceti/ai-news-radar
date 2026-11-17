@@ -6,7 +6,9 @@
 A daily AI news digest built on the [Hacker News API](https://github.com/HackerNews/API).
 Every day a GitHub Action collects the AI stories posted on Hacker News, asks an LLM
 (Gemini) to label each one with a theme and a one-sentence summary, and commits a
-Markdown digest of the ten most important stories to [`digests/`](digests/).
+Markdown digest of the ten most important stories to [`digests/`](digests/). A
+[dashboard](https://osceti.github.io/ai-news-radar/) shows which themes are posted about,
+which ones readers actually discuss, and how that changes from day to day.
 
 ## The problem
 
@@ -28,6 +30,7 @@ flowchart LR
     C --> D["Gemini<br/>theme + one-line summary"]
     D --> C
     C --> E["digests/YYYY-MM-DD.md<br/>top 10 of the day"]
+    C --> F["docs/index.html<br/>trend dashboard"]
 ```
 
 1. **Collect** ([`radar/hn.py`](radar/hn.py), [`radar/filters.py`](radar/filters.py)).
@@ -39,7 +42,7 @@ flowchart LR
 2. **Store** ([`radar/storage.py`](radar/storage.py)). Stories are upserted into
    [`data/posts.csv`](data/posts.csv), one row per story id: a story seen again gets its
    latest score and comment count, and keeps its theme and summary, so there are no
-   duplicates and no story is classified twice.
+   duplicates and no story is classified twice with the same prompt.
 3. **Classify** ([`radar/classifier.py`](radar/classifier.py)). Unlabelled stories are sent
    to the Gemini API in batches of 25. Structured output constrains each answer to one of
    nine fixed themes (models, agents, RAG, dev tools, security, research, business,
@@ -50,9 +53,14 @@ flowchart LR
    previous UTC day (00:00 to 24:00) with the most points + comments are written to
    `digests/YYYY-MM-DD.md`, grouped by theme, with the link, the summary and the Hacker
    News discussion.
+5. **Dashboard** ([`radar/site.py`](radar/site.py), [`radar/trends.py`](radar/trends.py)).
+   Theme shares per day, rising and falling themes, posted-about versus discussed themes
+   and the most discussed stories are computed in Python and embedded in a single static
+   page, [`docs/index.html`](docs/index.html), served by GitHub Pages. The page draws the
+   charts with ECharts and needs no server.
 
 The [daily workflow](.github/workflows/daily-radar.yml) is scheduled at 06:00 UTC: it runs
-the test suite, then the pipeline, then commits the updated CSV and the new digest.
+the test suite, then the pipeline, then commits the updated CSV, the new digest and the dashboard.
 GitHub often starts scheduled runs hours late, so each digest is tied to the day it
 covers rather than to the time of the run, and the 72-hour collection window means a late
 run loses nothing. A missed day can be rebuilt from **Actions → Daily radar → Run
@@ -73,6 +81,7 @@ A [CI workflow](.github/workflows/ci.yml) runs the tests on every push and pull 
 | `author` | Hacker News username |
 | `keywords` | AI keywords that matched the title |
 | `theme`, `summary` | Gemini's label and one-sentence summary (empty until classified) |
+| `prompt_version` | Version of the classification prompt behind the label; older labels are redone automatically |
 | `collected_at` | When the row was last updated |
 
 ## Example digest
@@ -132,6 +141,15 @@ Each step can also run on its own: `python -m radar collect`, `python -m radar c
 (default: yesterday), `--window-hours` to change the 72-hour collection window, and
 `--data` and `--digests` to write somewhere else.
 
+Rebuild the dashboard with `python -m radar site` and open `docs/index.html` in a browser.
+The trend analysis notebook, [`notebooks/trends.ipynb`](notebooks/trends.ipynb), needs a few
+more packages:
+
+```bash
+pip install -r requirements-analysis.txt
+jupyter notebook notebooks/trends.ipynb
+```
+
 ### Configuration
 
 | Variable | Where | Default | Purpose |
@@ -155,9 +173,13 @@ radar/
   digest.py       ranking and Markdown rendering
   pipeline.py     collect, classify and digest steps
   evaluation.py   sampling, blind labelling and metrics for the classifier
+  trends.py       theme shares, momentum and rankings for the notebook and dashboard
+  site.py         builds the static dashboard from dashboard.html
   __main__.py     command line interface
 tests/            pytest suite (no network access needed)
 eval/             evaluation sample, reference labels and report
+notebooks/        trend analysis notebook
+docs/             the generated dashboard, served by GitHub Pages
 data/posts.csv    every AI story collected so far
 digests/          one Markdown digest per day
 ```
@@ -250,8 +272,9 @@ using the repository secret) and
 - [x] Daily collection, Gemini classification and digest
 - [x] Evaluation of the classifier on 100 stories
 - [x] Tighter theme definitions (prompt v2), measured on a held-out sample
-- [ ] Notebook on how themes evolve over time
-- [ ] Streamlit dashboard
+- [x] Notebook on how themes evolve over time
+- [x] Static HTML dashboard, rebuilt daily
+- [ ] Week-over-week trends once a month of data is in
 
 ## License
 

@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI News Radar</title>
+<meta name="description" content="What Hacker News talks about in AI: every AI story, labelled by theme, updated daily.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%234F7CF7'/%3E%3Cpath d='M16 16 L27 9' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3' fill='white'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #F6F7F9; --surface: #FFFFFF; --surface-2: #F1F3F6; --border: #E4E7EC;
+  --text: #11141A; --text-2: #5A6372; --text-3: #8A93A2;
+  --accent: #4F7CF7; --accent-soft: rgba(79,124,247,.12);
+  --up: #1F9D61; --down: #D64545; --grid: #EDF0F3;
+  --shadow: 0 1px 2px rgba(16,24,40,.04), 0 4px 16px rgba(16,24,40,.04);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0C10; --surface: #11141A; --surface-2: #171B23; --border: #222834;
+    --text: #E8EBF0; --text-2: #A0A8B6; --text-3: #6E7787;
+    --accent: #6F93FF; --accent-soft: rgba(111,147,255,.14);
+    --up: #3DD68C; --down: #FF6B6B; --grid: #1C212B;
+    --shadow: 0 1px 2px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A0C10; --surface: #11141A; --surface-2: #171B23; --border: #222834;
+  --text: #E8EBF0; --text-2: #A0A8B6; --text-3: #6E7787;
+  --accent: #6F93FF; --accent-soft: rgba(111,147,255,.14);
+  --up: #3DD68C; --down: #FF6B6B; --grid: #1C212B;
+  --shadow: 0 1px 2px rgba(0,0,0,.3);
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Header */
+.top { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.01em; text-decoration: none; }
+.brand svg { width: 26px; height: 26px; }
+.nav { display: flex; gap: 6px; }
+.nav a {
+  text-decoration: none; color: var(--text-2); font-size: 14px; padding: 7px 12px;
+  border-radius: 8px; transition: background .15s, color .15s;
+}
+.nav a:hover { background: var(--surface-2); color: var(--text); }
+
+/* Hero */
+.hero { padding: 40px 0 28px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px; color: var(--text-2); font-size: 13px; font-weight: 500; }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--up); box-shadow: 0 0 0 0 rgba(31,157,97,.5); animation: pulse 2.4s infinite; }
+@keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(31,157,97,0); } 100% { box-shadow: 0 0 0 0 rgba(31,157,97,0); } }
+@media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
+h1 { margin: 0; font-size: clamp(30px, 4.6vw, 46px); line-height: 1.08; letter-spacing: -.035em; font-weight: 700; max-width: 760px; }
+.lede { margin: 14px 0 0; color: var(--text-2); font-size: 17px; max-width: 680px; }
+
+/* KPIs */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 8px 0 28px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow); min-width: 0; }
+.kpi .label { color: var(--text-2); font-size: 13px; font-weight: 500; }
+.kpi .value { font-size: 26px; font-weight: 650; letter-spacing: -.02em; margin-top: 4px; display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi .sub { color: var(--text-3); font-size: 13px; margin-top: 2px; }
+.dot { width: 10px; height: 10px; border-radius: 3px; flex: none; display: inline-block; }
+
+/* Toolbar */
+.toolbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; position: sticky; top: 0; z-index: 5; padding: 10px 0; background: var(--bg); }
+.seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
+.seg button {
+  border: 0; background: none; color: var(--text-2); font: inherit; font-size: 14px; font-weight: 500;
+  padding: 6px 14px; border-radius: 7px; cursor: pointer; transition: background .15s, color .15s;
+}
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.seg button:focus-visible, .chip:focus-visible, .more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hint { color: var(--text-3); font-size: 13px; margin: 0; }
+
+/* Cards */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); min-width: 0; }
+.card h2 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+.card .sub { margin: 4px 0 0; color: var(--text-2); font-size: 13.5px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.chart { width: 100%; height: 320px; margin-top: 10px; }
+.chart.tall { height: 380px; }
+.chart.short { height: 260px; }
+
+/* Stories */
+.stories-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-2); font: inherit; font-size: 12.5px; font-weight: 500; padding: 4px 10px; border-radius: 999px; cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--text); color: var(--surface); border-color: var(--text); }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
+.story { display: grid; grid-template-columns: 34px 1fr auto; gap: 4px 14px; align-items: start; padding: 13px 0; border-top: 1px solid var(--border); }
+.story:first-child { border-top: 0; }
+.rank { color: var(--text-3); font-size: 13px; font-weight: 600; padding-top: 2px; }
+.story a.title { font-weight: 550; text-decoration: none; line-height: 1.4; }
+.story a.title:hover { color: var(--accent); }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 4px; color: var(--text-3); font-size: 13px; }
+.tag { display: inline-flex; align-items: center; gap: 5px; color: var(--text-2); }
+.tag .dot { width: 7px; height: 7px; border-radius: 50%; }
+.stats { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; font-size: 13px; color: var(--text-2); white-space: nowrap; }
+.stats strong { color: var(--text); font-weight: 600; font-size: 15px; }
+.stats a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.more { margin-top: 10px; width: 100%; border: 1px dashed var(--border); background: none; color: var(--text-2); font: inherit; font-size: 14px; padding: 10px; border-radius: 10px; cursor: pointer; }
+.more:hover { background: var(--surface-2); }
+.empty { color: var(--text-3); padding: 18px 0; }
+
+/* Footer */
+.foot { color: var(--text-2); font-size: 13.5px; padding: 36px 24px 56px; display: grid; grid-template-columns: 2fr 1fr; gap: 28px; }
+.foot h3 { margin: 0 0 6px; font-size: 13px; color: var(--text); font-weight: 600; }
+.foot p { margin: 0 0 8px; }
+.foot a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 860px) {
+  .kpis { grid-template-columns: 1fr 1fr; }
+  .grid2 { grid-template-columns: 1fr; }
+  .foot { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .wrap { padding: 0 16px; }
+  .nav a.hide-sm { display: none; }
+  .toolbar .hint { display: none; }
+  .kpi .value { font-size: 22px; }
+  .card { padding: 16px; }
+  .chart.tall { height: 340px; }
+  .story { grid-template-columns: 26px 1fr; }
+  .stats { grid-column: 2; flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+}
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="brand" href="#">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="var(--accent)"/><circle cx="16" cy="16" r="9" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1.5"/><path d="M16 16 L27 9" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="2.6" fill="#fff"/></svg>
+    <span>AI News Radar</span>
+  </a>
+  <nav class="nav">
+    <a id="digest-link" href="#">Latest digest</a>
+    <a class="hide-sm" id="method-link" href="#">Method</a>
+    <a id="repo-link" href="#">GitHub</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow"><span class="pulse"></span><span id="updated"></span></p>
+    <h1>What Hacker News talks about in AI</h1>
+    <p class="lede">Every AI story posted on Hacker News, collected daily from the official API and labelled by theme with Gemini. <span id="range"></span></p>
+  </section>
+
+  <section class="kpis" id="kpis" aria-label="Key figures"></section>
+
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="Measure">
+      <button type="button" data-measure="volume" aria-pressed="true">Stories</button>
+      <button type="button" data-measure="attention" aria-pressed="false">Points + comments</button>
+    </div>
+    <p class="hint" id="measure-hint"></p>
+  </div>
+
+  <section class="card">
+    <h2>Theme share per day</h2>
+    <p class="sub" id="share-sub"></p>
+    <div id="chart-share" class="chart tall" role="img" aria-label="Stacked bar chart of theme shares per day"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>Rising and falling</h2>
+      <p class="sub" id="momentum-sub"></p>
+      <div id="chart-momentum" class="chart" role="img" aria-label="Change in theme share"></div>
+    </section>
+    <section class="card">
+      <h2>Posted about vs. discussed</h2>
+      <p class="sub">Each theme's share of stories and share of points + comments, over the whole period.</p>
+      <div id="chart-mix" class="chart" role="img" aria-label="Share of stories and of attention per theme"></div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>AI stories per day</h2>
+      <p class="sub">Stories whose title matches the AI keyword filter.</p>
+      <div id="chart-volume" class="chart short" role="img" aria-label="AI stories per day"></div>
+    </section>
+    <section class="card">
+      <h2>Most linked sites</h2>
+      <p class="sub">Domains of the links, Ask HN posts excluded.</p>
+      <div id="chart-domains" class="chart short" role="img" aria-label="Most linked domains"></div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:16px">
+    <div class="stories-head">
+      <div>
+        <h2>Most discussed stories</h2>
+        <p class="sub">Ranked by points + comments over the period.</p>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filter by theme"></div>
+    </div>
+    <ol class="stories" id="stories"></ol>
+    <button type="button" class="more" id="more" hidden>Show more</button>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <div>
+    <h3>How it works</h3>
+    <p>Every day a GitHub Action reads the top, new and best stories from the <a href="https://github.com/HackerNews/API">Hacker News API</a>, keeps those whose title matches a list of AI keywords, and asks Gemini to label each one with one of nine themes. Only complete UTC days are shown.</p>
+    <p id="eval-note"></p>
+  </div>
+  <div>
+    <h3>Links</h3>
+    <p><a id="repo-link-2" href="#">Source code and README</a><br><a id="digest-link-2" href="#">Latest daily digest</a><br><a id="method-link-2" href="#">Classifier evaluation</a></p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<script id="radar-data" type="application/json">__RADAR_DATA__</script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById("radar-data").textContent);
+  const THEMES = D.themes;
+  const BY_SLUG = Object.fromEntries(THEMES.map(t => [t.slug, t]));
+  const state = { measure: "volume", theme: "all", shown: 15 };
+  const $ = id => document.getElementById(id);
+  const pct = (v, d = 0) => `${(v * 100).toFixed(d)}%`;
+  const int = v => v.toLocaleString("en-US");
+  const day = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+  const shortDay = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const MEASURE = {
+    volume: { name: "Stories", hint: "Share of AI stories posted in each theme." },
+    attention: { name: "Points + comments", hint: "Share of reader engagement (points + comments) each theme received." },
+  };
+
+  // Static text and links
+  const evalUrl = `${D.repo}#evaluation`;
+  for (const id of ["repo-link", "repo-link-2"]) $(id).href = D.repo;
+  for (const id of ["digest-link", "digest-link-2"]) $(id).href = D.latest_digest;
+  for (const id of ["method-link", "method-link-2"]) $(id).href = evalUrl;
+  $("updated").textContent = `Updated ${D.generated_at}`;
+  $("range").textContent = `${D.days.length} complete days, ${day(D.start)} to ${day(D.end)}.`;
+  $("momentum-sub").textContent = `Change in share over the last ${D.window} days compared with the ${D.window} days before, in percentage points.`;
+  if (D.evaluation) {
+    $("eval-note").innerHTML = `Themes are assigned by an LLM and are not perfect: on a held-out sample of ${D.evaluation.stories} stories they matched an independent reference ${pct(D.evaluation.accuracy)} of the time. <a href="${evalUrl}">Read the evaluation</a>.`;
+  }
+
+  // Key figures
+  function renderKpis() {
+    const totalStories = D.totals.reduce((a, t) => a + t.stories, 0);
+    const totalEng = D.totals.reduce((a, t) => a + t.engagement, 0);
+    const topVol = [...D.totals].sort((a, b) => b.stories - a.stories)[0];
+    const topEng = [...D.totals].sort((a, b) => b.engagement - a.engagement)[0];
+    const rising = D.momentum.volume[0];
+    const tile = (label, value, sub, slug) => `
+      <div class="kpi"><div class="label">${label}</div>
+      <div class="value num">${slug ? `<span class="dot" style="background:${BY_SLUG[slug].color}"></span>` : ""}${value}</div>
+      <div class="sub num">${sub}</div></div>`;
+    $("kpis").innerHTML =
+      tile("AI stories", int(D.total), `${Math.round(D.total / D.days.length)} per day on average`) +
+      tile("Most posted theme", BY_SLUG[topVol.theme].label, `${pct(topVol.stories / totalStories)} of stories`, topVol.theme) +
+      tile("Most discussed theme", BY_SLUG[topEng.theme].label, `${pct(topEng.engagement / totalEng)} of points + comments`, topEng.theme) +
+      tile("Rising fastest", BY_SLUG[rising.theme].label, `${rising.change >= 0 ? "+" : ""}${rising.change.toFixed(1)} pts over ${D.window} days`, rising.theme);
+  }
+
+  // Charts
+  const charts = {};
+  const chart = id => charts[id] || (charts[id] = echarts.init($(id), null, { renderer: "svg" }));
+  const base = () => ({
+    textStyle: { fontFamily: "Inter, system-ui, sans-serif", color: css("--text-2") },
+    tooltip: {
+      backgroundColor: css("--surface"), borderColor: css("--border"), borderWidth: 1,
+      textStyle: { color: css("--text"), fontSize: 13 }, extraCssText: "border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);",
+    },
+    animationDuration: 500,
+  });
+  const axisCommon = () => ({
+    axisLine: { lineStyle: { color: css("--border") } }, axisTick: { show: false },
+    axisLabel: { color: css("--text-3"), fontSize: 12 }, splitLine: { lineStyle: { color: css("--grid") } },
+  });
+
+  function renderShare() {
+    const data = D.share[state.measure];
+    $("share-sub").textContent = state.measure === "volume"
+      ? "Share of each day's AI stories, by theme. Click a theme in the legend to hide it."
+      : "Share of each day's points + comments, by theme. Click a theme in the legend to hide it.";
+    const narrow = $("chart-share").clientWidth < 560;  // phones: wrapped legend, short dates
+    chart("chart-share").setOption({
+      ...base(),
+      grid: { left: 8, right: 8, top: 10, bottom: narrow ? 104 : 64, containLabel: true },
+      legend: { bottom: 0, icon: "roundRect", itemWidth: 10, itemHeight: 10, itemGap: 14, textStyle: { color: css("--text-2"), fontSize: 12.5 } },
+      tooltip: { ...base().tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: css("--accent-soft") } },
+        formatter: ps => {
+          const rows = [...ps].filter(p => p.value > 0).sort((a, b) => b.value - a.value)
+            .map(p => `<div style="display:flex;justify-content:space-between;gap:18px"><span>${p.marker}${p.seriesName}</span><b>${pct(p.value)}</b></div>`).join("");
+          return `<div style="font-weight:600;margin-bottom:6px">${day(D.days[ps[0].dataIndex])}</div>${rows}`;
+        } },
+      xAxis: { type: "category", data: D.days.map(narrow ? shortDay : day), ...axisCommon(), splitLine: { show: false } },
+      yAxis: { type: "value", max: 1, ...axisCommon(), axisLabel: { ...axisCommon().axisLabel, formatter: v => pct(v) } },
+      series: THEMES.map(t => ({
+        name: t.label, type: "bar", stack: "share", barWidth: "62%", data: data[t.slug],
+        itemStyle: { color: t.color, borderColor: css("--surface"), borderWidth: 1 },
+        emphasis: { focus: "series" },
+      })),
+    }, true);
+  }
+
+  function renderMomentum() {
+    const rows = [...D.momentum[state.measure]].sort((a, b) => a.change - b.change);
+    // Symmetric axis with headroom so that the value labels never hit the theme names.
+    const reach = Math.max(1, ...rows.map(r => Math.abs(r.change))) * 1.3;
+    chart("chart-momentum").setOption({
+      ...base(),
+      grid: { left: 8, right: 16, top: 6, bottom: 6, containLabel: true },
+      tooltip: { ...base().tooltip, trigger: "item",
+        formatter: p => { const r = rows[p.dataIndex]; return `<div style="font-weight:600;margin-bottom:4px">${BY_SLUG[r.theme].label}</div>
+          Last ${D.window} days: <b>${pct(r.recent)}</b><br>${D.window} days before: <b>${pct(r.previous)}</b><br>${r.stories} stories recently`; } },
+      xAxis: { type: "value", min: -reach, max: reach, ...axisCommon(),
+        axisLabel: { ...axisCommon().axisLabel, showMinLabel: false, showMaxLabel: false,
+          formatter: v => `${v > 0 ? "+" : ""}${v}` } },
+      yAxis: { type: "category", data: rows.map(r => BY_SLUG[r.theme].label), ...axisCommon(), splitLine: { show: false }, axisLine: { show: false },
+        axisLabel: { color: css("--text-2"), fontSize: 12.5 } },
+      series: [{ type: "bar", barWidth: "58%", data: rows.map(r => ({
+        value: +r.change.toFixed(1),
+        itemStyle: { color: r.change >= 0 ? css("--up") : css("--down"), borderRadius: r.change >= 0 ? [0, 4, 4, 0] : [4, 0, 0, 4] },
+        label: { show: true, position: r.change >= 0 ? "right" : "left", color: css("--text-2"), fontSize: 12,
+          formatter: `${r.change >= 0 ? "+" : ""}${r.change.toFixed(1)}` },
+      })) }],
+    }, true);
+  }
+
+  function renderMix() {
+    const totalS = D.totals.reduce((a, t) => a + t.stories, 0);
+    const totalE = D.totals.reduce((a, t) => a + t.engagement, 0);
+    const rows = [...D.totals].sort((a, b) => a.stories - b.stories);
+    chart("chart-mix").setOption({
+      ...base(),
+      grid: { left: 8, right: 16, top: 30, bottom: 6, containLabel: true },
+      legend: { top: 0, right: 0, icon: "roundRect", itemWidth: 10, itemHeight: 10, textStyle: { color: css("--text-2"), fontSize: 12.5 } },
+      tooltip: { ...base().tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: css("--accent-soft") } },
+        valueFormatter: v => pct(v, 1) },
+      xAxis: { type: "value", ...axisCommon(), axisLabel: { ...axisCommon().axisLabel, formatter: v => pct(v) } },
+      yAxis: { type: "category", data: rows.map(r => BY_SLUG[r.theme].label), ...axisCommon(), splitLine: { show: false }, axisLine: { show: false },
+        axisLabel: { color: css("--text-2"), fontSize: 12.5 } },
+      series: [
+        { name: "Stories", type: "bar", barGap: "15%", barWidth: "34%", data: rows.map(r => r.stories / totalS),
+          itemStyle: { color: css("--text-3"), borderRadius: [0, 3, 3, 0] } },
+        { name: "Points + comments", type: "bar", barWidth: "34%", data: rows.map(r => r.engagement / totalE),
+          itemStyle: { color: css("--accent"), borderRadius: [0, 3, 3, 0] } },
+      ],
+    }, true);
+  }
+
+  function renderVolume() {
+    const accent = css("--accent");
+    chart("chart-volume").setOption({
+      ...base(),
+      grid: { left: 8, right: 28, top: 14, bottom: 6, containLabel: true },
+      tooltip: { ...base().tooltip, trigger: "axis", formatter: ps => `<b>${day(D.days[ps[0].dataIndex])}</b><br>${ps[0].value} AI stories` },
+      xAxis: { type: "category", boundaryGap: false, data: D.days.map(shortDay), ...axisCommon(), splitLine: { show: false } },
+      yAxis: { type: "value", min: 0, ...axisCommon() },
+      series: [{ type: "line", data: D.volume, smooth: 0.25, symbol: "circle", symbolSize: 7,
+        lineStyle: { width: 2.5, color: accent }, itemStyle: { color: accent, borderColor: css("--surface"), borderWidth: 2 },
+        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: css("--accent-soft") }, { offset: 1, color: "rgba(0,0,0,0)" }]) } }],
+    }, true);
+  }
+
+  function renderDomains() {
+    const rows = [...D.domains].reverse();
+    chart("chart-domains").setOption({
+      ...base(),
+      grid: { left: 8, right: 36, top: 6, bottom: 6, containLabel: true },
+      tooltip: { ...base().tooltip, trigger: "item", formatter: p => { const r = rows[p.dataIndex];
+        return `<b>${esc(r.domain)}</b><br>${r.stories} stories · ${int(r.engagement)} points + comments`; } },
+      xAxis: { type: "value", ...axisCommon(), splitLine: { show: false }, axisLabel: { show: false } },
+      yAxis: { type: "category", data: rows.map(r => r.domain), ...axisCommon(), axisLine: { show: false }, splitLine: { show: false },
+        axisLabel: { color: css("--text-2"), fontSize: 12.5, width: 150, overflow: "truncate" } },
+      series: [{ type: "bar", barWidth: "56%", data: rows.map(r => r.stories),
+        itemStyle: { color: css("--accent"), borderRadius: [0, 4, 4, 0] },
+        label: { show: true, position: "right", color: css("--text-2"), fontSize: 12 } }],
+    }, true);
+  }
+
+  // Stories list
+  function renderChips() {
+    const counts = {};
+    for (const s of D.stories) counts[s.theme] = (counts[s.theme] || 0) + 1;
+    const chip = (slug, label, color) => `<button type="button" class="chip" data-theme="${slug}" aria-pressed="${state.theme === slug}">
+      ${color ? `<span class="dot" style="background:${color}"></span>` : ""}${label}</button>`;
+    $("chips").innerHTML = chip("all", "All") + THEMES.filter(t => counts[t.slug]).map(t => chip(t.slug, t.label, t.color)).join("");
+  }
+
+  function renderStories() {
+    const list = D.stories.filter(s => state.theme === "all" || s.theme === state.theme);
+    const shown = list.slice(0, state.shown);
+    $("stories").innerHTML = shown.length ? shown.map((s, i) => {
+      const t = BY_SLUG[s.theme];
+      return `<li class="story">
+        <span class="rank num">${i + 1}</span>
+        <div>
+          <a class="title" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>
+          <div class="meta"><span class="tag"><span class="dot" style="background:${t.color}"></span>${t.label}</span>
+            <span>${esc(s.domain || "Ask HN")}</span><span>${day(s.day)}</span></div>
+        </div>
+        <div class="stats num"><span><strong>${int(s.score)}</strong> points</span>
+          <span>${int(s.comments)} comments</span>
+          <a href="${esc(s.hn_url)}" target="_blank" rel="noopener">Discussion →</a></div>
+      </li>`;
+    }).join("") : `<li class="empty">No story in this theme among the most discussed.</li>`;
+    $("more").hidden = list.length <= state.shown;
+  }
+
+  // Interactions
+  document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
+    state.measure = b.dataset.measure;
+    document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    $("measure-hint").textContent = MEASURE[state.measure].hint;
+    renderShare(); renderMomentum();
+  }));
+  $("chips").addEventListener("click", e => {
+    const b = e.target.closest(".chip"); if (!b) return;
+    state.theme = b.dataset.theme; state.shown = 15;
+    renderChips(); renderStories();
+  });
+  $("more").addEventListener("click", () => { state.shown += 15; renderStories(); });
+
+  function renderCharts() { renderShare(); renderMomentum(); renderMix(); renderVolume(); renderDomains(); }
+  $("measure-hint").textContent = MEASURE.volume.hint;
+  renderKpis(); renderChips(); renderStories(); renderCharts();
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    Object.values(charts).forEach(c => c.resize());
+    clearTimeout(resizeTimer); resizeTimer = setTimeout(renderShare, 150);  // layout depends on width
+  });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderCharts);
+})();
+</script>
+</body>
+</html>
