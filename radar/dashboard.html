@@ -7,212 +7,257 @@
 <meta name="description" content="What Hacker News talks about in AI: every AI story, labelled by theme, updated daily.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%234F7CF7'/%3E%3Cpath d='M16 16 L27 9' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3' fill='white'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23111'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%236F93FF' stroke-width='2'/%3E%3Cpath d='M16 16 L24 10' stroke='%236F93FF' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%236F93FF'/%3E%3C/svg%3E">
 <style>
 :root {
-  --bg: #F6F7F9; --surface: #FFFFFF; --surface-2: #F1F3F6; --border: #E4E7EC;
-  --text: #11141A; --text-2: #5A6372; --text-3: #8A93A2;
-  --accent: #4F7CF7; --accent-soft: rgba(79,124,247,.12);
-  --up: #1F9D61; --down: #D64545; --grid: #EDF0F3;
-  --shadow: 0 1px 2px rgba(16,24,40,.04), 0 4px 16px rgba(16,24,40,.04);
+  --bg: #F7F7F8; --surface: #FFFFFF; --surface-2: #F2F3F5; --border: #E6E7EB; --border-strong: #D8DAE0;
+  --text: #0E1015; --text-2: #565E6C; --text-3: #8C93A1;
+  --accent: #3D6BFF; --accent-soft: rgba(61,107,255,.10); --glow: rgba(61,107,255,.10);
+  --up: #12A150; --up-soft: rgba(18,161,80,.10); --down: #E5484D; --down-soft: rgba(229,72,77,.10);
+  --grid: #EEEFF2; --dots: rgba(14,16,21,.07);
+  --card: #FFFFFF; --card-hi: rgba(255,255,255,0);
+  --shadow: 0 1px 2px rgba(16,24,40,.04), 0 8px 24px -12px rgba(16,24,40,.10);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0A0C10; --surface: #11141A; --surface-2: #171B23; --border: #222834;
-    --text: #E8EBF0; --text-2: #A0A8B6; --text-3: #6E7787;
-    --accent: #6F93FF; --accent-soft: rgba(111,147,255,.14);
-    --up: #3DD68C; --down: #FF6B6B; --grid: #1C212B;
-    --shadow: 0 1px 2px rgba(0,0,0,.3);
+    --bg: #07080B; --surface: #0E1015; --surface-2: #15181F; --border: #1D212A; --border-strong: #2A303B;
+    --text: #EDEFF3; --text-2: #A1A8B5; --text-3: #6B7383;
+    --accent: #7B9BFF; --accent-soft: rgba(123,155,255,.13); --glow: rgba(87,120,255,.22);
+    --up: #3DD68C; --up-soft: rgba(61,214,140,.12); --down: #FF6369; --down-soft: rgba(255,99,105,.12);
+    --grid: #171A21; --dots: rgba(255,255,255,.06);
+    --card: linear-gradient(180deg, #11141A 0%, #0C0E13 100%); --card-hi: rgba(255,255,255,.05);
+    --shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 12px 32px -16px rgba(0,0,0,.6);
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0A0C10; --surface: #11141A; --surface-2: #171B23; --border: #222834;
-  --text: #E8EBF0; --text-2: #A0A8B6; --text-3: #6E7787;
-  --accent: #6F93FF; --accent-soft: rgba(111,147,255,.14);
-  --up: #3DD68C; --down: #FF6B6B; --grid: #1C212B;
-  --shadow: 0 1px 2px rgba(0,0,0,.3);
+  --bg: #07080B; --surface: #0E1015; --surface-2: #15181F; --border: #1D212A; --border-strong: #2A303B;
+  --text: #EDEFF3; --text-2: #A1A8B5; --text-3: #6B7383;
+  --accent: #7B9BFF; --accent-soft: rgba(123,155,255,.13); --glow: rgba(87,120,255,.22);
+  --up: #3DD68C; --up-soft: rgba(61,214,140,.12); --down: #FF6369; --down-soft: rgba(255,99,105,.12);
+  --grid: #171A21; --dots: rgba(255,255,255,.06);
+  --card: linear-gradient(180deg, #11141A 0%, #0C0E13 100%); --card-hi: rgba(255,255,255,.05);
+  --shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 12px 32px -16px rgba(0,0,0,.6);
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  margin: 0; background: var(--bg); color: var(--text);
+  margin: 0; color: var(--text); min-height: 100vh;
+  background: radial-gradient(900px 420px at 50% -120px, var(--glow), transparent 70%), var(--bg);
   font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; }
-.wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
-.num { font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.num, .mono { font-variant-numeric: tabular-nums; }
+.mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
 
 /* Header */
 .top { display: flex; align-items: center; justify-content: space-between; height: 64px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.01em; text-decoration: none; }
-.brand svg { width: 26px; height: 26px; }
-.nav { display: flex; gap: 6px; }
-.nav a {
-  text-decoration: none; color: var(--text-2); font-size: 14px; padding: 7px 12px;
-  border-radius: 8px; transition: background .15s, color .15s;
-}
+.logo { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--text); }
+.logo svg { width: 18px; height: 18px; }
+.nav { display: flex; gap: 4px; align-items: center; }
+.nav a { text-decoration: none; color: var(--text-2); font-size: 14px; padding: 7px 12px; border-radius: 8px; transition: background .15s, color .15s; }
 .nav a:hover { background: var(--surface-2); color: var(--text); }
+.nav a.btn { color: var(--bg); background: var(--text); font-weight: 500; margin-left: 4px; }
+.nav a.btn:hover { opacity: .88; background: var(--text); color: var(--bg); }
 
 /* Hero */
-.hero { padding: 40px 0 28px; }
-.eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px; color: var(--text-2); font-size: 13px; font-weight: 500; }
-.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--up); box-shadow: 0 0 0 0 rgba(31,157,97,.5); animation: pulse 2.4s infinite; }
-@keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(31,157,97,0); } 100% { box-shadow: 0 0 0 0 rgba(31,157,97,0); } }
+.hero { position: relative; padding: 56px 0 36px; text-align: center; }
+.hero::before {
+  content: ""; position: absolute; inset: -40px 0 0; z-index: -1;
+  background-image: radial-gradient(var(--dots) 1px, transparent 1px); background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, #000 30%, transparent 75%);
+          mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, #000 30%, transparent 75%);
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 8px; margin: 0 0 20px; padding: 5px 12px 5px 10px;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
+  color: var(--text-2); font-size: 12.5px; font-weight: 500; box-shadow: var(--shadow);
+}
+.pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--up); box-shadow: 0 0 0 0 var(--up); animation: pulse 2.4s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 var(--up-soft); } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
 @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
-h1 { margin: 0; font-size: clamp(30px, 4.6vw, 46px); line-height: 1.08; letter-spacing: -.035em; font-weight: 700; max-width: 760px; }
-.lede { margin: 14px 0 0; color: var(--text-2); font-size: 17px; max-width: 680px; }
+h1 { margin: 0 auto; font-size: clamp(32px, 5.4vw, 58px); line-height: 1.04; letter-spacing: -.045em; font-weight: 700; max-width: 820px; }
+h1 .fade { background: linear-gradient(180deg, var(--text) 30%, var(--text-3)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lede { margin: 18px auto 0; color: var(--text-2); font-size: 17px; max-width: 640px; }
 
-/* KPIs */
-.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 8px 0 28px; }
-.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow); min-width: 0; }
-.kpi .label { color: var(--text-2); font-size: 13px; font-weight: 500; }
-.kpi .value { font-size: 26px; font-weight: 650; letter-spacing: -.02em; margin-top: 4px; display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.kpi .sub { color: var(--text-3); font-size: 13px; margin-top: 2px; }
-.dot { width: 10px; height: 10px; border-radius: 3px; flex: none; display: inline-block; }
+/* Cards */
+.card {
+  position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+  padding: 20px 22px; box-shadow: var(--shadow); min-width: 0;
+}
+.card::after { /* hairline highlight on the top edge, visible in dark mode */
+  content: ""; position: absolute; left: 24px; right: 24px; top: -1px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--card-hi), transparent); pointer-events: none;
+}
+.card h2 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+.card .sub { margin: 4px 0 0; color: var(--text-2); font-size: 13.5px; }
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+
+/* KPI cards with sparklines */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
+.kpi { padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
+.kpi .label { display: flex; align-items: center; gap: 8px; color: var(--text-2); font-size: 13px; font-weight: 500; }
+.kpi .label .ico { width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--border); }
+.kpi .label .ico svg { width: 13px; height: 13px; stroke: var(--text-2); }
+.kpi .row { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-top: 4px; }
+.kpi .value { font-size: 26px; font-weight: 650; letter-spacing: -.03em; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 9px; min-width: 0; }
+.kpi .value .dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.kpi svg.spark { width: 76px; height: 32px; flex: none; overflow: visible; }
+.kpi .kfoot { display: flex; align-items: center; gap: 8px; color: var(--text-3); font-size: 12.5px; }
+.delta { white-space: nowrap; flex: none; display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.delta.up { color: var(--up); background: var(--up-soft); }
+.delta.down { color: var(--down); background: var(--down-soft); }
+.delta.flat { color: var(--text-2); background: var(--surface-2); }
 
 /* Toolbar */
-.toolbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; position: sticky; top: 0; z-index: 5; padding: 10px 0; background: var(--bg); }
-.seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
-.seg button {
-  border: 0; background: none; color: var(--text-2); font: inherit; font-size: 14px; font-weight: 500;
-  padding: 6px 14px; border-radius: 7px; cursor: pointer; transition: background .15s, color .15s;
-}
-.seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; position: sticky; top: 0; z-index: 5; padding: 12px 0; margin-bottom: 2px; background: var(--bg); }
+.seg { position: relative; display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 11px; padding: 3px; }
+.seg .pill { position: absolute; top: 3px; bottom: 3px; left: 3px; border-radius: 8px; background: var(--surface); box-shadow: 0 1px 2px rgba(0,0,0,.12), 0 0 0 1px var(--border); transition: transform .25s cubic-bezier(.3,.7,.3,1), width .25s cubic-bezier(.3,.7,.3,1); }
+.seg button { position: relative; z-index: 1; border: 0; background: none; color: var(--text-2); font: inherit; font-size: 13.5px; font-weight: 500; padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: color .2s; }
+.seg button[aria-pressed="true"] { color: var(--text); }
+@media (prefers-reduced-motion: reduce) { .seg .pill { transition: none; } }
 .seg button:focus-visible, .chip:focus-visible, .more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .hint { color: var(--text-3); font-size: 13px; margin: 0; }
 
-/* Cards */
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); min-width: 0; }
-.card h2 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
-.card .sub { margin: 4px 0 0; color: var(--text-2); font-size: 13.5px; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
-.chart { width: 100%; height: 320px; margin-top: 10px; }
-.chart.tall { height: 380px; }
-.chart.short { height: 260px; }
+/* Bento grid */
+.bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.span-2 { grid-column: span 2; }
+.span-3 { grid-column: 1 / -1; }
+.chart { width: 100%; height: 300px; margin-top: 12px; }
+.chart.tall { height: 360px; }
+.chart.short { height: 250px; }
 
 /* Stories */
-.stories-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip {
-  display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: var(--surface);
-  color: var(--text-2); font: inherit; font-size: 12.5px; font-weight: 500; padding: 4px 10px; border-radius: 999px; cursor: pointer;
-}
-.chip[aria-pressed="true"] { background: var(--text); color: var(--surface); border-color: var(--text); }
-.chip .dot { width: 8px; height: 8px; border-radius: 50%; }
-ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
-.story { display: grid; grid-template-columns: 34px 1fr auto; gap: 4px 14px; align-items: start; padding: 13px 0; border-top: 1px solid var(--border); }
-.story:first-child { border-top: 0; }
-.rank { color: var(--text-3); font-size: 13px; font-weight: 600; padding-top: 2px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-2); font: inherit; font-size: 12.5px; font-weight: 500; padding: 4px 10px; border-radius: 999px; cursor: pointer; transition: border-color .15s, color .15s; }
+.chip:hover { border-color: var(--border-strong); color: var(--text); }
+.chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; }
+ol.stories { list-style: none; margin: 14px -10px 0; padding: 0; }
+.story { display: grid; grid-template-columns: 36px 1fr auto; gap: 4px 14px; align-items: center; padding: 12px 10px; border-radius: 12px; transition: background .15s; }
+.story + .story { border-top: 1px solid var(--border); }
+.story:hover { background: var(--surface-2); }
+.story:hover + .story { border-top-color: transparent; }
+.rank { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); font-size: 12px; font-weight: 600; }
 .story a.title { font-weight: 550; text-decoration: none; line-height: 1.4; }
 .story a.title:hover { color: var(--accent); }
-.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 4px; color: var(--text-3); font-size: 13px; }
-.tag { display: inline-flex; align-items: center; gap: 5px; color: var(--text-2); }
-.tag .dot { width: 7px; height: 7px; border-radius: 50%; }
-.stats { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; font-size: 13px; color: var(--text-2); white-space: nowrap; }
-.stats strong { color: var(--text); font-weight: 600; font-size: 15px; }
-.stats a { color: var(--accent); text-decoration: none; font-weight: 500; }
-.more { margin-top: 10px; width: 100%; border: 1px dashed var(--border); background: none; color: var(--text-2); font: inherit; font-size: 14px; padding: 10px; border-radius: 10px; cursor: pointer; }
-.more:hover { background: var(--surface-2); }
-.empty { color: var(--text-3); padding: 18px 0; }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 3px; color: var(--text-3); font-size: 12.5px; }
+.tag { display: inline-flex; align-items: center; gap: 5px; padding: 0 8px; height: 20px; border-radius: 6px; font-weight: 500; font-size: 12px; }
+.stats { display: flex; align-items: center; gap: 18px; font-size: 13px; color: var(--text-3); white-space: nowrap; }
+.stats .n { text-align: right; min-width: 64px; }
+.stats .n b { display: block; color: var(--text); font-size: 15px; font-weight: 600; }
+.stats a.hn { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border); color: var(--text-2); text-decoration: none; font-size: 13px; font-weight: 600; transition: background .15s, color .15s; }
+.stats a.hn:hover { background: #FF6600; border-color: #FF6600; color: #fff; }
+.more { margin-top: 10px; width: 100%; border: 1px dashed var(--border-strong); background: none; color: var(--text-2); font: inherit; font-size: 13.5px; padding: 10px; border-radius: 12px; cursor: pointer; }
+.more:hover { background: var(--surface-2); color: var(--text); }
+.empty { color: var(--text-3); padding: 18px 10px; }
 
 /* Footer */
-.foot { color: var(--text-2); font-size: 13.5px; padding: 36px 24px 56px; display: grid; grid-template-columns: 2fr 1fr; gap: 28px; }
+.foot { color: var(--text-2); font-size: 13.5px; padding: 44px 24px 64px; display: grid; grid-template-columns: 2fr 1fr; gap: 32px; border-top: 1px solid var(--border); margin-top: 48px; }
 .foot h3 { margin: 0 0 6px; font-size: 13px; color: var(--text); font-weight: 600; }
 .foot p { margin: 0 0 8px; }
 .foot a { color: var(--accent); text-decoration: none; }
 
-@media (max-width: 860px) {
+@media (max-width: 960px) {
   .kpis { grid-template-columns: 1fr 1fr; }
-  .grid2 { grid-template-columns: 1fr; }
-  .foot { grid-template-columns: 1fr; }
+  .bento { grid-template-columns: 1fr 1fr; }
+  .span-2 { grid-column: 1 / -1; }
 }
-@media (max-width: 520px) {
+@media (max-width: 640px) {
   .wrap { padding: 0 16px; }
   .nav a.hide-sm { display: none; }
-  .toolbar .hint { display: none; }
+  .hero { padding: 36px 0 24px; }
+  .bento { grid-template-columns: 1fr; }
+  .kpis { gap: 10px; }
+  .kpi { padding: 14px; }
   .kpi .value { font-size: 22px; }
-  .card { padding: 16px; }
+  .kpi .row { flex-direction: column; align-items: stretch; gap: 6px; }
+  .kpi svg.spark { width: 100%; height: 26px; }
+  .card { padding: 16px; border-radius: 16px; }
+  .toolbar .hint { display: none; }
   .chart.tall { height: 340px; }
-  .story { grid-template-columns: 26px 1fr; }
-  .stats { grid-column: 2; flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .story { grid-template-columns: 30px 1fr; align-items: start; }
+  .stats { grid-column: 2; gap: 14px; }
+  .stats .n { text-align: left; min-width: 0; }
+  .stats .n b { display: inline; margin-right: 3px; }
+  .foot { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 <header class="wrap top">
   <a class="brand" href="#">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="var(--accent)"/><circle cx="16" cy="16" r="9" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1.5"/><path d="M16 16 L27 9" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="2.6" fill="#fff"/></svg>
+    <span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><circle cx="12" cy="12" r="8" stroke="var(--bg)" stroke-opacity=".55" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="var(--bg)" stroke-opacity=".35" stroke-width="1.4"/><path d="M12 12 L19 7" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="1.8" fill="var(--bg)"/></svg></span>
     <span>AI News Radar</span>
   </a>
   <nav class="nav">
-    <a id="digest-link" href="#">Latest digest</a>
     <a class="hide-sm" id="method-link" href="#">Method</a>
-    <a id="repo-link" href="#">GitHub</a>
+    <a class="hide-sm" id="digest-link" href="#">Daily digest</a>
+    <a class="btn" id="repo-link" href="#">GitHub</a>
   </nav>
 </header>
 
 <main class="wrap">
   <section class="hero">
-    <p class="eyebrow"><span class="pulse"></span><span id="updated"></span></p>
-    <h1>What Hacker News talks about in AI</h1>
+    <p class="badge"><span class="pulse"></span><span id="updated"></span></p>
+    <h1>What Hacker News <span class="fade">talks about in AI</span></h1>
     <p class="lede">Every AI story posted on Hacker News, collected daily from the official API and labelled by theme with Gemini. <span id="range"></span></p>
   </section>
 
   <section class="kpis" id="kpis" aria-label="Key figures"></section>
 
   <div class="toolbar">
-    <div class="seg" role="group" aria-label="Measure">
+    <div class="seg" role="group" aria-label="Measure" id="seg">
+      <span class="pill" aria-hidden="true"></span>
       <button type="button" data-measure="volume" aria-pressed="true">Stories</button>
       <button type="button" data-measure="attention" aria-pressed="false">Points + comments</button>
     </div>
     <p class="hint" id="measure-hint"></p>
   </div>
 
-  <section class="card">
-    <h2>Theme share per day</h2>
-    <p class="sub" id="share-sub"></p>
-    <div id="chart-share" class="chart tall" role="img" aria-label="Stacked bar chart of theme shares per day"></div>
-  </section>
-
-  <div class="grid2">
+  <div class="bento">
+    <section class="card span-2">
+      <h2>Theme share per day</h2>
+      <p class="sub" id="share-sub"></p>
+      <div id="chart-share" class="chart tall" role="img" aria-label="Stacked bar chart of theme shares per day"></div>
+    </section>
     <section class="card">
       <h2>Rising and falling</h2>
       <p class="sub" id="momentum-sub"></p>
-      <div id="chart-momentum" class="chart" role="img" aria-label="Change in theme share"></div>
+      <div id="chart-momentum" class="chart tall" role="img" aria-label="Change in theme share"></div>
     </section>
+
     <section class="card">
       <h2>Posted about vs. discussed</h2>
-      <p class="sub">Each theme's share of stories and share of points + comments, over the whole period.</p>
+      <p class="sub">Share of stories and of points + comments per theme, whole period.</p>
       <div id="chart-mix" class="chart" role="img" aria-label="Share of stories and of attention per theme"></div>
     </section>
-  </div>
-
-  <div class="grid2">
     <section class="card">
       <h2>AI stories per day</h2>
-      <p class="sub">Stories whose title matches the AI keyword filter.</p>
-      <div id="chart-volume" class="chart short" role="img" aria-label="AI stories per day"></div>
+      <p class="sub">Titles matching the AI keyword filter.</p>
+      <div id="chart-volume" class="chart" role="img" aria-label="AI stories per day"></div>
     </section>
     <section class="card">
       <h2>Most linked sites</h2>
-      <p class="sub">Domains of the links, Ask HN posts excluded.</p>
-      <div id="chart-domains" class="chart short" role="img" aria-label="Most linked domains"></div>
+      <p class="sub">Link domains, Ask HN posts excluded.</p>
+      <div id="chart-domains" class="chart" role="img" aria-label="Most linked domains"></div>
+    </section>
+
+    <section class="card span-3">
+      <div class="card-head">
+        <div>
+          <h2>Most discussed stories</h2>
+          <p class="sub">Ranked by points + comments over the period.</p>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Filter by theme"></div>
+      </div>
+      <ol class="stories" id="stories"></ol>
+      <button type="button" class="more" id="more" hidden>Show more</button>
     </section>
   </div>
-
-  <section class="card" style="margin-top:16px">
-    <div class="stories-head">
-      <div>
-        <h2>Most discussed stories</h2>
-        <p class="sub">Ranked by points + comments over the period.</p>
-      </div>
-      <div class="chips" id="chips" role="group" aria-label="Filter by theme"></div>
-    </div>
-    <ol class="stories" id="stories"></ol>
-    <button type="button" class="more" id="more" hidden>Show more</button>
-  </section>
 </main>
 
 <footer class="wrap foot">
@@ -234,7 +279,7 @@ ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
   const D = JSON.parse(document.getElementById("radar-data").textContent);
   const THEMES = D.themes;
   const BY_SLUG = Object.fromEntries(THEMES.map(t => [t.slug, t]));
-  const state = { measure: "volume", theme: "all", shown: 15 };
+  const state = { measure: "volume", theme: "all", shown: 12 };
   const $ = id => document.getElementById(id);
   const pct = (v, d = 0) => `${(v * 100).toFixed(d)}%`;
   const int = v => v.toLocaleString("en-US");
@@ -242,9 +287,10 @@ ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
   const shortDay = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const hexA = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
   const MEASURE = {
-    volume: { name: "Stories", hint: "Share of AI stories posted in each theme." },
-    attention: { name: "Points + comments", hint: "Share of reader engagement (points + comments) each theme received." },
+    volume: "Share of AI stories posted in each theme.",
+    attention: "Share of reader engagement (points + comments) each theme received.",
   };
 
   // Static text and links
@@ -252,29 +298,64 @@ ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
   for (const id of ["repo-link", "repo-link-2"]) $(id).href = D.repo;
   for (const id of ["digest-link", "digest-link-2"]) $(id).href = D.latest_digest;
   for (const id of ["method-link", "method-link-2"]) $(id).href = evalUrl;
-  $("updated").textContent = `Updated ${D.generated_at}`;
+  $("updated").textContent = `Live · updated ${D.generated_at}`;
   $("range").textContent = `${D.days.length} complete days, ${day(D.start)} to ${day(D.end)}.`;
-  $("momentum-sub").textContent = `Change in share over the last ${D.window} days compared with the ${D.window} days before, in percentage points.`;
+  $("momentum-sub").textContent = `Share in the last ${D.window} days vs the ${D.window} days before, in points.`;
   if (D.evaluation) {
     $("eval-note").innerHTML = `Themes are assigned by an LLM and are not perfect: on a held-out sample of ${D.evaluation.stories} stories they matched an independent reference ${pct(D.evaluation.accuracy)} of the time. <a href="${evalUrl}">Read the evaluation</a>.`;
   }
 
-  // Key figures
+  // Sparkline: a small area chart drawn as inline SVG.
+  function spark(values, color) {
+    const w = 92, h = 34, n = values.length;
+    if (n < 2) return "";
+    const lo = Math.min(...values), hi = Math.max(...values), span = hi - lo || 1;
+    const pts = values.map((v, i) => [(i / (n - 1)) * w, h - 3 - ((v - lo) / span) * (h - 8)]);
+    const line = pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("");
+    const id = "g" + Math.random().toString(36).slice(2, 8);
+    const [lx, ly] = pts[n - 1];
+    return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".28"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+      <path d="${line}L${w},${h}L0,${h}Z" fill="url(#${id})"/>
+      <path d="${line}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      <circle cx="${lx}" cy="${ly}" r="2.6" fill="${color}"/></svg>`;
+  }
+  const delta = (v, unit, digits = 1) => {
+    const cls = Math.abs(v) < 0.05 ? "flat" : v > 0 ? "up" : "down";
+    const arrow = cls === "up" ? "↑" : cls === "down" ? "↓" : "→";
+    return `<span class="delta ${cls}">${arrow} ${Math.abs(v).toFixed(digits)}${unit}</span>`;
+  };
+  const ICONS = {
+    stories: '<path d="M4 6h16M4 12h16M4 18h10" stroke-width="2" stroke-linecap="round" fill="none"/>',
+    posted: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke-width="2" stroke-linecap="round" fill="none"/>',
+    discussed: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" stroke-width="2" stroke-linejoin="round" fill="none"/>',
+    rising: '<path d="M3 17l6-6 4 4 8-8M15 7h6v6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+  };
+
   function renderKpis() {
     const totalStories = D.totals.reduce((a, t) => a + t.stories, 0);
     const totalEng = D.totals.reduce((a, t) => a + t.engagement, 0);
     const topVol = [...D.totals].sort((a, b) => b.stories - a.stories)[0];
     const topEng = [...D.totals].sort((a, b) => b.engagement - a.engagement)[0];
     const rising = D.momentum.volume[0];
-    const tile = (label, value, sub, slug) => `
-      <div class="kpi"><div class="label">${label}</div>
-      <div class="value num">${slug ? `<span class="dot" style="background:${BY_SLUG[slug].color}"></span>` : ""}${value}</div>
-      <div class="sub num">${sub}</div></div>`;
+    const v = D.volume, last = v[v.length - 1], prev = v[v.length - 2];
+    const dayChange = prev ? (last - prev) / prev * 100 : 0;
+    const accent = css("--accent");
+    const tile = (icon, label, value, foot, sparkline, slug) => `
+      <div class="card kpi">
+        <div class="label"><span class="ico"><svg viewBox="0 0 24 24">${ICONS[icon]}</svg></span>${label}</div>
+        <div class="row"><div class="value num">${slug ? `<span class="dot" style="background:${BY_SLUG[slug].color}"></span>` : ""}${value}</div>${sparkline}</div>
+        <div class="kfoot num">${foot}</div>
+      </div>`;
     $("kpis").innerHTML =
-      tile("AI stories", int(D.total), `${Math.round(D.total / D.days.length)} per day on average`) +
-      tile("Most posted theme", BY_SLUG[topVol.theme].label, `${pct(topVol.stories / totalStories)} of stories`, topVol.theme) +
-      tile("Most discussed theme", BY_SLUG[topEng.theme].label, `${pct(topEng.engagement / totalEng)} of points + comments`, topEng.theme) +
-      tile("Rising fastest", BY_SLUG[rising.theme].label, `${rising.change >= 0 ? "+" : ""}${rising.change.toFixed(1)} pts over ${D.window} days`, rising.theme);
+      tile("stories", "AI stories", int(D.total),
+        `${delta(dayChange, "%")}<span>${int(last)} on ${shortDay(D.end)} vs day before</span>`, spark(v, accent)) +
+      tile("posted", "Most posted theme", BY_SLUG[topVol.theme].label,
+        `<span>${pct(topVol.stories / totalStories)} of all stories</span>`, spark(D.share.volume[topVol.theme], BY_SLUG[topVol.theme].color), topVol.theme) +
+      tile("discussed", "Most discussed theme", BY_SLUG[topEng.theme].label,
+        `<span>${pct(topEng.engagement / totalEng)} of points + comments</span>`, spark(D.share.attention[topEng.theme], BY_SLUG[topEng.theme].color), topEng.theme) +
+      tile("rising", "Rising fastest", BY_SLUG[rising.theme].label,
+        `${delta(rising.change, " pts")}<span>over ${D.window} days</span>`, spark(D.share.volume[rising.theme], BY_SLUG[rising.theme].color), rising.theme);
   }
 
   // Charts
@@ -283,37 +364,39 @@ ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
   const base = () => ({
     textStyle: { fontFamily: "Inter, system-ui, sans-serif", color: css("--text-2") },
     tooltip: {
-      backgroundColor: css("--surface"), borderColor: css("--border"), borderWidth: 1,
-      textStyle: { color: css("--text"), fontSize: 13 }, extraCssText: "border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);",
+      backgroundColor: css("--surface"), borderColor: css("--border-strong"), borderWidth: 1, padding: [10, 12],
+      textStyle: { color: css("--text"), fontSize: 12.5 }, extraCssText: "border-radius:12px;box-shadow:0 12px 32px -8px rgba(0,0,0,.25);",
     },
-    animationDuration: 500,
+    animationDuration: 600, animationEasing: "cubicOut",
   });
   const axisCommon = () => ({
     axisLine: { lineStyle: { color: css("--border") } }, axisTick: { show: false },
-    axisLabel: { color: css("--text-3"), fontSize: 12 }, splitLine: { lineStyle: { color: css("--grid") } },
+    axisLabel: { color: css("--text-3"), fontSize: 11.5 }, splitLine: { lineStyle: { color: css("--grid"), type: [3, 3] } },
   });
+  const catAxis = (data, extra = {}) => ({ type: "category", data, ...axisCommon(), splitLine: { show: false }, axisLine: { show: false },
+    axisLabel: { color: css("--text-2"), fontSize: 12.5 }, ...extra });
 
   function renderShare() {
     const data = D.share[state.measure];
-    $("share-sub").textContent = state.measure === "volume"
-      ? "Share of each day's AI stories, by theme. Click a theme in the legend to hide it."
-      : "Share of each day's points + comments, by theme. Click a theme in the legend to hide it.";
-    const narrow = $("chart-share").clientWidth < 560;  // phones: wrapped legend, short dates
+    const narrow = $("chart-share").clientWidth < 560;
+    $("share-sub").textContent = (state.measure === "volume" ? "Share of each day's AI stories" : "Share of each day's points + comments")
+      + ", by theme. Click the legend to hide a theme.";
     chart("chart-share").setOption({
       ...base(),
-      grid: { left: 8, right: 8, top: 10, bottom: narrow ? 104 : 64, containLabel: true },
-      legend: { bottom: 0, icon: "roundRect", itemWidth: 10, itemHeight: 10, itemGap: 14, textStyle: { color: css("--text-2"), fontSize: 12.5 } },
+      grid: { left: 4, right: 4, top: 8, bottom: narrow ? 104 : 60, containLabel: true },
+      legend: { bottom: 0, icon: "circle", itemWidth: 8, itemHeight: 8, itemGap: 14, textStyle: { color: css("--text-2"), fontSize: 12.5 } },
       tooltip: { ...base().tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: css("--accent-soft") } },
         formatter: ps => {
           const rows = [...ps].filter(p => p.value > 0).sort((a, b) => b.value - a.value)
-            .map(p => `<div style="display:flex;justify-content:space-between;gap:18px"><span>${p.marker}${p.seriesName}</span><b>${pct(p.value)}</b></div>`).join("");
-          return `<div style="font-weight:600;margin-bottom:6px">${day(D.days[ps[0].dataIndex])}</div>${rows}`;
+            .map(p => `<div style="display:flex;justify-content:space-between;gap:20px;line-height:1.7"><span>${p.marker}${p.seriesName}</span><b>${pct(p.value)}</b></div>`).join("");
+          return `<div style="font-weight:600;margin-bottom:4px">${day(D.days[ps[0].dataIndex])}</div>${rows}`;
         } },
       xAxis: { type: "category", data: D.days.map(narrow ? shortDay : day), ...axisCommon(), splitLine: { show: false } },
-      yAxis: { type: "value", max: 1, ...axisCommon(), axisLabel: { ...axisCommon().axisLabel, formatter: v => pct(v) } },
-      series: THEMES.map(t => ({
-        name: t.label, type: "bar", stack: "share", barWidth: "62%", data: data[t.slug],
-        itemStyle: { color: t.color, borderColor: css("--surface"), borderWidth: 1 },
+      yAxis: { type: "value", max: 1, ...axisCommon(), axisLine: { show: false }, axisLabel: { ...axisCommon().axisLabel, formatter: v => pct(v) } },
+      series: THEMES.map((t, i) => ({
+        name: t.label, type: "bar", stack: "share", barWidth: "58%", data: data[t.slug],
+        itemStyle: { color: t.color, borderColor: css("--surface"), borderWidth: 1.5,
+          borderRadius: i === THEMES.length - 1 ? [6, 6, 0, 0] : i === 0 ? [0, 0, 6, 6] : 0 },
         emphasis: { focus: "series" },
       })),
     }, true);
@@ -321,25 +404,23 @@ ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
 
   function renderMomentum() {
     const rows = [...D.momentum[state.measure]].sort((a, b) => a.change - b.change);
-    // Symmetric axis with headroom so that the value labels never hit the theme names.
-    const reach = Math.max(1, ...rows.map(r => Math.abs(r.change))) * 1.3;
+    const reach = Math.max(1, ...rows.map(r => Math.abs(r.change))) * 1.35;
     chart("chart-momentum").setOption({
       ...base(),
-      grid: { left: 8, right: 16, top: 6, bottom: 6, containLabel: true },
+      grid: { left: 4, right: 8, top: 4, bottom: 4, containLabel: true },
       tooltip: { ...base().tooltip, trigger: "item",
         formatter: p => { const r = rows[p.dataIndex]; return `<div style="font-weight:600;margin-bottom:4px">${BY_SLUG[r.theme].label}</div>
           Last ${D.window} days: <b>${pct(r.recent)}</b><br>${D.window} days before: <b>${pct(r.previous)}</b><br>${r.stories} stories recently`; } },
       xAxis: { type: "value", min: -reach, max: reach, ...axisCommon(),
-        axisLabel: { ...axisCommon().axisLabel, showMinLabel: false, showMaxLabel: false,
-          formatter: v => `${v > 0 ? "+" : ""}${v}` } },
-      yAxis: { type: "category", data: rows.map(r => BY_SLUG[r.theme].label), ...axisCommon(), splitLine: { show: false }, axisLine: { show: false },
-        axisLabel: { color: css("--text-2"), fontSize: 12.5 } },
-      series: [{ type: "bar", barWidth: "58%", data: rows.map(r => ({
-        value: +r.change.toFixed(1),
-        itemStyle: { color: r.change >= 0 ? css("--up") : css("--down"), borderRadius: r.change >= 0 ? [0, 4, 4, 0] : [4, 0, 0, 4] },
-        label: { show: true, position: r.change >= 0 ? "right" : "left", color: css("--text-2"), fontSize: 12,
-          formatter: `${r.change >= 0 ? "+" : ""}${r.change.toFixed(1)}` },
-      })) }],
+        axisLabel: { ...axisCommon().axisLabel, showMinLabel: false, showMaxLabel: false, formatter: v => `${v > 0 ? "+" : ""}${v}` } },
+      yAxis: catAxis(rows.map(r => BY_SLUG[r.theme].label)),
+      series: [{ type: "bar", barWidth: "54%", data: rows.map(r => {
+        const c = r.change >= 0 ? css("--up") : css("--down");
+        return { value: +r.change.toFixed(1),
+          itemStyle: { color: c, borderRadius: r.change >= 0 ? [0, 5, 5, 0] : [5, 0, 0, 5] },
+          label: { show: true, position: r.change >= 0 ? "right" : "left", color: css("--text-2"), fontSize: 11.5,
+            formatter: `${r.change >= 0 ? "+" : ""}${r.change.toFixed(1)}` } };
+      }) }],
     }, true);
   }
 
@@ -349,17 +430,15 @@ ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
     const rows = [...D.totals].sort((a, b) => a.stories - b.stories);
     chart("chart-mix").setOption({
       ...base(),
-      grid: { left: 8, right: 16, top: 30, bottom: 6, containLabel: true },
-      legend: { top: 0, right: 0, icon: "roundRect", itemWidth: 10, itemHeight: 10, textStyle: { color: css("--text-2"), fontSize: 12.5 } },
-      tooltip: { ...base().tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: css("--accent-soft") } },
-        valueFormatter: v => pct(v, 1) },
+      grid: { left: 4, right: 12, top: 28, bottom: 4, containLabel: true },
+      legend: { top: 0, left: 0, icon: "circle", itemWidth: 8, itemHeight: 8, textStyle: { color: css("--text-2"), fontSize: 12 } },
+      tooltip: { ...base().tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: css("--accent-soft") } }, valueFormatter: v => pct(v, 1) },
       xAxis: { type: "value", ...axisCommon(), axisLabel: { ...axisCommon().axisLabel, formatter: v => pct(v) } },
-      yAxis: { type: "category", data: rows.map(r => BY_SLUG[r.theme].label), ...axisCommon(), splitLine: { show: false }, axisLine: { show: false },
-        axisLabel: { color: css("--text-2"), fontSize: 12.5 } },
+      yAxis: catAxis(rows.map(r => BY_SLUG[r.theme].label)),
       series: [
-        { name: "Stories", type: "bar", barGap: "15%", barWidth: "34%", data: rows.map(r => r.stories / totalS),
-          itemStyle: { color: css("--text-3"), borderRadius: [0, 3, 3, 0] } },
-        { name: "Points + comments", type: "bar", barWidth: "34%", data: rows.map(r => r.engagement / totalE),
+        { name: "Stories", type: "bar", barGap: "20%", barWidth: "32%", data: rows.map(r => r.stories / totalS),
+          itemStyle: { color: css("--border-strong"), borderRadius: [0, 3, 3, 0] } },
+        { name: "Points + comments", type: "bar", barWidth: "32%", data: rows.map(r => r.engagement / totalE),
           itemStyle: { color: css("--accent"), borderRadius: [0, 3, 3, 0] } },
       ],
     }, true);
@@ -369,29 +448,30 @@ ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
     const accent = css("--accent");
     chart("chart-volume").setOption({
       ...base(),
-      grid: { left: 8, right: 28, top: 14, bottom: 6, containLabel: true },
+      grid: { left: 4, right: 18, top: 12, bottom: 4, containLabel: true },
       tooltip: { ...base().tooltip, trigger: "axis", formatter: ps => `<b>${day(D.days[ps[0].dataIndex])}</b><br>${ps[0].value} AI stories` },
       xAxis: { type: "category", boundaryGap: false, data: D.days.map(shortDay), ...axisCommon(), splitLine: { show: false } },
-      yAxis: { type: "value", min: 0, ...axisCommon() },
-      series: [{ type: "line", data: D.volume, smooth: 0.25, symbol: "circle", symbolSize: 7,
+      yAxis: { type: "value", min: 0, ...axisCommon(), axisLine: { show: false } },
+      series: [{ type: "line", data: D.volume, smooth: 0.3, symbol: "circle", symbolSize: 7, showSymbol: true,
         lineStyle: { width: 2.5, color: accent }, itemStyle: { color: accent, borderColor: css("--surface"), borderWidth: 2 },
-        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: css("--accent-soft") }, { offset: 1, color: "rgba(0,0,0,0)" }]) } }],
+        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: hexA(accent, .28) }, { offset: 1, color: hexA(accent, 0) }]) } }],
     }, true);
   }
 
   function renderDomains() {
     const rows = [...D.domains].reverse();
+    const accent = css("--accent");
     chart("chart-domains").setOption({
       ...base(),
-      grid: { left: 8, right: 36, top: 6, bottom: 6, containLabel: true },
+      grid: { left: 4, right: 30, top: 4, bottom: 4, containLabel: true },
       tooltip: { ...base().tooltip, trigger: "item", formatter: p => { const r = rows[p.dataIndex];
         return `<b>${esc(r.domain)}</b><br>${r.stories} stories · ${int(r.engagement)} points + comments`; } },
-      xAxis: { type: "value", ...axisCommon(), splitLine: { show: false }, axisLabel: { show: false } },
-      yAxis: { type: "category", data: rows.map(r => r.domain), ...axisCommon(), axisLine: { show: false }, splitLine: { show: false },
-        axisLabel: { color: css("--text-2"), fontSize: 12.5, width: 150, overflow: "truncate" } },
-      series: [{ type: "bar", barWidth: "56%", data: rows.map(r => r.stories),
-        itemStyle: { color: css("--accent"), borderRadius: [0, 4, 4, 0] },
-        label: { show: true, position: "right", color: css("--text-2"), fontSize: 12 } }],
+      xAxis: { type: "value", show: false },
+      yAxis: catAxis(rows.map(r => r.domain), { axisLabel: { color: css("--text-2"), fontSize: 12, width: 132, overflow: "truncate" } }),
+      series: [{ type: "bar", barWidth: "55%", data: rows.map(r => r.stories),
+        showBackground: true, backgroundStyle: { color: css("--surface-2"), borderRadius: 4 },
+        itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: hexA(accent, .55) }, { offset: 1, color: accent }]), borderRadius: 4 },
+        label: { show: true, position: "right", color: css("--text-2"), fontSize: 11.5 } }],
     }, true);
   }
 
@@ -399,8 +479,7 @@ ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
   function renderChips() {
     const counts = {};
     for (const s of D.stories) counts[s.theme] = (counts[s.theme] || 0) + 1;
-    const chip = (slug, label, color) => `<button type="button" class="chip" data-theme="${slug}" aria-pressed="${state.theme === slug}">
-      ${color ? `<span class="dot" style="background:${color}"></span>` : ""}${label}</button>`;
+    const chip = (slug, label, color) => `<button type="button" class="chip" data-theme="${slug}" aria-pressed="${state.theme === slug}">${color ? `<span class="dot" style="background:${color}"></span>` : ""}${label}</button>`;
     $("chips").innerHTML = chip("all", "All") + THEMES.filter(t => counts[t.slug]).map(t => chip(t.slug, t.label, t.color)).join("");
   }
 
@@ -410,43 +489,53 @@ ol.stories { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: s; }
     $("stories").innerHTML = shown.length ? shown.map((s, i) => {
       const t = BY_SLUG[s.theme];
       return `<li class="story">
-        <span class="rank num">${i + 1}</span>
+        <span class="rank mono">${i + 1}</span>
         <div>
           <a class="title" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>
-          <div class="meta"><span class="tag"><span class="dot" style="background:${t.color}"></span>${t.label}</span>
-            <span>${esc(s.domain || "Ask HN")}</span><span>${day(s.day)}</span></div>
+          <div class="meta"><span class="tag" style="color:${t.color};background:${hexA(t.color, .12)}">${t.label}</span>
+            <span>${esc(s.domain || "Ask HN")}</span><span>·</span><span>${day(s.day)}</span></div>
         </div>
-        <div class="stats num"><span><strong>${int(s.score)}</strong> points</span>
-          <span>${int(s.comments)} comments</span>
-          <a href="${esc(s.hn_url)}" target="_blank" rel="noopener">Discussion →</a></div>
+        <div class="stats num">
+          <span class="n"><b>${int(s.score)}</b>points</span>
+          <span class="n"><b>${int(s.comments)}</b>comments</span>
+          <a class="hn" href="${esc(s.hn_url)}" target="_blank" rel="noopener" title="Discussion on Hacker News" aria-label="Discussion on Hacker News">Y</a>
+        </div>
       </li>`;
     }).join("") : `<li class="empty">No story in this theme among the most discussed.</li>`;
     $("more").hidden = list.length <= state.shown;
   }
 
-  // Interactions
-  document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
+  // Segmented control with a sliding pill
+  function movePill() {
+    const btn = document.querySelector('#seg button[aria-pressed="true"]');
+    const pill = document.querySelector("#seg .pill");
+    pill.style.width = `${btn.offsetWidth}px`;
+    pill.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
+  }
+  document.querySelectorAll("#seg button").forEach(b => b.addEventListener("click", () => {
     state.measure = b.dataset.measure;
-    document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
-    $("measure-hint").textContent = MEASURE[state.measure].hint;
+    document.querySelectorAll("#seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    movePill();
+    $("measure-hint").textContent = MEASURE[state.measure];
     renderShare(); renderMomentum();
   }));
   $("chips").addEventListener("click", e => {
     const b = e.target.closest(".chip"); if (!b) return;
-    state.theme = b.dataset.theme; state.shown = 15;
+    state.theme = b.dataset.theme; state.shown = 12;
     renderChips(); renderStories();
   });
-  $("more").addEventListener("click", () => { state.shown += 15; renderStories(); });
+  $("more").addEventListener("click", () => { state.shown += 12; renderStories(); });
 
-  function renderCharts() { renderShare(); renderMomentum(); renderMix(); renderVolume(); renderDomains(); }
-  $("measure-hint").textContent = MEASURE.volume.hint;
-  renderKpis(); renderChips(); renderStories(); renderCharts();
+  function renderAll() { renderKpis(); renderShare(); renderMomentum(); renderMix(); renderVolume(); renderDomains(); }
+  $("measure-hint").textContent = MEASURE.volume;
+  renderChips(); renderStories(); renderAll(); movePill();
+  if (document.fonts) document.fonts.ready.then(movePill);
   let resizeTimer;
   window.addEventListener("resize", () => {
     Object.values(charts).forEach(c => c.resize());
-    clearTimeout(resizeTimer); resizeTimer = setTimeout(renderShare, 150);  // layout depends on width
+    clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderShare(); movePill(); }, 150);
   });
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderCharts);
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderAll);
 })();
 </script>
 </body>
