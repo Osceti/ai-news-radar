@@ -19,7 +19,7 @@ from radar.pipeline import classify, collect, make_digest
 from radar.storage import load_posts
 
 PIPELINE_COMMANDS = ["collect", "classify", "digest", "run"]
-EVAL_COMMANDS = ["eval-sample", "eval-label", "eval-report"]
+EVAL_COMMANDS = ["eval-sample", "eval-label", "eval-prompt", "eval-report"]
 
 log = logging.getLogger("radar")
 
@@ -58,6 +58,12 @@ def run_evaluation(command: str, data_path: Path, eval_dir: Path) -> int:
     if not labels_path.exists():
         log.error("No sample yet: run python -m radar eval-sample first")
         return 1
+    if command == "eval-prompt":
+        path = eval_dir / "annotation_prompt.txt"
+        path.write_text(evaluation.annotation_prompt(evaluation.read_csv(labels_path)),
+                        encoding="utf-8")
+        print(f"Prompt written to {path}")
+        return 0
     if command == "eval-label":
         count = evaluation.label_interactively(labels_path)
         print(f"\n{count} stories labelled this session; progress saved to {labels_path}")

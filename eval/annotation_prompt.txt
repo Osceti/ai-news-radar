@@ -1,0 +1,123 @@
+You are annotating Hacker News stories to build a reference set for evaluating an AI news classifier.
+
+For each story below, choose the ONE theme that best describes what the story is about, judging from its title and link domain (you may use your knowledge of the site). If the story is not really about artificial intelligence (the title only mentions AI in passing, or uses an AI keyword with another meaning), use not-ai.
+
+Themes:
+- models: releases, updates, benchmarks or comparisons of specific AI models, open-weight models
+- agents: autonomous or tool-using AI agents, agent frameworks, computer use, multi-agent systems
+- rag: retrieval-augmented generation, embeddings, vector databases, search over documents
+- dev-tools: libraries, SDKs, coding assistants, IDEs, inference servers and infrastructure for building with AI
+- security: prompt injection, jailbreaks, vulnerabilities, data leaks, misuse and AI safety incidents
+- research: papers, scientific results, new techniques, interpretability and alignment research
+- business: companies, funding, acquisitions, pricing, hardware supply, jobs and the AI market
+- regulation: laws, policy, lawsuits, copyright and government action on AI
+- other: opinion, culture, education and anything that fits no other theme
+- not-ai: the story is not about artificial intelligence
+
+Rules:
+- Use exactly one of these labels: models, agents, rag, dev-tools, security, research, business, regulation, other, not-ai.
+- When a story fits several themes, pick the one a reader would consider its main subject.
+- Add a short note (at most 12 words, no commas) only when you hesitated between themes; otherwise leave it empty.
+- Answer with a single CSV code block and nothing else: the header line id,theme,note followed by exactly 100 rows, one per story, in the same order as below, keeping each id unchanged.
+
+Stories (id | title | domain):
+50457150 | Claude Reverse Engineered my 32-year-old Jeep and Started Controlling it | youtube.com
+50457693 | Discourse (forums) sees itself well positioned for the AI search era (vs Reddit) | blog.discourse.org
+50457706 | Pipeline Parallelism is here: 8x faster than Apple's WWDC26 fine-tuning | nuketorch.ai
+50457822 | I think differently, and I think AI might help | tinamrak.com
+50457964 | Token Economy – Claude Code/Codex usage, limits and token savings | github.com
+50458324 | Show HN: Play SNES games while Claude is working | github.com
+50459020 | Some IGF Jurors released a statement about AI usage | blog.lauramichet.com
+50459106 | Forchetta – one window for all your Claude Code sessions (macOS) | github.com
+50459119 | An AI-assisted RP2040 audio board that worked on first spin in 5 days | solderable.dev
+50459151 | We just found a new Dwarf Planet in our solar system with Claude and you can too | twitter.com
+50459445 | HuggingFace/Kernels: 200 WebGPU Kernels for Local AI | huggingface.co
+50460269 | Claude usage in your menu bar | github.com
+50460287 | Show HN: Agent skill and Claude/Codex plugins for Google Ads campaigns | github.com
+50460968 | Yes, you should panic about AI | rutgerbregman.substack.com
+50462153 | Can commercial stage-gates keep enterprise AI pilots out of procurement stalls? | pilotmap.bizmasterynow.com
+50463558 | Towards Verifiable LLM Infra | haoailab.com
+50464363 | Open Agentic Web Challenge – Help Build the Open Agentic Web | worldwideagenticweb.org
+50470137 | The Hard Part of AI Coding Is the Second Change | brian.biz
+50470160 | Perplexity Teammates: always-on AI agents that message your coworkers in Slack | thenewstack.io
+50471151 | Running 800B-parameter LLMs on consumer hardware with InferSSD | wici.ai
+50471652 | Washing dishes at Denny's to rockstar of AI, the rise and fall of Jensen Huang | theguardian.com
+50472179 | Local AI chat for iPhone(test build), built on a custom engine | github.com
+50473390 | MCP vs. CLI vs. Skills: What Each Costs in Context | openrouter.ai
+50473715 | Agentic Commits | github.com
+50473926 | Ask HN: Has AI coding changed who builds your internal tools? | news.ycombinator.com
+50474813 | Top Chinese AI labs built their newest models on Nvidia's Blackwell chips | twitter.com
+50474852 | Nvidia Faced Pressure to Boost Its AI Backstop Before Huang Exit | bloomberg.com
+50474883 | Chinese frontier AI models carry the fingerprint of export-controlled GPUs | unemploymentlabs.com
+50474942 | OpenAI wants agents to tell websites where you are | joost.blog
+50475735 | Why You Should Expect an AI Crash | economist.com
+50475982 | Show HN: Agentview Chat – a chat UI for Claude Code background sessions | github.com
+50476219 | Show HN: AxiomStory – Keep stories consistent across AI text, images, video | axiomstory.com
+50476441 | Have AI timelines suddenly moved? | lars.yencken.org
+50480936 | Claude OAuth Failures | news.ycombinator.com
+50483765 | Llama.cpp v1 Is Out | huggingface.co
+50485228 | Ask HN: Has AI coding changed who builds your internal tools? | news.ycombinator.com
+50485745 | We review 4x more AI code without reading every line | thenewstack.io
+50486914 | DeepSeek Ultrafast | github.com
+50487198 | AI Doesn't Have to Go Rogue to Break the World – Schneier on Security | schneier.com
+50487216 | AI, work from home, and the young-graduate job market | stripeeconomics.com
+50487611 | Jensen Huang's Resignation from Nvidia Worries the A.I. Startup World | nytimes.com
+50488562 | 30x more efficient Diffusion language model for Translation | dlmtranslate.com
+50488716 | Ghost Writing: On AI Before AI | lithub.com
+50488774 | Orienting to 1 year AGI timelines | lesswrong.com
+50488911 | I Used to Be Excited About Software Conferences. AI KILLed That | medium.com
+50489240 | Using LLMs outside of reflection is an anti-pattern | news.ycombinator.com
+50489463 | Show HN: Free AI Image Gallery | images.skynettstudio.com
+50489631 | Evidence Chinese AI labs built their newest models on Nvidia's Blackwell chips | twitter.com
+50491417 | The anti-marketing aspect of the Gemini network | ploum.net
+50493079 | Sam Bankman-Fried would have made nearly $40B in Anthropic IPO | ft.com
+50496084 | Mac Health MCP – ask Claude why your Mac is slow | github.com
+50496147 | Real: Reported Engagement with AI Level Framework | realgoodai.org
+50496205 | In 1 in 6 repos with both files, Claude Code never loads the AGENTS.md | gethrbr.com
+50496350 | Show HN: Bright Lines – a fail-closed guard hook for Claude Code | github.com
+50496631 | Show HN: Timon, an open-source AI workstation for coordinating agents | github.com
+50497578 | ML Modules for Mere Mortals | thunderseethe.dev
+50497744 | Jensen Huang's exit from Nvidia impacts China's AI supply chain | restofworld.org
+50498051 | Smuggling of 1.5M AI GPUs could be the cause of Huang's departure | tomshardware.com
+50499588 | I Tried Every LLM Architecture Change Since 2020 | nikita-pavlichenko.com
+50499787 | Tactical Team Changes from AI | staysaasy.com
+50500656 | The Collision: What AI Does to Us | mitsloan.mit.edu
+50500966 | From AI ambition to business impact | blogs.microsoft.com
+50506796 | Europa, the EU's open AI model, is aiming for nearly 1T parameters | maccus.fr
+50506919 | Let your AI agent call you, over MCP | agline.in
+50507199 | Amazon Threat Intelligence observes threat actor campaigns with ARTEX AI agents | aws.amazon.com
+50507303 | All AI-generated code should be Open Source | jakub.jankiewicz.org
+50507449 | FlashVMM – jail your AI agent in a MicroVM that boots in 18 ms | flashvmm.com
+50507517 | A Human Reads the Anthropic IPO Filing | nytimes.com
+50507702 | I let LLMs play a 1988 detective gamebook 646 times | blog.mastykarz.nl
+50507971 | Show HN: Pizza – An event-driven AI agent, no while true | pizza.hertzbeat.com
+50508576 | Factum – Human-first, AI-native modeling for VS Code | factum-orm.com
+50508977 | Show HN: Pocket Garden – a player interface to over 130 AI based web games | triptych.github.io
+50509195 | We handed our lives to closed software. AI is about to show us the cost | news.ycombinator.com
+50510433 | Inference Gateway Desktop, an AI client for any model provider | github.com
+50510760 | Show HN: Minute – An Offline Meeting Notetaker Using Local LLMs | minutenotes.app
+50510788 | CloakPrompt – Local browser firewall that scrubs PII/keys before ChatGPT/Claude | addons.mozilla.org
+50510872 | LLM Releases, Token Limits, and Pricing Since GPT 3.5 | metemorris.com
+50511337 | Delaware considers AI-managed companies | jdsupra.com
+50511622 | Thales Launches Sentinel Envelope Plus to Protect from AI-Assisted Hacking | thalesgroup.com
+50512047 | Reddit's traffic is down 13%, partly thanks to AI Overviews | businessinsider.com
+50520568 | Shot in Training to Sovereign Defense AI – Al Vigier, Caseway [video] | youtube.com
+50520896 | Databricks AI Index | developers.databricks.com
+50521694 | Benchmarks for document tasks for local AI models | bendyline.com
+50522069 | Evolving Infra: Agent-Adaptive LLM Serving at Scale | arxiv.org
+50522268 | A new implementation for LLMs through Nvidia GPUs natively on Apple Silicon | github.com
+50522562 | Trump's Plan for A.I. Supremacy Fuels Resistance in the Philippines | nytimes.com
+50522602 | Show HN: My OSS Claude Meetings alternative that works with any agent or call | github.com
+50523835 | Building a Rust-Native, Cross-Language Foundation for Agentic ML Compilers | tvm.apache.org
+50524598 | Show HN: AI Dating photos – can you tell they're AI? | datingprofile.app
+50525014 | California sues OpenAI over hacking risks | npr.org
+50526094 | My Annoying Coworker Claude | sharamp.com
+50526734 | Directly editing a VLA's weights improved its performance, with no fine-tuning | abdulrahimmirani.com
+50526969 | Everything You Wanted to Know About LLM Post-Training [video] | youtube.com
+50527557 | Show HN: Blobby – A design canvas that Claude, Cursor or Codex drives over MCP | useblobby.com
+50528233 | Building a Rust-Native, Cross-Language Foundation for Agentic ML Compilers | tvm.apache.org
+50528364 | 40-domain study: 80% of Shopify stores expose /API/ucp/MCP, 0% /agents.md | verisource.dev
+50529310 | China taps US AI models to train homegrown rivals as chip curbs bite | reuters.com
+50529624 | AI Race: an adaptation of Magical Athlete board game | ai-race.eamag.me
+50530124 | California Sues OpenAI over Hugging Face | cnbc.com
+50530141 | Show HN: Toolmaker Agent–Software project management for human and AI agent | toolmaker.io

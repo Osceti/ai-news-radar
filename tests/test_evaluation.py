@@ -7,6 +7,7 @@ from conftest import NOW, make_item
 from radar import __main__ as cli
 from radar.evaluation import (
     NOT_AI,
+    annotation_prompt,
     create_sample,
     draw_sample,
     evaluate,
@@ -104,6 +105,14 @@ def test_evaluate_reports_invalid_labels():
     ev = evaluate(labels, predictions)
     assert (ev.correct, ev.total) == (1, 1)
     assert ev.invalid["id"].tolist() == [2]
+
+
+def test_annotation_prompt_is_blind_and_complete():
+    labels, predictions = draw_sample(classified_posts(), n=5)
+    prompt = annotation_prompt(labels)
+    assert all(f"{i} | AI story {i} | example.com" in prompt for i in labels["id"])
+    assert "exactly 5 rows" in prompt and "not-ai" in prompt
+    assert "Summary" not in prompt  # Gemini's output never reaches the annotator
 
 
 def test_wilson_interval():

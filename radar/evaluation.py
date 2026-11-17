@@ -133,6 +133,34 @@ def label_interactively(labels_path: Path, input_fn=input, print_fn=print) -> in
     return labelled
 
 
+ANNOTATION_PROMPT = """You are annotating Hacker News stories to build a reference set for evaluating an AI news classifier.
+
+For each story below, choose the ONE theme that best describes what the story is about, judging from its title and link domain (you may use your knowledge of the site). If the story is not really about artificial intelligence (the title only mentions AI in passing, or uses an AI keyword with another meaning), use not-ai.
+
+Themes:
+{themes}
+- not-ai: the story is not about artificial intelligence
+
+Rules:
+- Use exactly one of these labels: {labels}.
+- When a story fits several themes, pick the one a reader would consider its main subject.
+- Add a short note (at most 12 words, no commas) only when you hesitated between themes; otherwise leave it empty.
+- Answer with a single CSV code block and nothing else: the header line id,theme,note followed by exactly {count} rows, one per story, in the same order as below, keeping each id unchanged.
+
+Stories (id | title | domain):
+{stories}
+"""
+
+
+def annotation_prompt(labels: pd.DataFrame) -> str:
+    """Prompt asking an independent model to label the sample, blind to Gemini."""
+    themes = "\n".join(f"- {slug}: {THEME_GUIDE[slug]}" for slug in THEMES)
+    stories = "\n".join(f"{row.id} | {row.title} | {row.domain or 'news.ycombinator.com'}"
+                        for row in labels.itertuples(index=False))
+    return ANNOTATION_PROMPT.format(themes=themes, labels=", ".join([*THEMES, NOT_AI]),
+                                    count=len(labels), stories=stories)
+
+
 # --- Metrics ------------------------------------------------------------------
 
 def wilson_interval(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
