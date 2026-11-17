@@ -168,7 +168,7 @@ digests/          one Markdown digest per day
 first week of data: a *tuning* sample ([`eval/`](eval/), seed 42), used to find errors and
 improve the prompt, and a held-out *test* sample ([`eval/test/`](eval/test/), seed 2026),
 used only to measure the result. Each was labelled blind (without Gemini's answer) by an
-independent LLM from another vendor, given the theme definitions and the extra option
+independent model from another vendor, OpenAI's GPT-6 Astra, given the theme definitions and the extra option
 `not-ai` to flag stories the keyword filter should not have kept. Each folder holds the
 annotation prompt, the reference labels (`judge_labels.csv`), Gemini's labels per prompt
 version (`predictions.csv` for v1, `predictions_v2.csv`) and full reports with the

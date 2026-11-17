@@ -1,6 +1,6 @@
 # Classifier evaluation
 
-100 stories labelled by an independent LLM, blind to Gemini's answer.
+100 stories labelled by GPT-6 Astra (OpenAI), blind to Gemini's answer.
 Gemini's labels: `predictions.csv`.
 
 ## Summary
