@@ -7,211 +7,253 @@
 <meta name="description" content="What Hacker News talks about in AI: every AI story, labelled by theme, updated daily.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23111'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%236F93FF' stroke-width='2'/%3E%3Cpath d='M16 16 L24 10' stroke='%236F93FF' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%236F93FF'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' fill='%23FACC15' stroke='%23000' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23000' stroke-width='3'/%3E%3Cpath d='M16 16 L23 10' stroke='%23000' stroke-width='3'/%3E%3C/svg%3E">
 <style>
 :root {
-  --bg: #F7F7F8; --surface: #FFFFFF; --surface-2: #F2F3F5; --border: #E6E7EB; --border-strong: #D8DAE0;
-  --text: #0E1015; --text-2: #565E6C; --text-3: #8C93A1;
-  --accent: #3D6BFF; --accent-soft: rgba(61,107,255,.10); --glow: rgba(61,107,255,.10);
-  --up: #12A150; --up-soft: rgba(18,161,80,.10); --down: #E5484D; --down-soft: rgba(229,72,77,.10);
-  --grid: #EEEFF2; --dots: rgba(14,16,21,.07);
-  --card: #FFFFFF; --card-hi: rgba(255,255,255,0);
-  --shadow: 0 1px 2px rgba(16,24,40,.04), 0 8px 24px -12px rgba(16,24,40,.10);
+  --bg: #F4F4F5; --card: #FFFFFF; --card-2: #FAFAFA; --ink: #000000; --paper: #FFFFFF;
+  --text: #09090B; --muted: #52525B; --faint: #A1A1AA; --dot: rgba(0,0,0,.09);
+  --up: #4ADE80; --down: #F87171; --hn: #FF6600;
+  --yellow: #FACC15; --blue: #60A5FA; --green: #4ADE80; --pink: #F472B6; --purple: #A78BFA;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #07080B; --surface: #0E1015; --surface-2: #15181F; --border: #1D212A; --border-strong: #2A303B;
-    --text: #EDEFF3; --text-2: #A1A8B5; --text-3: #6B7383;
-    --accent: #7B9BFF; --accent-soft: rgba(123,155,255,.13); --glow: rgba(87,120,255,.22);
-    --up: #3DD68C; --up-soft: rgba(61,214,140,.12); --down: #FF6369; --down-soft: rgba(255,99,105,.12);
-    --grid: #171A21; --dots: rgba(255,255,255,.06);
-    --card: linear-gradient(180deg, #11141A 0%, #0C0E13 100%); --card-hi: rgba(255,255,255,.05);
-    --shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 12px 32px -16px rgba(0,0,0,.6);
+    --bg: #000000; --card: #18181B; --card-2: #27272A; --ink: #FFFFFF; --paper: #18181B;
+    --text: #FAFAFA; --muted: #A1A1AA; --faint: #71717A; --dot: rgba(255,255,255,.10);
   }
 }
 :root[data-theme="dark"] {
-  --bg: #07080B; --surface: #0E1015; --surface-2: #15181F; --border: #1D212A; --border-strong: #2A303B;
-  --text: #EDEFF3; --text-2: #A1A8B5; --text-3: #6B7383;
-  --accent: #7B9BFF; --accent-soft: rgba(123,155,255,.13); --glow: rgba(87,120,255,.22);
-  --up: #3DD68C; --up-soft: rgba(61,214,140,.12); --down: #FF6369; --down-soft: rgba(255,99,105,.12);
-  --grid: #171A21; --dots: rgba(255,255,255,.06);
-  --card: linear-gradient(180deg, #11141A 0%, #0C0E13 100%); --card-hi: rgba(255,255,255,.05);
-  --shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 12px 32px -16px rgba(0,0,0,.6);
+  --bg: #000000; --card: #18181B; --card-2: #27272A; --ink: #FFFFFF; --paper: #18181B;
+  --text: #FAFAFA; --muted: #A1A1AA; --faint: #71717A; --dot: rgba(255,255,255,.10);
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  margin: 0; color: var(--text); min-height: 100vh;
-  background: radial-gradient(900px 420px at 50% -120px, var(--glow), transparent 70%), var(--bg);
-  font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased;
+  margin: 0; background: var(--bg); color: var(--text); min-height: 100vh;
+  font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+body::before { /* dot texture */
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: 24px 24px;
+}
+::selection { background: var(--ink); color: var(--paper); }
 a { color: inherit; }
-.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
-.num, .mono { font-variant-numeric: tabular-nums; }
-.mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+.wrap { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Brutalist primitives */
+.box {
+  background: var(--card); border: 3px solid var(--ink); box-shadow: 8px 8px 0 0 var(--ink);
+  position: relative; min-width: 0;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; border: 3px solid var(--ink); background: var(--card);
+  color: var(--text); box-shadow: 4px 4px 0 0 var(--ink); padding: 6px 12px; font: 800 13px/1.2 "JetBrains Mono", monospace;
+  text-transform: uppercase; text-decoration: none; cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 0 var(--ink); }
+.btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 0 var(--ink); }
+.btn:focus-visible, .chip:focus-visible, .seg button:focus-visible, .legend button:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.btn.solid { background: var(--yellow); color: #000; }
 
 /* Header */
-.top { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.01em; text-decoration: none; }
-.logo { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--text); }
-.logo svg { width: 18px; height: 18px; }
-.nav { display: flex; gap: 4px; align-items: center; }
-.nav a { text-decoration: none; color: var(--text-2); font-size: 14px; padding: 7px 12px; border-radius: 8px; transition: background .15s, color .15s; }
-.nav a:hover { background: var(--surface-2); color: var(--text); }
-.nav a.btn { color: var(--bg); background: var(--text); font-weight: 500; margin-left: 4px; }
-.nav a.btn:hover { opacity: .88; background: var(--text); color: var(--bg); }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 22px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font: 900 18px/1 Inter, sans-serif; text-transform: uppercase; letter-spacing: -.02em; }
+.brand .mark { width: 34px; height: 34px; background: var(--yellow); border: 3px solid var(--ink); box-shadow: 3px 3px 0 0 var(--ink); display: grid; place-items: center; }
+.nav { display: flex; gap: 12px; flex-wrap: wrap; }
 
 /* Hero */
-.hero { position: relative; padding: 56px 0 36px; text-align: center; }
-.hero::before {
-  content: ""; position: absolute; inset: -40px 0 0; z-index: -1;
-  background-image: radial-gradient(var(--dots) 1px, transparent 1px); background-size: 22px 22px;
-  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, #000 30%, transparent 75%);
-          mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, #000 30%, transparent 75%);
-}
-.badge {
-  display: inline-flex; align-items: center; gap: 8px; margin: 0 0 20px; padding: 5px 12px 5px 10px;
-  border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
-  color: var(--text-2); font-size: 12.5px; font-weight: 500; box-shadow: var(--shadow);
-}
-.pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--up); box-shadow: 0 0 0 0 var(--up); animation: pulse 2.4s infinite; }
-@keyframes pulse { 0% { box-shadow: 0 0 0 0 var(--up-soft); } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
-@media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
-h1 { margin: 0 auto; font-size: clamp(32px, 5.4vw, 58px); line-height: 1.04; letter-spacing: -.045em; font-weight: 700; max-width: 820px; }
-h1 .fade { background: linear-gradient(180deg, var(--text) 30%, var(--text-3)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.lede { margin: 18px auto 0; color: var(--text-2); font-size: 17px; max-width: 640px; }
+.hero { padding: 44px 0 34px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+h1 { margin: 0; font: 900 clamp(40px, 8.2vw, 104px)/.92 Inter, sans-serif; text-transform: uppercase; letter-spacing: -.055em; }
+h1 .hl { background: var(--yellow); color: #000; padding: 0 .12em; border: 3px solid var(--ink); box-shadow: 6px 6px 0 0 var(--ink); display: inline-block; transform: rotate(-1.5deg); }
+.tagline { margin: 22px 0 0; font: 700 13px/1.6 "JetBrains Mono", monospace; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); max-width: 720px; }
+.stamp { padding: 12px 14px; font: 800 12px/1.5 "JetBrains Mono", monospace; text-transform: uppercase; text-align: right; }
+.stamp .live { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: var(--paper); padding: 2px 8px; margin-bottom: 6px; }
+.stamp .live i { width: 8px; height: 8px; background: var(--green); display: inline-block; animation: blink 1.4s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .2; } }
 
-/* Cards */
-.card {
-  position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 18px;
-  padding: 20px 22px; box-shadow: var(--shadow); min-width: 0;
-}
-.card::after { /* hairline highlight on the top edge, visible in dark mode */
-  content: ""; position: absolute; left: 24px; right: 24px; top: -1px; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--card-hi), transparent); pointer-events: none;
-}
-.card h2 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
-.card .sub { margin: 4px 0 0; color: var(--text-2); font-size: 13.5px; }
-.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
-
-/* KPI cards with sparklines */
-.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
-.kpi { padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
-.kpi .label { display: flex; align-items: center; gap: 8px; color: var(--text-2); font-size: 13px; font-weight: 500; }
-.kpi .label .ico { width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--border); }
-.kpi .label .ico svg { width: 13px; height: 13px; stroke: var(--text-2); }
-.kpi .row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 6px 10px; margin-top: 4px; }
-.kpi .value { font-size: 26px; font-weight: 650; letter-spacing: -.03em; line-height: 1.1; white-space: nowrap; display: flex; align-items: center; gap: 9px; }
-.kpi .value .dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
-.kpi svg.spark { width: 76px; height: 32px; flex: none; overflow: visible; }
-.kpi .kfoot { display: flex; align-items: center; gap: 8px; color: var(--text-3); font-size: 12.5px; }
-.delta { white-space: nowrap; flex: none; display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 999px; font-size: 12px; font-weight: 600; }
-.delta.up { color: var(--up); background: var(--up-soft); }
-.delta.down { color: var(--down); background: var(--down-soft); }
-.delta.flat { color: var(--text-2); background: var(--surface-2); }
+/* KPIs */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-bottom: 30px; }
+.kpi { padding: 16px 18px 14px; color: #000; display: flex; flex-direction: column; gap: 10px; transition: transform .15s ease, box-shadow .15s ease; }
+.kpi:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 0 var(--ink); }
+.kpi .label { font: 800 12px/1.2 "JetBrains Mono", monospace; text-transform: uppercase; letter-spacing: .08em; border-bottom: 3px solid #000; padding-bottom: 8px; }
+.kpi .value { font: 900 34px/1 Inter, sans-serif; letter-spacing: -.04em; text-transform: uppercase; }
+.kpi .row { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px 12px; flex-wrap: wrap; }
+.kpi svg.spark { width: 84px; height: 34px; overflow: visible; flex: none; }
+.kpi .kfoot { font: 700 12px/1.4 "JetBrains Mono", monospace; text-transform: uppercase; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.tagbox { display: inline-block; padding: 1px 6px; border: 2px solid #000; background: #fff; color: #000; font: 800 12px/1.3 "JetBrains Mono", monospace; white-space: nowrap; }
+.tagbox.up { background: #000; color: var(--green); }
+.tagbox.down { background: #000; color: var(--down); }
 
 /* Toolbar */
-.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; position: sticky; top: 0; z-index: 5; padding: 12px 0; margin-bottom: 2px; background: var(--bg); }
-.seg { position: relative; display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 11px; padding: 3px; }
-.seg .pill { position: absolute; top: 3px; bottom: 3px; left: 3px; border-radius: 8px; background: var(--surface); box-shadow: 0 1px 2px rgba(0,0,0,.12), 0 0 0 1px var(--border); transition: transform .25s cubic-bezier(.3,.7,.3,1), width .25s cubic-bezier(.3,.7,.3,1); }
-.seg button { position: relative; z-index: 1; border: 0; background: none; color: var(--text-2); font: inherit; font-size: 13.5px; font-weight: 500; padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: color .2s; }
-.seg button[aria-pressed="true"] { color: var(--text); }
-@media (prefers-reduced-motion: reduce) { .seg .pill { transition: none; } }
-.seg button:focus-visible, .chip:focus-visible, .more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.hint { color: var(--text-3); font-size: 13px; margin: 0; }
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; position: sticky; top: 0; z-index: 6; padding: 12px 0 14px; background: var(--bg); border-bottom: 3px solid var(--ink); margin-bottom: 30px; }
+.seg { display: inline-flex; border: 3px solid var(--ink); box-shadow: 4px 4px 0 0 var(--ink); background: var(--card); }
+.seg button { border: 0; background: none; color: var(--text); font: 800 13px/1 "JetBrains Mono", monospace; text-transform: uppercase; padding: 10px 14px; cursor: pointer; transition: background .12s, color .12s; }
+.seg button + button { border-left: 3px solid var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.seg button:not([aria-pressed="true"]):hover { background: var(--yellow); color: #000; }
+.hint { margin: 0; font: 700 12px/1.4 "JetBrains Mono", monospace; text-transform: uppercase; color: var(--muted); }
 
-/* Bento grid */
-.bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+/* Bento */
+.bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
 .span-2 { grid-column: span 2; }
 .span-3 { grid-column: 1 / -1; }
-.chart { width: 100%; height: 300px; margin-top: 12px; }
-.chart.tall { height: 360px; }
-.chart.short { height: 250px; }
+.panel { padding: 20px 22px 22px; display: flex; flex-direction: column; }
+.panel h2 { margin: 0 0 4px; font: 900 21px/1.1 Inter, sans-serif; text-transform: uppercase; letter-spacing: -.02em; border-bottom: 3px solid var(--ink); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.panel h2 small { font: 800 11px/1 "JetBrains Mono", monospace; letter-spacing: .08em; color: var(--muted); white-space: nowrap; }
+.panel .sub { margin: 10px 0 0; font: 600 12.5px/1.45 "JetBrains Mono", monospace; color: var(--muted); }
+.panel.textured::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image: radial-gradient(var(--dot) 1.5px, transparent 1.5px); background-size: 12px 12px; }
+.panel > * { position: relative; z-index: 1; }
+.chart { width: 100%; height: 320px; margin-top: 12px; }
+.chart.tall { height: 380px; }
+
+/* Bar chart (stories per day) */
+.bars { display: flex; align-items: flex-end; gap: 10px; height: 230px; margin-top: 22px; }
+.bar-col { position: relative; flex: 1; height: 100%; display: flex; align-items: flex-end; min-width: 0; }
+.bar { width: 100%; height: 0; border: 3px solid var(--ink); position: relative; overflow: hidden; cursor: pointer;
+  transition: height .7s cubic-bezier(.34,1.56,.64,1), transform .15s ease; transform-origin: bottom; }
+.bar::before { content: ""; position: absolute; inset: 0; opacity: .22; background-image: radial-gradient(#000 1px, transparent 1px); background-size: 4px 4px; }
+.bar:hover { transform: scaleY(1.04) scaleX(1.06); }
+.bar-label { position: absolute; bottom: 6px; left: 0; right: 0; text-align: center; font: 800 11px/1 "JetBrains Mono", monospace; color: rgba(0,0,0,.85); z-index: 1; }
+.bar-axis { display: flex; gap: 10px; margin-top: 8px; }
+.bar-axis span { flex: 1; text-align: center; font: 800 10.5px/1.2 "JetBrains Mono", monospace; color: var(--muted); text-transform: uppercase; min-width: 0; overflow: hidden; white-space: nowrap; }
+
+/* Donut */
+.donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; margin-top: 16px; flex: 1; justify-content: center; }
+.donut { position: relative; width: min(100%, 290px); aspect-ratio: 1; }
+.donut svg { width: 100%; height: 100%; overflow: visible; transform: rotate(-90deg); animation: spin-in .9s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes spin-in { from { transform: rotate(-270deg) scale(0); } to { transform: rotate(-90deg) scale(1); } }
+.donut path { stroke: var(--ink); stroke-width: .035; stroke-linejoin: round; cursor: pointer;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .2s, filter .2s; }
+.donut path.dim { opacity: .3; filter: grayscale(.8); }
+.donut .hole { fill: var(--card); stroke: var(--ink); stroke-width: .035; }
+.donut .center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
+.donut .center b { display: block; font: 900 34px/1 Inter, sans-serif; letter-spacing: -.03em; }
+.donut .center span { display: inline-block; margin-top: 6px; font: 800 10px/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; background: var(--ink); color: var(--paper); padding: 3px 6px; }
+.legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 100%; }
+.legend button { display: flex; align-items: center; gap: 6px; background: none; border: 2px solid transparent; padding: 5px 6px; cursor: pointer; color: var(--text); font: 800 11px/1.2 "JetBrains Mono", monospace; text-transform: uppercase; text-align: left; transition: border-color .12s, background .12s, opacity .2s; min-width: 0; }
+.legend button:hover, .legend button.on { border-color: var(--ink); background: var(--card-2); }
+.legend button.dim { opacity: .35; }
+.sw { width: 12px; height: 12px; border: 2px solid var(--ink); flex: none; display: inline-block; }
+
+/* Radar */
+.radar { width: 100%; max-width: 340px; margin: 10px auto 0; display: block; overflow: visible; }
+.radar .grid { fill: none; stroke: var(--ink); stroke-opacity: .16; stroke-width: 1.5; stroke-dasharray: 4 4; }
+.radar .axis { stroke: var(--ink); stroke-opacity: .16; stroke-width: 1.5; }
+.radar .poly { stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; transform-origin: 120px 120px; transform-box: view-box;
+  animation: pop .7s cubic-bezier(.34,1.56,.64,1) both; }
+.radar .poly.b { animation-delay: .15s; }
+@keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.radar .pt { fill: var(--card); stroke: var(--ink); stroke-width: 2.5; cursor: pointer; }
+.radar .pt.on { fill: var(--ink); }
+.radar text { font: 800 8.5px "JetBrains Mono", monospace; fill: var(--text); text-transform: uppercase; }
+.radar-key { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 12px; font: 800 11px/1 "JetBrains Mono", monospace; text-transform: uppercase; }
+.radar-key span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* Domains */
+.domains { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+.domains li { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; font: 700 12px/1.2 "JetBrains Mono", monospace; }
+.domains .track { grid-column: 1 / -1; height: 14px; border: 2px solid var(--ink); background: var(--card-2); }
+.domains .fill { height: 100%; background: var(--blue); width: 0; transition: width .8s cubic-bezier(.34,1.56,.64,1); }
+.domains li:first-child .fill { background: var(--yellow); }
 
 /* Stories */
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-2); font: inherit; font-size: 12.5px; font-weight: 500; padding: 4px 10px; border-radius: 999px; cursor: pointer; transition: border-color .15s, color .15s; }
-.chip:hover { border-color: var(--border-strong); color: var(--text); }
-.chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
-.chip .dot { width: 7px; height: 7px; border-radius: 50%; }
-ol.stories { list-style: none; margin: 14px -10px 0; padding: 0; }
-.story { display: grid; grid-template-columns: 36px 1fr auto; gap: 4px 14px; align-items: center; padding: 12px 10px; border-radius: 12px; transition: background .15s; }
-.story + .story { border-top: 1px solid var(--border); }
-.story:hover { background: var(--surface-2); }
-.story:hover + .story { border-top-color: transparent; }
-.rank { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); font-size: 12px; font-weight: 600; }
-.story a.title { font-weight: 550; text-decoration: none; line-height: 1.4; }
-.story a.title:hover { color: var(--accent); }
-.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 3px; color: var(--text-3); font-size: 12.5px; }
-.tag { display: inline-flex; align-items: center; gap: 5px; padding: 0 8px; height: 20px; border-radius: 6px; font-weight: 500; font-size: 12px; }
-.stats { display: flex; align-items: center; gap: 18px; font-size: 13px; color: var(--text-3); white-space: nowrap; }
-.stats .n { text-align: right; min-width: 64px; }
-.stats .n b { display: block; color: var(--text); font-size: 15px; font-weight: 600; }
-.stats a.hn { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border); color: var(--text-2); text-decoration: none; font-size: 13px; font-weight: 600; transition: background .15s, color .15s; }
-.stats a.hn:hover { background: #FF6600; border-color: #FF6600; color: #fff; }
-.more { margin-top: 10px; width: 100%; border: 1px dashed var(--border-strong); background: none; color: var(--text-2); font: inherit; font-size: 13.5px; padding: 10px; border-radius: 12px; cursor: pointer; }
-.more:hover { background: var(--surface-2); color: var(--text); }
-.empty { color: var(--text-3); padding: 18px 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 2px solid var(--ink); background: var(--card); color: var(--text); font: 800 11.5px/1 "JetBrains Mono", monospace; text-transform: uppercase; padding: 6px 9px; cursor: pointer; box-shadow: 2px 2px 0 0 var(--ink); transition: transform .1s, box-shadow .1s; }
+.chip:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 0 var(--ink); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+ol.stories { list-style: none; margin: 16px 0 0; padding: 0; }
+.story { display: grid; grid-template-columns: 44px 1fr auto; gap: 6px 16px; align-items: center; padding: 14px 8px; border-top: 3px solid var(--ink); transition: background .12s; }
+.story:hover { background: var(--card-2); }
+.rank { width: 38px; height: 38px; display: grid; place-items: center; border: 3px solid var(--ink); font: 900 15px/1 Inter, sans-serif; background: var(--card); }
+.story:nth-child(1) .rank { background: var(--yellow); color: #000; }
+.story:nth-child(2) .rank { background: var(--blue); color: #000; }
+.story:nth-child(3) .rank { background: var(--pink); color: #000; }
+.story a.title { font: 800 15.5px/1.35 Inter, sans-serif; text-decoration: none; letter-spacing: -.01em; }
+.story a.title:hover { background: var(--yellow); color: #000; box-shadow: 0 0 0 2px var(--yellow); }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 6px; font: 700 11.5px/1.2 "JetBrains Mono", monospace; color: var(--muted); text-transform: uppercase; }
+.ttag { padding: 2px 6px; border: 2px solid var(--ink); color: #000; font-weight: 800; }
+.stats { display: flex; align-items: center; gap: 16px; }
+.stat { text-align: right; font: 700 10.5px/1.2 "JetBrains Mono", monospace; text-transform: uppercase; color: var(--muted); }
+.stat b { display: block; font: 900 20px/1 Inter, sans-serif; color: var(--text); letter-spacing: -.02em; }
+.hnbtn { width: 38px; height: 38px; display: grid; place-items: center; background: var(--hn); color: #fff; border: 3px solid var(--ink); box-shadow: 3px 3px 0 0 var(--ink); font: 900 16px/1 Inter, sans-serif; text-decoration: none; transition: transform .1s, box-shadow .1s; flex: none; }
+.hnbtn:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 0 var(--ink); }
+.more { margin-top: 18px; width: 100%; justify-content: center; }
+.empty { padding: 18px 8px; font: 700 13px "JetBrains Mono", monospace; color: var(--muted); border-top: 3px solid var(--ink); }
+
+/* Tooltip */
+#tip { position: fixed; z-index: 50; pointer-events: none; background: var(--ink); color: var(--paper); padding: 6px 10px; font: 800 12px/1.45 "JetBrains Mono", monospace; text-transform: uppercase; opacity: 0; transform: translateY(6px); transition: opacity .12s, transform .12s; max-width: 260px; }
+#tip.show { opacity: 1; transform: none; }
 
 /* Footer */
-.foot { color: var(--text-2); font-size: 13.5px; padding: 44px 24px 64px; display: grid; grid-template-columns: 2fr 1fr; gap: 32px; border-top: 1px solid var(--border); margin-top: 48px; }
-.foot h3 { margin: 0 0 6px; font-size: 13px; color: var(--text); font-weight: 600; }
+.foot { margin: 46px 0 60px; padding: 22px 24px; display: grid; grid-template-columns: 2fr 1fr; gap: 28px; font: 600 13px/1.6 "JetBrains Mono", monospace; color: var(--muted); }
+.foot h3 { margin: 0 0 8px; font: 900 15px/1 Inter, sans-serif; text-transform: uppercase; color: var(--text); }
 .foot p { margin: 0 0 8px; }
-.foot a { color: var(--accent); text-decoration: none; }
+.foot a { color: var(--text); font-weight: 800; text-decoration: underline; text-decoration-thickness: 3px; text-decoration-color: var(--yellow); text-underline-offset: 3px; }
 
-@media (max-width: 960px) {
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 1000px) {
   .kpis { grid-template-columns: 1fr 1fr; }
   .bento { grid-template-columns: 1fr 1fr; }
-  .span-2 { grid-column: 1 / -1; }
+  .span-2, .span-3 { grid-column: 1 / -1; }
+  .hero { grid-template-columns: 1fr; }
+  .stamp { text-align: left; justify-self: start; }
 }
-@media (max-width: 640px) {
-  .wrap { padding: 0 16px; }
-  .nav a.hide-sm { display: none; }
-  .hero { padding: 36px 0 24px; }
+@media (max-width: 680px) {
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  .nav .btn.hide-sm { display: none; }
+  .box { box-shadow: 5px 5px 0 0 var(--ink); }
+  .kpi:hover { box-shadow: 7px 7px 0 0 var(--ink); }
+  .kpis, .bento { gap: 18px; }
   .bento { grid-template-columns: 1fr; }
-  .kpis { gap: 10px; }
-  .kpi { padding: 14px; }
+  .kpi { padding: 12px 12px 10px; }
   .kpi .value { font-size: 22px; }
-  .kpi .row { flex-direction: column; align-items: stretch; gap: 6px; }
+  .kpi .row { flex-direction: column; align-items: stretch; }
   .kpi svg.spark { width: 100%; height: 26px; }
-  .card { padding: 16px; border-radius: 16px; }
-  .toolbar .hint { display: none; }
+  .panel { padding: 16px; }
+  .panel h2 { font-size: 18px; }
+  .hint { display: none; }
   .chart.tall { height: 340px; }
-  .story { grid-template-columns: 30px 1fr; align-items: start; }
-  .stats { grid-column: 2; gap: 14px; }
-  .stats .n { text-align: left; min-width: 0; }
-  .stats .n b { display: inline; margin-right: 3px; }
+  .story { grid-template-columns: 38px 1fr; align-items: start; }
+  .rank { width: 32px; height: 32px; font-size: 13px; }
+  .stats { grid-column: 2; justify-content: flex-start; }
+  .stat { text-align: left; }
+  .legend { grid-template-columns: 1fr 1fr; }
   .foot { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
-<header class="wrap top">
+<header class="top wrap">
   <a class="brand" href="#">
-    <span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><circle cx="12" cy="12" r="8" stroke="var(--bg)" stroke-opacity=".55" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="var(--bg)" stroke-opacity=".35" stroke-width="1.4"/><path d="M12 12 L19 7" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="1.8" fill="var(--bg)"/></svg></span>
-    <span>AI News Radar</span>
+    <span class="mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 12 L18 7"/></svg></span>
+    AI News Radar
   </a>
   <nav class="nav">
-    <a class="hide-sm" id="method-link" href="#">Method</a>
-    <a class="hide-sm" id="digest-link" href="#">Daily digest</a>
-    <a class="btn" id="repo-link" href="#">GitHub</a>
+    <a class="btn hide-sm" id="method-link" href="#">Method</a>
+    <a class="btn hide-sm" id="digest-link" href="#">Digest</a>
+    <a class="btn solid" id="repo-link" href="#">GitHub ↗</a>
   </nav>
 </header>
 
 <main class="wrap">
   <section class="hero">
-    <p class="badge"><span class="pulse"></span><span id="updated"></span></p>
-    <h1>What Hacker News <span class="fade">talks about in AI</span></h1>
-    <p class="lede">Every AI story posted on Hacker News, collected daily from the official API and labelled by theme with Gemini. <span id="range"></span></p>
+    <div>
+      <h1>What HN says<br>about <span class="hl">AI</span></h1>
+      <p class="tagline">Every AI story posted on Hacker News, collected daily from the official API and labelled by theme with Gemini. <span id="range"></span></p>
+    </div>
+    <div class="box stamp"><span class="live"><i></i>Live</span><br><span id="updated"></span></div>
   </section>
 
   <section class="kpis" id="kpis" aria-label="Key figures"></section>
 
   <div class="toolbar">
-    <div class="seg" role="group" aria-label="Measure" id="seg">
-      <span class="pill" aria-hidden="true"></span>
+    <div class="seg" role="group" aria-label="Measure">
       <button type="button" data-measure="volume" aria-pressed="true">Stories</button>
       <button type="button" data-measure="attention" aria-pressed="false">Points + comments</button>
     </div>
@@ -219,48 +261,56 @@ ol.stories { list-style: none; margin: 14px -10px 0; padding: 0; }
   </div>
 
   <div class="bento">
-    <section class="card span-2">
-      <h2>Theme share per day</h2>
-      <p class="sub" id="share-sub"></p>
+    <section class="box panel span-2">
+      <h2>Theme share per day <small id="share-unit"></small></h2>
+      <p class="sub">Each bar is one UTC day. Click the legend to hide a theme.</p>
       <div id="chart-share" class="chart tall" role="img" aria-label="Stacked bar chart of theme shares per day"></div>
     </section>
-    <section class="card">
-      <h2>Rising and falling</h2>
-      <p class="sub" id="momentum-sub"></p>
-      <div id="chart-momentum" class="chart tall" role="img" aria-label="Change in theme share"></div>
+
+    <section class="box panel textured">
+      <h2>Theme mix <small id="donut-unit"></small></h2>
+      <div class="donut-wrap">
+        <div class="donut" id="donut"></div>
+        <div class="legend" id="donut-legend"></div>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>Posted about vs. discussed</h2>
+    <section class="box panel">
+      <h2>Posted vs. discussed</h2>
       <p class="sub">Share of stories and of points + comments per theme, whole period.</p>
-      <div id="chart-mix" class="chart" role="img" aria-label="Share of stories and of attention per theme"></div>
+      <svg class="radar" id="radar" viewBox="0 0 240 240" role="img" aria-label="Radar chart of stories and attention per theme"></svg>
+      <div class="radar-key"><span><i class="sw" style="background:var(--blue)"></i>Stories</span><span><i class="sw" style="background:var(--yellow)"></i>Points + comments</span></div>
     </section>
-    <section class="card">
-      <h2>AI stories per day</h2>
+
+    <section class="box panel">
+      <h2>Rising &amp; falling</h2>
+      <p class="sub" id="momentum-sub"></p>
+      <div id="chart-momentum" class="chart" role="img" aria-label="Change in theme share"></div>
+    </section>
+
+    <section class="box panel textured">
+      <h2>Stories per day</h2>
       <p class="sub">Titles matching the AI keyword filter.</p>
-      <div id="chart-volume" class="chart" role="img" aria-label="AI stories per day"></div>
+      <div class="bars" id="bars"></div>
+      <div class="bar-axis" id="bar-axis"></div>
     </section>
-    <section class="card">
+
+    <section class="box panel span-2">
+      <h2>Most discussed <small>points + comments</small></h2>
+      <div class="chips" id="chips" role="group" aria-label="Filter by theme"></div>
+      <ol class="stories" id="stories"></ol>
+      <button type="button" class="btn more" id="more" hidden>Show more ↓</button>
+    </section>
+
+    <section class="box panel">
       <h2>Most linked sites</h2>
       <p class="sub">Link domains, Ask HN posts excluded.</p>
-      <div id="chart-domains" class="chart" role="img" aria-label="Most linked domains"></div>
-    </section>
-
-    <section class="card span-3">
-      <div class="card-head">
-        <div>
-          <h2>Most discussed stories</h2>
-          <p class="sub">Ranked by points + comments over the period.</p>
-        </div>
-        <div class="chips" id="chips" role="group" aria-label="Filter by theme"></div>
-      </div>
-      <ol class="stories" id="stories"></ol>
-      <button type="button" class="more" id="more" hidden>Show more</button>
+      <ul class="domains" id="domains"></ul>
     </section>
   </div>
 </main>
 
-<footer class="wrap foot">
+<footer class="wrap"><div class="box foot">
   <div>
     <h3>How it works</h3>
     <p>Every day a GitHub Action reads the top, new and best stories from the <a href="https://github.com/HackerNews/API">Hacker News API</a>, keeps those whose title matches a list of AI keywords, and asks Gemini to label each one with one of nine themes. Only complete UTC days are shown.</p>
@@ -268,135 +318,122 @@ ol.stories { list-style: none; margin: 14px -10px 0; padding: 0; }
   </div>
   <div>
     <h3>Links</h3>
-    <p><a id="repo-link-2" href="#">Source code and README</a><br><a id="digest-link-2" href="#">Latest daily digest</a><br><a id="method-link-2" href="#">Classifier evaluation</a></p>
+    <p><a id="repo-link-2" href="#">Source code</a><br><a id="digest-link-2" href="#">Latest daily digest</a><br><a id="method-link-2" href="#">Classifier evaluation</a></p>
   </div>
-</footer>
+</div></footer>
+
+<div id="tip" role="tooltip"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
-<script id="radar-data" type="application/json">{"generated_at": "2026-11-17 13:31 UTC", "start": "2026-11-12", "end": "2026-11-16", "days": ["2026-11-12", "2026-11-13", "2026-11-14", "2026-11-15", "2026-11-16"], "total": 627, "themes": [{"slug": "models", "label": "Models", "color": "#4F7CF7"}, {"slug": "agents", "label": "Agents", "color": "#F2994A"}, {"slug": "rag", "label": "RAG", "color": "#27AE60"}, {"slug": "dev-tools", "label": "Dev tools", "color": "#9B51E0"}, {"slug": "security", "label": "Security", "color": "#EB5757"}, {"slug": "research", "label": "Research", "color": "#2DB7B0"}, {"slug": "business", "label": "Business", "color": "#E2B93B"}, {"slug": "regulation", "label": "Regulation", "color": "#A0785A"}, {"slug": "other", "label": "Other", "color": "#9AA3AE"}], "volume": [146, 140, 131, 106, 104], "share": {"volume": {"models": [0.0685, 0.0214, 0.0611, 0.0849, 0.0481], "agents": [0.089, 0.1143, 0.1374, 0.0943, 0.0962], "rag": [0.0205, 0.0143, 0.0076, 0.0, 0.0096], "dev-tools": [0.137, 0.1714, 0.1679, 0.2358, 0.2115], "security": [0.1027, 0.0286, 0.0305, 0.0849, 0.0577], "research": [0.0616, 0.0857, 0.1374, 0.0943, 0.0096], "business": [0.2055, 0.2286, 0.1603, 0.1321, 0.2115], "regulation": [0.0479, 0.0571, 0.0076, 0.0377, 0.1154], "other": [0.2671, 0.2786, 0.2901, 0.2358, 0.2404]}, "attention": {"models": [0.3035, 0.0014, 0.0129, 0.0141, 0.004], "agents": [0.0033, 0.0706, 0.0116, 0.0141, 0.0197], "rag": [0.0016, 0.0003, 0.0003, 0.0, 0.0007], "dev-tools": [0.1026, 0.029, 0.2131, 0.0651, 0.4515], "security": [0.009, 0.0009, 0.0021, 0.0127, 0.0328], "research": [0.0024, 0.1359, 0.0608, 0.1025, 0.0018], "business": [0.4178, 0.2812, 0.5096, 0.0761, 0.3069], "regulation": [0.0099, 0.016, 0.0018, 0.0035, 0.043], "other": [0.1499, 0.4646, 0.1878, 0.712, 0.1396]}}, "totals": [{"theme": "models", "stories": 35, "engagement": 2227}, {"theme": "agents", "stories": 67, "engagement": 628}, {"theme": "rag", "stories": 7, "engagement": 16}, {"theme": "dev-tools", "stories": 113, "engagement": 3141}, {"theme": "security", "stories": 38, "engagement": 203}, {"theme": "research", "stories": 50, "engagement": 1443}, {"theme": "business", "stories": 119, "engagement": 7769}, {"theme": "regulation", "stories": 32, "engagement": 310}, {"theme": "other", "stories": 166, "engagement": 7237}], "window": 2, "momentum": {"volume": [{"theme": "dev-tools", "recent": 0.2238, "previous": 0.1697, "change": 5.41, "stories": 47}, {"theme": "regulation", "recent": 0.0762, "previous": 0.0332, "change": 4.3, "stories": 16}, {"theme": "security", "recent": 0.0714, "previous": 0.0295, "change": 4.19, "stories": 15}, {"theme": "models", "recent": 0.0667, "previous": 0.0406, "change": 2.61, "stories": 14}, {"theme": "rag", "recent": 0.0048, "previous": 0.0111, "change": -0.63, "stories": 1}, {"theme": "business", "recent": 0.1714, "previous": 0.1956, "change": -2.41, "stories": 36}, {"theme": "agents", "recent": 0.0952, "previous": 0.1255, "change": -3.02, "stories": 20}, {"theme": "other", "recent": 0.2381, "previous": 0.2841, "change": -4.6, "stories": 50}, {"theme": "research", "recent": 0.0524, "previous": 0.1107, "change": -5.83, "stories": 11}], "attention": [{"theme": "dev-tools", "recent": 0.255, "previous": 0.0961, "change": 15.89, "stories": 47}, {"theme": "other", "recent": 0.4307, "previous": 0.3637, "change": 6.7, "stories": 50}, {"theme": "security", "recent": 0.0226, "previous": 0.0013, "change": 2.12, "stories": 15}, {"theme": "regulation", "recent": 0.0229, "previous": 0.0109, "change": 1.21, "stories": 16}, {"theme": "models", "recent": 0.0091, "previous": 0.0056, "change": 0.36, "stories": 14}, {"theme": "rag", "recent": 0.0004, "previous": 0.0003, "change": 0.01, "stories": 1}, {"theme": "agents", "recent": 0.0168, "previous": 0.0491, "change": -3.22, "stories": 20}, {"theme": "research", "recent": 0.053, "previous": 0.1085, "change": -5.55, "stories": 11}, {"theme": "business", "recent": 0.1895, "previous": 0.3645, "change": -17.5, "stories": 36}]}, "stories": [{"day": "2026-11-15", "theme": "other", "title": "All AI-generated code should be Open Source", "url": "https://jakub.jankiewicz.org/blog/ai-code-open-source/", "hn_url": "https://news.ycombinator.com/item?id=50507303", "domain": "jakub.jankiewicz.org", "score": 1274, "comments": 664}, {"day": "2026-11-12", "theme": "business", "title": "Anthropic IPO", "url": "https://ipo.anthropic.com/us/", "hn_url": "https://news.ycombinator.com/item?id=50465829", "domain": "ipo.anthropic.com", "score": 1005, "comments": 921}, {"day": "2026-11-14", "theme": "business", "title": "Nvidia allegedly engineered scarcity by funding AI startups to buy its GPUs", "url": "https://www.techpowerup.com/354814/nvidia-allegedly-engineered-scarcity-by-funding-ai-startups-to-buy-its-gpus", "hn_url": "https://news.ycombinator.com/item?id=50493251", "domain": "techpowerup.com", "score": 1112, "comments": 649}, {"day": "2026-11-13", "theme": "other", "title": "Jonathan Blow – If AI solved coding, why is my software still the same? [video]", "url": "https://www.youtube.com/watch?v=IRK8h67ol7Q", "hn_url": "https://news.ycombinator.com/item?id=50484658", "domain": "youtube.com", "score": 493, "comments": 740}, {"day": "2026-11-16", "theme": "dev-tools", "title": "Windows 11 is collecting data on which coding agents and developer tools you use", "url": "https://xusheng.dev/posts/windows-coding-agent-telemetry/", "hn_url": "https://news.ycombinator.com/item?id=50524736", "domain": "xusheng.dev", "score": 652, "comments": 511}, {"day": "2026-11-12", "theme": "models", "title": "Gemini 4 Hydrogen", "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/", "hn_url": "https://news.ycombinator.com/item?id=50471431", "domain": "blog.google", "score": 572, "comments": 353}, {"day": "2026-11-13", "theme": "business", "title": "Elevated errors on claude.ai, Claude Code, and platform.claude.com", "url": "https://status.claude.com/incidents/nn11wk485zfn", "hn_url": "https://news.ycombinator.com/item?id=50481187", "domain": "status.claude.com", "score": 493, "comments": 393}, {"day": "2026-11-12", "theme": "other", "title": "Claude Code and Codex reverse engineered my 1994 Jeep's ECU over a $3 Arduino [video]", "url": "https://www.youtube.com/watch?v=WPj3aQ-xxpI", "hn_url": "https://news.ycombinator.com/item?id=50463399", "domain": "youtube.com", "score": 453, "comments": 239}, {"day": "2026-11-12", "theme": "models", "title": "Gemini 4 Hydrogen and Orchestrator", "url": "https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity/", "hn_url": "https://news.ycombinator.com/item?id=50472260", "domain": "antigravity.google", "score": 507, "comments": 165}, {"day": "2026-11-12", "theme": "dev-tools", "title": "I'm making LLMs work on small and old devices", "url": "https://github.com/hyperionaidev/smolmaxxing/", "hn_url": "https://news.ycombinator.com/item?id=50468888", "domain": "github.com", "score": 483, "comments": 180}, {"day": "2026-11-12", "theme": "business", "title": "Chinese frontier AI models carry the fingerprint of export-controlled GPUs", "url": "https://unemploymentlabs.com/checkpoint-forensics", "hn_url": "https://news.ycombinator.com/item?id=50474883", "domain": "unemploymentlabs.com", "score": 451, "comments": 195}, {"day": "2026-11-13", "theme": "other", "title": "AI is destroying the trust between writers and readers", "url": "https://www.theatlantic.com/books/2026/11/ai-literary-scams-amazon/689391/", "hn_url": "https://news.ycombinator.com/item?id=50481870", "domain": "theatlantic.com", "score": 371, "comments": 239}, {"day": "2026-11-13", "theme": "research", "title": "AI unlocks Gödel's notebooks, said to contain hundreds of proved theorems", "url": "https://www.theguardian.com/science/2026/nov/13/kurt-godel-notebooks-ai-helps-unlock-hidden-discoveries-man-who-transformed-maths", "hn_url": "https://news.ycombinator.com/item?id=50486748", "domain": "theguardian.com", "score": 443, "comments": 111}, {"day": "2026-11-12", "theme": "models", "title": "Edge0-145B: Frontier AI Capabilities on Your Own Computer", "url": "https://edge0.ai/blog/introducing-edge0-145b-frontier-ai-capabilities-on-your-own-computer", "hn_url": "https://news.ycombinator.com/item?id=50475713", "domain": "edge0.ai", "score": 357, "comments": 105}, {"day": "2026-11-13", "theme": "agents", "title": "Brave Search API now accepts agentic payments via the x402 protocol", "url": "https://brave.com/blog/search-api-agentic-payments/", "hn_url": "https://news.ycombinator.com/item?id=50477649", "domain": "brave.com", "score": 262, "comments": 151}, {"day": "2026-11-13", "theme": "other", "title": "Why is Google cutting off Search from AI-free schools? Here are some theories", "url": "https://text.npr.org/nx-s1-6029408", "hn_url": "https://news.ycombinator.com/item?id=50484960", "domain": "text.npr.org", "score": 197, "comments": 197}, {"day": "2026-11-13", "theme": "business", "title": "Claude Is Down", "url": "https://status.claude.com/history", "hn_url": "https://news.ycombinator.com/item?id=50481220", "domain": "status.claude.com", "score": 196, "comments": 170}, {"day": "2026-11-14", "theme": "other", "title": "The Claude Delusion", "url": "https://www.netmeister.org/blog/claude-delusion.html", "hn_url": "https://news.ycombinator.com/item?id=50496921", "domain": "netmeister.org", "score": 143, "comments": 180}, {"day": "2026-11-14", "theme": "dev-tools", "title": "Show HN: DeepSeek V3 in ~200 lines of pure Jax", "url": "https://github.com/Vaibhaav-Tiwari/deepseek-v3-jax", "hn_url": "https://news.ycombinator.com/item?id=50497589", "domain": "github.com", "score": 276, "comments": 30}, {"day": "2026-11-13", "theme": "other", "title": "No AI Slop: A Manifesto", "url": "https://www.slopmanifesto.com/", "hn_url": "https://news.ycombinator.com/item?id=50488769", "domain": "slopmanifesto.com", "score": 178, "comments": 99}, {"day": "2026-11-15", "theme": "research", "title": "Understanding Positional Embeddings in Modern LLMs", "url": "https://magazine.sebastianraschka.com/p/understanding-positional-embeddings", "hn_url": "https://news.ycombinator.com/item?id=50506376", "domain": "magazine.sebastianraschka.com", "score": 245, "comments": 27}, {"day": "2026-11-13", "theme": "business", "title": "OpenAI disbands its robotics team as its general models start running robots", "url": "https://fortune.com/2026/11/13/openai-disbands-robotics-team-as-its-general-models-start-running-robots/", "hn_url": "https://news.ycombinator.com/item?id=50487184", "domain": "fortune.com", "score": 179, "comments": 73}, {"day": "2026-11-14", "theme": "dev-tools", "title": "Serving GLM-5.3 at 607.8 tok/s across two Nvidia DGX stations with vLLM", "url": "https://developer.nvidia.com/blog/when-one-gpu-isnt-enough-serving-glm-5-3-across-two-nvidia-dgx-stations-with-vllm/", "hn_url": "https://news.ycombinator.com/item?id=50497155", "domain": "developer.nvidia.com", "score": 149, "comments": 71}, {"day": "2026-11-13", "theme": "other", "title": "Claude Meetings", "url": "https://claude.com/resources/articles/claude-meetings", "hn_url": "https://news.ycombinator.com/item?id=50491097", "domain": "claude.com", "score": 113, "comments": 89}, {"day": "2026-11-14", "theme": "dev-tools", "title": "Anthropic upgrades Claude Code Projects to run parallel AI workers", "url": "https://claude.com/resources/articles/projects-redesigned", "hn_url": "https://news.ycombinator.com/item?id=50492141", "domain": "claude.com", "score": 98, "comments": 91}, {"day": "2026-11-16", "theme": "business", "title": "\"Who is Hiring?\" postings stuck near 12-year lows as AI reaches half of all jobs", "url": "https://www.hntrends.com/2026/november.html", "hn_url": "https://news.ycombinator.com/item?id=50512950", "domain": "hntrends.com", "score": 94, "comments": 86}, {"day": "2026-11-14", "theme": "research", "title": "A visual explanation of reinforcement learning", "url": "https://aatishb.com/myriad/how-brains-learn/", "hn_url": "https://news.ycombinator.com/item?id=50496885", "domain": "aatishb.com", "score": 169, "comments": 9}, {"day": "2026-11-13", "theme": "research", "title": "What thousands of conversations look like inside a language model", "url": "https://operator0x.com/field-notes/qwen-conversation-state-space/", "hn_url": "https://news.ycombinator.com/item?id=50481321", "domain": "operator0x.com", "score": 130, "comments": 31}, {"day": "2026-11-13", "theme": "research", "title": "The avalanche that hit math is coming for AI development", "url": "https://www.dwarkesh.com/p/rsi", "hn_url": "https://news.ycombinator.com/item?id=50487854", "domain": "dwarkesh.com", "score": 59, "comments": 100}, {"day": "2026-11-16", "theme": "other", "title": "Ask HN: If AI tools are so good, why isn't your bug backlog empty?", "url": "https://news.ycombinator.com/item?id=50520076", "hn_url": "https://news.ycombinator.com/item?id=50520076", "domain": "", "score": 69, "comments": 88}, {"day": "2026-11-12", "theme": "business", "title": "Why You Should Expect an AI Crash", "url": "https://www.economist.com/leaders/2026/11/12/why-you-should-expect-an-ai-crash", "hn_url": "https://news.ycombinator.com/item?id=50475735", "domain": "economist.com", "score": 81, "comments": 62}, {"day": "2026-11-12", "theme": "other", "title": "AI is turning Apple's app review process into a nightmare for synth developers", "url": "https://synthanatomy.com/2026/11/ai-is-turning-apples-app-review-process-into-a-nightmare-for-developers.html", "hn_url": "https://news.ycombinator.com/item?id=50474311", "domain": "synthanatomy.com", "score": 73, "comments": 69}, {"day": "2026-11-15", "theme": "business", "title": "Parents pay $75k for Alpha's AI school. Half of its students missed math target", "url": "https://fortune.com/2026/11/14/alpha-school-ai-students-tuition-learning-goals/", "hn_url": "https://news.ycombinator.com/item?id=50509953", "domain": "fortune.com", "score": 69, "comments": 67}, {"day": "2026-11-16", "theme": "business", "title": "How Billions in Safe Insurance Money Is Being Bet on A.I. Debt", "url": "https://www.nytimes.com/2026/11/16/business/insurance-ai-debt.html", "hn_url": "https://news.ycombinator.com/item?id=50520148", "domain": "nytimes.com", "score": 88, "comments": 48}, {"day": "2026-11-16", "theme": "business", "title": "Generative AI Usage in the Games Industry", "url": "https://www.gameworkers.co.uk/ai-manifesto/", "hn_url": "https://news.ycombinator.com/item?id=50519043", "domain": "gameworkers.co.uk", "score": 42, "comments": 94}, {"day": "2026-11-16", "theme": "business", "title": "ChatGPT Wallet", "url": "https://openai.com/index/introducing-chatgpt-wallet/", "hn_url": "https://news.ycombinator.com/item?id=50518501", "domain": "openai.com", "score": 46, "comments": 80}, {"day": "2026-11-14", "theme": "other", "title": "Ask HN: What are the most useful, concrete AI skills to independently learn?", "url": "https://news.ycombinator.com/item?id=50494696", "hn_url": "https://news.ycombinator.com/item?id=50494696", "domain": "", "score": 76, "comments": 49}, {"day": "2026-11-16", "theme": "other", "title": "Caltech professor no longer grades homework's because everyone uses AI", "url": "https://www.businessinsider.com/ai-math-class-university-homework-caltech-careers-2026-11", "hn_url": "https://news.ycombinator.com/item?id=50523022", "domain": "businessinsider.com", "score": 48, "comments": 59}, {"day": "2026-11-13", "theme": "business", "title": "Amodei Says AI Will Cure Cancer in a Decade. Doctors Are Skeptical", "url": "https://www.businessinsider.com/dario-amodei-anthropic-cancer-cure-ipo-roadshow-backlash-doctors-2026-11", "hn_url": "https://news.ycombinator.com/item?id=50484110", "domain": "businessinsider.com", "score": 31, "comments": 70}, {"day": "2026-11-14", "theme": "other", "title": "Claude asked to renumber pages deletes professor's syllabus, year of notes", "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/rogue-claude-ai-tasked-with-renumbering-pages-accidentally-deletes-law-professors-entire-syllabus-one-year-of-lecture-notes-youre-right-to-be-angry-i-deleted-your-files-through-my-own-carelessness-humbled-agent-admits", "hn_url": "https://news.ycombinator.com/item?id=50499114", "domain": "tomshardware.com", "score": 39, "comments": 61}, {"day": "2026-11-13", "theme": "other", "title": "Is there a 'right amount' of AI?", "url": "https://coyotetracks.org/blog/right-amount-of-ai/", "hn_url": "https://news.ycombinator.com/item?id=50480659", "domain": "coyotetracks.org", "score": 36, "comments": 62}, {"day": "2026-11-13", "theme": "regulation", "title": "Are we just going to ignore that books are destroyed for AI?", "url": "https://www.forbes.com/sites/maryroeloffs/2026/08/17/ai-companies-are-buying-and-destroying-antique-books-heres-why/", "hn_url": "https://news.ycombinator.com/item?id=50487469", "domain": "forbes.com", "score": 51, "comments": 40}, {"day": "2026-11-13", "theme": "other", "title": "Artificial Intelligence for the Z80", "url": "https://www.dfsantos.com/en/libro-ia-z80", "hn_url": "https://news.ycombinator.com/item?id=50485275", "domain": "dfsantos.com", "score": 83, "comments": 8}, {"day": "2026-11-13", "theme": "dev-tools", "title": "DeepSeek Ultrafast", "url": "https://github.com/basetenlabs/deepseek-ultrafast", "hn_url": "https://news.ycombinator.com/item?id=50486914", "domain": "github.com", "score": 71, "comments": 18}, {"day": "2026-11-13", "theme": "other", "title": "Ask HN: Can anyone name anything new that AI has done?", "url": "https://news.ycombinator.com/item?id=50484426", "hn_url": "https://news.ycombinator.com/item?id=50484426", "domain": "", "score": 27, "comments": 48}, {"day": "2026-11-16", "theme": "business", "title": "First phase of embedded assessments at OpenAI", "url": "https://openai.com/index/our-first-phase-of-embedded-assessments/", "hn_url": "https://news.ycombinator.com/item?id=50519153", "domain": "openai.com", "score": 55, "comments": 18}, {"day": "2026-11-14", "theme": "business", "title": "Smuggling of 1.5M AI GPUs could be the cause of Huang's departure", "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/mass-smuggling-of-nvidia-ai-gpus-could-be-the-underlying-cause-of-jensen-huangs-departure-analysts-claim-more-than-1-5-gigawatts-of-banned-chips-tracked-to-china-despite-export-controls", "hn_url": "https://news.ycombinator.com/item?id=50498051", "domain": "tomshardware.com", "score": 43, "comments": 25}, {"day": "2026-11-15", "theme": "dev-tools", "title": "Show HN: db-branch – database branches in seconds for AI agents and CI, via ZFS", "url": "https://github.com/db-branch/db-branch", "hn_url": "https://news.ycombinator.com/item?id=50506940", "domain": "github.com", "score": 45, "comments": 16}, {"day": "2026-11-12", "theme": "other", "title": "Show HN: AI Red Lines – write down what would make you act on AI", "url": "https://yourairedlines.com", "hn_url": "https://news.ycombinator.com/item?id=50467880", "domain": "yourairedlines.com", "score": 32, "comments": 29}, {"day": "2026-11-13", "theme": "business", "title": "Tell HN: Claude Code Is Down", "url": "https://news.ycombinator.com/item?id=50480909", "hn_url": "https://news.ycombinator.com/item?id=50480909", "domain": "", "score": 37, "comments": 21}, {"day": "2026-11-15", "theme": "dev-tools", "title": "Show HN: Turbo-Browser-MCP – Batch forms, DOM deltas and submit guards for MCP", "url": "https://github.com/Tthanh2k6/turbo-browser-mcp", "hn_url": "https://news.ycombinator.com/item?id=50503930", "domain": "github.com", "score": 49, "comments": 9}, {"day": "2026-11-16", "theme": "security", "title": "FBI says Artex AI open-source hacking tool used to breach networks", "url": "https://techcrunch.com/2026/11/16/fbi-says-artex-ai-open-source-hacking-tool-used-to-breach-networks-in-under-three-hours/", "hn_url": "https://news.ycombinator.com/item?id=50520796", "domain": "techcrunch.com", "score": 46, "comments": 10}, {"day": "2026-11-13", "theme": "business", "title": "Claude OAuth Failures", "url": "https://news.ycombinator.com/item?id=50480936", "hn_url": "https://news.ycombinator.com/item?id=50480936", "domain": "", "score": 27, "comments": 24}, {"day": "2026-11-16", "theme": "business", "title": "Nvidia's Days as an Open Checkbook for the AI Economy Are Numbered", "url": "https://www.wsj.com/tech/ai/nvidias-days-as-an-open-checkbook-for-the-ai-economy-are-numbered-90c7b388", "hn_url": "https://news.ycombinator.com/item?id=50513876", "domain": "wsj.com", "score": 38, "comments": 10}, {"day": "2026-11-12", "theme": "other", "title": "AI Models Know What Women, Peace and Security Is. They Just Don't Bring It Up", "url": "https://blog.cip.org/p/ai-models-know-what-women-peace-and", "hn_url": "https://news.ycombinator.com/item?id=50470975", "domain": "blog.cip.org", "score": 21, "comments": 25}, {"day": "2026-11-16", "theme": "business", "title": "Reports of AI-related child sexual abuse material rise 8,400% in two years", "url": "https://www.theguardian.com/technology/2026/nov/16/ai-related-child-sexual-abuse-material-rise-exploitation-deepfakes", "hn_url": "https://news.ycombinator.com/item?id=50513713", "domain": "theguardian.com", "score": 18, "comments": 26}, {"day": "2026-11-12", "theme": "business", "title": "Jensen Huang Was the Face of the A.I. Boom Powering the U.S. Economy", "url": "https://www.nytimes.com/2026/11/12/business/economy/jensen-huang-economy-nvidia-ai.html", "hn_url": "https://news.ycombinator.com/item?id=50468904", "domain": "nytimes.com", "score": 25, "comments": 16}, {"day": "2026-11-16", "theme": "business", "title": "The Fed Is Worried AI Agents Could Trigger a Bank Run", "url": "https://gizmodo.com/the-fed-is-worried-ai-agents-could-trigger-a-bank-run-2000840566", "hn_url": "https://news.ycombinator.com/item?id=50523346", "domain": "gizmodo.com", "score": 27, "comments": 12}, {"day": "2026-11-14", "theme": "business", "title": "Open-source AI without Jensen", "url": "https://www.interconnects.ai/p/open-source-ai-without-jensen", "hn_url": "https://news.ycombinator.com/item?id=50496590", "domain": "interconnects.ai", "score": 27, "comments": 7}, {"day": "2026-11-13", "theme": "business", "title": "Claude AI Is Down", "url": "https://news.ycombinator.com/item?id=50480941", "hn_url": "https://news.ycombinator.com/item?id=50480941", "domain": "", "score": 27, "comments": 7}], "domains": [{"domain": "github.com", "stories": 76, "engagement": 1365}, {"domain": "youtube.com", "stories": 23, "engagement": 1960}, {"domain": "nytimes.com", "stories": 9, "engagement": 237}, {"domain": "arxiv.org", "stories": 9, "engagement": 20}, {"domain": "huggingface.co", "stories": 8, "engagement": 109}, {"domain": "reuters.com", "stories": 8, "engagement": 62}, {"domain": "medium.com", "stories": 8, "engagement": 28}, {"domain": "openai.com", "stories": 7, "engagement": 217}, {"domain": "twitter.com", "stories": 7, "engagement": 57}, {"domain": "theguardian.com", "stories": 6, "engagement": 650}], "latest_digest": "https://github.com/Osceti/ai-news-radar/blob/main/digests/2026-11-16.md", "evaluation": {"accuracy": 0.73, "stories": 100}, "repo": "https://github.com/Osceti/ai-news-radar"}</script>
+<script id="radar-data" type="application/json">{"generated_at": "2026-11-17 13:53 UTC", "start": "2026-11-12", "end": "2026-11-16", "days": ["2026-11-12", "2026-11-13", "2026-11-14", "2026-11-15", "2026-11-16"], "total": 627, "themes": [{"slug": "models", "label": "Models", "color": "#60A5FA"}, {"slug": "agents", "label": "Agents", "color": "#FB923C"}, {"slug": "rag", "label": "RAG", "color": "#4ADE80"}, {"slug": "dev-tools", "label": "Dev tools", "color": "#A78BFA"}, {"slug": "security", "label": "Security", "color": "#F87171"}, {"slug": "research", "label": "Research", "color": "#22D3EE"}, {"slug": "business", "label": "Business", "color": "#FACC15"}, {"slug": "regulation", "label": "Regulation", "color": "#F472B6"}, {"slug": "other", "label": "Other", "color": "#A1A1AA"}], "volume": [146, 140, 131, 106, 104], "share": {"volume": {"models": [0.0685, 0.0214, 0.0611, 0.0849, 0.0481], "agents": [0.089, 0.1143, 0.1374, 0.0943, 0.0962], "rag": [0.0205, 0.0143, 0.0076, 0.0, 0.0096], "dev-tools": [0.137, 0.1714, 0.1679, 0.2358, 0.2115], "security": [0.1027, 0.0286, 0.0305, 0.0849, 0.0577], "research": [0.0616, 0.0857, 0.1374, 0.0943, 0.0096], "business": [0.2055, 0.2286, 0.1603, 0.1321, 0.2115], "regulation": [0.0479, 0.0571, 0.0076, 0.0377, 0.1154], "other": [0.2671, 0.2786, 0.2901, 0.2358, 0.2404]}, "attention": {"models": [0.3035, 0.0014, 0.0129, 0.0141, 0.004], "agents": [0.0033, 0.0706, 0.0116, 0.0141, 0.0197], "rag": [0.0016, 0.0003, 0.0003, 0.0, 0.0007], "dev-tools": [0.1026, 0.029, 0.2131, 0.0651, 0.4515], "security": [0.009, 0.0009, 0.0021, 0.0127, 0.0328], "research": [0.0024, 0.1359, 0.0608, 0.1025, 0.0018], "business": [0.4178, 0.2812, 0.5096, 0.0761, 0.3069], "regulation": [0.0099, 0.016, 0.0018, 0.0035, 0.043], "other": [0.1499, 0.4646, 0.1878, 0.712, 0.1396]}}, "totals": [{"theme": "models", "stories": 35, "engagement": 2227}, {"theme": "agents", "stories": 67, "engagement": 628}, {"theme": "rag", "stories": 7, "engagement": 16}, {"theme": "dev-tools", "stories": 113, "engagement": 3141}, {"theme": "security", "stories": 38, "engagement": 203}, {"theme": "research", "stories": 50, "engagement": 1443}, {"theme": "business", "stories": 119, "engagement": 7769}, {"theme": "regulation", "stories": 32, "engagement": 310}, {"theme": "other", "stories": 166, "engagement": 7237}], "window": 2, "momentum": {"volume": [{"theme": "dev-tools", "recent": 0.2238, "previous": 0.1697, "change": 5.41, "stories": 47}, {"theme": "regulation", "recent": 0.0762, "previous": 0.0332, "change": 4.3, "stories": 16}, {"theme": "security", "recent": 0.0714, "previous": 0.0295, "change": 4.19, "stories": 15}, {"theme": "models", "recent": 0.0667, "previous": 0.0406, "change": 2.61, "stories": 14}, {"theme": "rag", "recent": 0.0048, "previous": 0.0111, "change": -0.63, "stories": 1}, {"theme": "business", "recent": 0.1714, "previous": 0.1956, "change": -2.41, "stories": 36}, {"theme": "agents", "recent": 0.0952, "previous": 0.1255, "change": -3.02, "stories": 20}, {"theme": "other", "recent": 0.2381, "previous": 0.2841, "change": -4.6, "stories": 50}, {"theme": "research", "recent": 0.0524, "previous": 0.1107, "change": -5.83, "stories": 11}], "attention": [{"theme": "dev-tools", "recent": 0.255, "previous": 0.0961, "change": 15.89, "stories": 47}, {"theme": "other", "recent": 0.4307, "previous": 0.3637, "change": 6.7, "stories": 50}, {"theme": "security", "recent": 0.0226, "previous": 0.0013, "change": 2.12, "stories": 15}, {"theme": "regulation", "recent": 0.0229, "previous": 0.0109, "change": 1.21, "stories": 16}, {"theme": "models", "recent": 0.0091, "previous": 0.0056, "change": 0.36, "stories": 14}, {"theme": "rag", "recent": 0.0004, "previous": 0.0003, "change": 0.01, "stories": 1}, {"theme": "agents", "recent": 0.0168, "previous": 0.0491, "change": -3.22, "stories": 20}, {"theme": "research", "recent": 0.053, "previous": 0.1085, "change": -5.55, "stories": 11}, {"theme": "business", "recent": 0.1895, "previous": 0.3645, "change": -17.5, "stories": 36}]}, "stories": [{"day": "2026-11-15", "theme": "other", "title": "All AI-generated code should be Open Source", "url": "https://jakub.jankiewicz.org/blog/ai-code-open-source/", "hn_url": "https://news.ycombinator.com/item?id=50507303", "domain": "jakub.jankiewicz.org", "score": 1274, "comments": 664}, {"day": "2026-11-12", "theme": "business", "title": "Anthropic IPO", "url": "https://ipo.anthropic.com/us/", "hn_url": "https://news.ycombinator.com/item?id=50465829", "domain": "ipo.anthropic.com", "score": 1005, "comments": 921}, {"day": "2026-11-14", "theme": "business", "title": "Nvidia allegedly engineered scarcity by funding AI startups to buy its GPUs", "url": "https://www.techpowerup.com/354814/nvidia-allegedly-engineered-scarcity-by-funding-ai-startups-to-buy-its-gpus", "hn_url": "https://news.ycombinator.com/item?id=50493251", "domain": "techpowerup.com", "score": 1112, "comments": 649}, {"day": "2026-11-13", "theme": "other", "title": "Jonathan Blow – If AI solved coding, why is my software still the same? [video]", "url": "https://www.youtube.com/watch?v=IRK8h67ol7Q", "hn_url": "https://news.ycombinator.com/item?id=50484658", "domain": "youtube.com", "score": 493, "comments": 740}, {"day": "2026-11-16", "theme": "dev-tools", "title": "Windows 11 is collecting data on which coding agents and developer tools you use", "url": "https://xusheng.dev/posts/windows-coding-agent-telemetry/", "hn_url": "https://news.ycombinator.com/item?id=50524736", "domain": "xusheng.dev", "score": 652, "comments": 511}, {"day": "2026-11-12", "theme": "models", "title": "Gemini 4 Hydrogen", "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/", "hn_url": "https://news.ycombinator.com/item?id=50471431", "domain": "blog.google", "score": 572, "comments": 353}, {"day": "2026-11-13", "theme": "business", "title": "Elevated errors on claude.ai, Claude Code, and platform.claude.com", "url": "https://status.claude.com/incidents/nn11wk485zfn", "hn_url": "https://news.ycombinator.com/item?id=50481187", "domain": "status.claude.com", "score": 493, "comments": 393}, {"day": "2026-11-12", "theme": "other", "title": "Claude Code and Codex reverse engineered my 1994 Jeep's ECU over a $3 Arduino [video]", "url": "https://www.youtube.com/watch?v=WPj3aQ-xxpI", "hn_url": "https://news.ycombinator.com/item?id=50463399", "domain": "youtube.com", "score": 453, "comments": 239}, {"day": "2026-11-12", "theme": "models", "title": "Gemini 4 Hydrogen and Orchestrator", "url": "https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity/", "hn_url": "https://news.ycombinator.com/item?id=50472260", "domain": "antigravity.google", "score": 507, "comments": 165}, {"day": "2026-11-12", "theme": "dev-tools", "title": "I'm making LLMs work on small and old devices", "url": "https://github.com/hyperionaidev/smolmaxxing/", "hn_url": "https://news.ycombinator.com/item?id=50468888", "domain": "github.com", "score": 483, "comments": 180}, {"day": "2026-11-12", "theme": "business", "title": "Chinese frontier AI models carry the fingerprint of export-controlled GPUs", "url": "https://unemploymentlabs.com/checkpoint-forensics", "hn_url": "https://news.ycombinator.com/item?id=50474883", "domain": "unemploymentlabs.com", "score": 451, "comments": 195}, {"day": "2026-11-13", "theme": "other", "title": "AI is destroying the trust between writers and readers", "url": "https://www.theatlantic.com/books/2026/11/ai-literary-scams-amazon/689391/", "hn_url": "https://news.ycombinator.com/item?id=50481870", "domain": "theatlantic.com", "score": 371, "comments": 239}, {"day": "2026-11-13", "theme": "research", "title": "AI unlocks Gödel's notebooks, said to contain hundreds of proved theorems", "url": "https://www.theguardian.com/science/2026/nov/13/kurt-godel-notebooks-ai-helps-unlock-hidden-discoveries-man-who-transformed-maths", "hn_url": "https://news.ycombinator.com/item?id=50486748", "domain": "theguardian.com", "score": 443, "comments": 111}, {"day": "2026-11-12", "theme": "models", "title": "Edge0-145B: Frontier AI Capabilities on Your Own Computer", "url": "https://edge0.ai/blog/introducing-edge0-145b-frontier-ai-capabilities-on-your-own-computer", "hn_url": "https://news.ycombinator.com/item?id=50475713", "domain": "edge0.ai", "score": 357, "comments": 105}, {"day": "2026-11-13", "theme": "agents", "title": "Brave Search API now accepts agentic payments via the x402 protocol", "url": "https://brave.com/blog/search-api-agentic-payments/", "hn_url": "https://news.ycombinator.com/item?id=50477649", "domain": "brave.com", "score": 262, "comments": 151}, {"day": "2026-11-13", "theme": "other", "title": "Why is Google cutting off Search from AI-free schools? Here are some theories", "url": "https://text.npr.org/nx-s1-6029408", "hn_url": "https://news.ycombinator.com/item?id=50484960", "domain": "text.npr.org", "score": 197, "comments": 197}, {"day": "2026-11-13", "theme": "business", "title": "Claude Is Down", "url": "https://status.claude.com/history", "hn_url": "https://news.ycombinator.com/item?id=50481220", "domain": "status.claude.com", "score": 196, "comments": 170}, {"day": "2026-11-14", "theme": "other", "title": "The Claude Delusion", "url": "https://www.netmeister.org/blog/claude-delusion.html", "hn_url": "https://news.ycombinator.com/item?id=50496921", "domain": "netmeister.org", "score": 143, "comments": 180}, {"day": "2026-11-14", "theme": "dev-tools", "title": "Show HN: DeepSeek V3 in ~200 lines of pure Jax", "url": "https://github.com/Vaibhaav-Tiwari/deepseek-v3-jax", "hn_url": "https://news.ycombinator.com/item?id=50497589", "domain": "github.com", "score": 276, "comments": 30}, {"day": "2026-11-13", "theme": "other", "title": "No AI Slop: A Manifesto", "url": "https://www.slopmanifesto.com/", "hn_url": "https://news.ycombinator.com/item?id=50488769", "domain": "slopmanifesto.com", "score": 178, "comments": 99}, {"day": "2026-11-15", "theme": "research", "title": "Understanding Positional Embeddings in Modern LLMs", "url": "https://magazine.sebastianraschka.com/p/understanding-positional-embeddings", "hn_url": "https://news.ycombinator.com/item?id=50506376", "domain": "magazine.sebastianraschka.com", "score": 245, "comments": 27}, {"day": "2026-11-13", "theme": "business", "title": "OpenAI disbands its robotics team as its general models start running robots", "url": "https://fortune.com/2026/11/13/openai-disbands-robotics-team-as-its-general-models-start-running-robots/", "hn_url": "https://news.ycombinator.com/item?id=50487184", "domain": "fortune.com", "score": 179, "comments": 73}, {"day": "2026-11-14", "theme": "dev-tools", "title": "Serving GLM-5.3 at 607.8 tok/s across two Nvidia DGX stations with vLLM", "url": "https://developer.nvidia.com/blog/when-one-gpu-isnt-enough-serving-glm-5-3-across-two-nvidia-dgx-stations-with-vllm/", "hn_url": "https://news.ycombinator.com/item?id=50497155", "domain": "developer.nvidia.com", "score": 149, "comments": 71}, {"day": "2026-11-13", "theme": "other", "title": "Claude Meetings", "url": "https://claude.com/resources/articles/claude-meetings", "hn_url": "https://news.ycombinator.com/item?id=50491097", "domain": "claude.com", "score": 113, "comments": 89}, {"day": "2026-11-14", "theme": "dev-tools", "title": "Anthropic upgrades Claude Code Projects to run parallel AI workers", "url": "https://claude.com/resources/articles/projects-redesigned", "hn_url": "https://news.ycombinator.com/item?id=50492141", "domain": "claude.com", "score": 98, "comments": 91}, {"day": "2026-11-16", "theme": "business", "title": "\"Who is Hiring?\" postings stuck near 12-year lows as AI reaches half of all jobs", "url": "https://www.hntrends.com/2026/november.html", "hn_url": "https://news.ycombinator.com/item?id=50512950", "domain": "hntrends.com", "score": 94, "comments": 86}, {"day": "2026-11-14", "theme": "research", "title": "A visual explanation of reinforcement learning", "url": "https://aatishb.com/myriad/how-brains-learn/", "hn_url": "https://news.ycombinator.com/item?id=50496885", "domain": "aatishb.com", "score": 169, "comments": 9}, {"day": "2026-11-13", "theme": "research", "title": "What thousands of conversations look like inside a language model", "url": "https://operator0x.com/field-notes/qwen-conversation-state-space/", "hn_url": "https://news.ycombinator.com/item?id=50481321", "domain": "operator0x.com", "score": 130, "comments": 31}, {"day": "2026-11-13", "theme": "research", "title": "The avalanche that hit math is coming for AI development", "url": "https://www.dwarkesh.com/p/rsi", "hn_url": "https://news.ycombinator.com/item?id=50487854", "domain": "dwarkesh.com", "score": 59, "comments": 100}, {"day": "2026-11-16", "theme": "other", "title": "Ask HN: If AI tools are so good, why isn't your bug backlog empty?", "url": "https://news.ycombinator.com/item?id=50520076", "hn_url": "https://news.ycombinator.com/item?id=50520076", "domain": "", "score": 69, "comments": 88}, {"day": "2026-11-12", "theme": "business", "title": "Why You Should Expect an AI Crash", "url": "https://www.economist.com/leaders/2026/11/12/why-you-should-expect-an-ai-crash", "hn_url": "https://news.ycombinator.com/item?id=50475735", "domain": "economist.com", "score": 81, "comments": 62}, {"day": "2026-11-12", "theme": "other", "title": "AI is turning Apple's app review process into a nightmare for synth developers", "url": "https://synthanatomy.com/2026/11/ai-is-turning-apples-app-review-process-into-a-nightmare-for-developers.html", "hn_url": "https://news.ycombinator.com/item?id=50474311", "domain": "synthanatomy.com", "score": 73, "comments": 69}, {"day": "2026-11-15", "theme": "business", "title": "Parents pay $75k for Alpha's AI school. Half of its students missed math target", "url": "https://fortune.com/2026/11/14/alpha-school-ai-students-tuition-learning-goals/", "hn_url": "https://news.ycombinator.com/item?id=50509953", "domain": "fortune.com", "score": 69, "comments": 67}, {"day": "2026-11-16", "theme": "business", "title": "How Billions in Safe Insurance Money Is Being Bet on A.I. Debt", "url": "https://www.nytimes.com/2026/11/16/business/insurance-ai-debt.html", "hn_url": "https://news.ycombinator.com/item?id=50520148", "domain": "nytimes.com", "score": 88, "comments": 48}, {"day": "2026-11-16", "theme": "business", "title": "Generative AI Usage in the Games Industry", "url": "https://www.gameworkers.co.uk/ai-manifesto/", "hn_url": "https://news.ycombinator.com/item?id=50519043", "domain": "gameworkers.co.uk", "score": 42, "comments": 94}, {"day": "2026-11-16", "theme": "business", "title": "ChatGPT Wallet", "url": "https://openai.com/index/introducing-chatgpt-wallet/", "hn_url": "https://news.ycombinator.com/item?id=50518501", "domain": "openai.com", "score": 46, "comments": 80}, {"day": "2026-11-14", "theme": "other", "title": "Ask HN: What are the most useful, concrete AI skills to independently learn?", "url": "https://news.ycombinator.com/item?id=50494696", "hn_url": "https://news.ycombinator.com/item?id=50494696", "domain": "", "score": 76, "comments": 49}, {"day": "2026-11-16", "theme": "other", "title": "Caltech professor no longer grades homework's because everyone uses AI", "url": "https://www.businessinsider.com/ai-math-class-university-homework-caltech-careers-2026-11", "hn_url": "https://news.ycombinator.com/item?id=50523022", "domain": "businessinsider.com", "score": 48, "comments": 59}, {"day": "2026-11-13", "theme": "business", "title": "Amodei Says AI Will Cure Cancer in a Decade. Doctors Are Skeptical", "url": "https://www.businessinsider.com/dario-amodei-anthropic-cancer-cure-ipo-roadshow-backlash-doctors-2026-11", "hn_url": "https://news.ycombinator.com/item?id=50484110", "domain": "businessinsider.com", "score": 31, "comments": 70}, {"day": "2026-11-14", "theme": "other", "title": "Claude asked to renumber pages deletes professor's syllabus, year of notes", "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/rogue-claude-ai-tasked-with-renumbering-pages-accidentally-deletes-law-professors-entire-syllabus-one-year-of-lecture-notes-youre-right-to-be-angry-i-deleted-your-files-through-my-own-carelessness-humbled-agent-admits", "hn_url": "https://news.ycombinator.com/item?id=50499114", "domain": "tomshardware.com", "score": 39, "comments": 61}, {"day": "2026-11-13", "theme": "other", "title": "Is there a 'right amount' of AI?", "url": "https://coyotetracks.org/blog/right-amount-of-ai/", "hn_url": "https://news.ycombinator.com/item?id=50480659", "domain": "coyotetracks.org", "score": 36, "comments": 62}, {"day": "2026-11-13", "theme": "regulation", "title": "Are we just going to ignore that books are destroyed for AI?", "url": "https://www.forbes.com/sites/maryroeloffs/2026/08/17/ai-companies-are-buying-and-destroying-antique-books-heres-why/", "hn_url": "https://news.ycombinator.com/item?id=50487469", "domain": "forbes.com", "score": 51, "comments": 40}, {"day": "2026-11-13", "theme": "other", "title": "Artificial Intelligence for the Z80", "url": "https://www.dfsantos.com/en/libro-ia-z80", "hn_url": "https://news.ycombinator.com/item?id=50485275", "domain": "dfsantos.com", "score": 83, "comments": 8}, {"day": "2026-11-13", "theme": "dev-tools", "title": "DeepSeek Ultrafast", "url": "https://github.com/basetenlabs/deepseek-ultrafast", "hn_url": "https://news.ycombinator.com/item?id=50486914", "domain": "github.com", "score": 71, "comments": 18}, {"day": "2026-11-13", "theme": "other", "title": "Ask HN: Can anyone name anything new that AI has done?", "url": "https://news.ycombinator.com/item?id=50484426", "hn_url": "https://news.ycombinator.com/item?id=50484426", "domain": "", "score": 27, "comments": 48}, {"day": "2026-11-16", "theme": "business", "title": "First phase of embedded assessments at OpenAI", "url": "https://openai.com/index/our-first-phase-of-embedded-assessments/", "hn_url": "https://news.ycombinator.com/item?id=50519153", "domain": "openai.com", "score": 55, "comments": 18}, {"day": "2026-11-14", "theme": "business", "title": "Smuggling of 1.5M AI GPUs could be the cause of Huang's departure", "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/mass-smuggling-of-nvidia-ai-gpus-could-be-the-underlying-cause-of-jensen-huangs-departure-analysts-claim-more-than-1-5-gigawatts-of-banned-chips-tracked-to-china-despite-export-controls", "hn_url": "https://news.ycombinator.com/item?id=50498051", "domain": "tomshardware.com", "score": 43, "comments": 25}, {"day": "2026-11-15", "theme": "dev-tools", "title": "Show HN: db-branch – database branches in seconds for AI agents and CI, via ZFS", "url": "https://github.com/db-branch/db-branch", "hn_url": "https://news.ycombinator.com/item?id=50506940", "domain": "github.com", "score": 45, "comments": 16}, {"day": "2026-11-12", "theme": "other", "title": "Show HN: AI Red Lines – write down what would make you act on AI", "url": "https://yourairedlines.com", "hn_url": "https://news.ycombinator.com/item?id=50467880", "domain": "yourairedlines.com", "score": 32, "comments": 29}, {"day": "2026-11-13", "theme": "business", "title": "Tell HN: Claude Code Is Down", "url": "https://news.ycombinator.com/item?id=50480909", "hn_url": "https://news.ycombinator.com/item?id=50480909", "domain": "", "score": 37, "comments": 21}, {"day": "2026-11-15", "theme": "dev-tools", "title": "Show HN: Turbo-Browser-MCP – Batch forms, DOM deltas and submit guards for MCP", "url": "https://github.com/Tthanh2k6/turbo-browser-mcp", "hn_url": "https://news.ycombinator.com/item?id=50503930", "domain": "github.com", "score": 49, "comments": 9}, {"day": "2026-11-16", "theme": "security", "title": "FBI says Artex AI open-source hacking tool used to breach networks", "url": "https://techcrunch.com/2026/11/16/fbi-says-artex-ai-open-source-hacking-tool-used-to-breach-networks-in-under-three-hours/", "hn_url": "https://news.ycombinator.com/item?id=50520796", "domain": "techcrunch.com", "score": 46, "comments": 10}, {"day": "2026-11-13", "theme": "business", "title": "Claude OAuth Failures", "url": "https://news.ycombinator.com/item?id=50480936", "hn_url": "https://news.ycombinator.com/item?id=50480936", "domain": "", "score": 27, "comments": 24}, {"day": "2026-11-16", "theme": "business", "title": "Nvidia's Days as an Open Checkbook for the AI Economy Are Numbered", "url": "https://www.wsj.com/tech/ai/nvidias-days-as-an-open-checkbook-for-the-ai-economy-are-numbered-90c7b388", "hn_url": "https://news.ycombinator.com/item?id=50513876", "domain": "wsj.com", "score": 38, "comments": 10}, {"day": "2026-11-12", "theme": "other", "title": "AI Models Know What Women, Peace and Security Is. They Just Don't Bring It Up", "url": "https://blog.cip.org/p/ai-models-know-what-women-peace-and", "hn_url": "https://news.ycombinator.com/item?id=50470975", "domain": "blog.cip.org", "score": 21, "comments": 25}, {"day": "2026-11-16", "theme": "business", "title": "Reports of AI-related child sexual abuse material rise 8,400% in two years", "url": "https://www.theguardian.com/technology/2026/nov/16/ai-related-child-sexual-abuse-material-rise-exploitation-deepfakes", "hn_url": "https://news.ycombinator.com/item?id=50513713", "domain": "theguardian.com", "score": 18, "comments": 26}, {"day": "2026-11-12", "theme": "business", "title": "Jensen Huang Was the Face of the A.I. Boom Powering the U.S. Economy", "url": "https://www.nytimes.com/2026/11/12/business/economy/jensen-huang-economy-nvidia-ai.html", "hn_url": "https://news.ycombinator.com/item?id=50468904", "domain": "nytimes.com", "score": 25, "comments": 16}, {"day": "2026-11-16", "theme": "business", "title": "The Fed Is Worried AI Agents Could Trigger a Bank Run", "url": "https://gizmodo.com/the-fed-is-worried-ai-agents-could-trigger-a-bank-run-2000840566", "hn_url": "https://news.ycombinator.com/item?id=50523346", "domain": "gizmodo.com", "score": 27, "comments": 12}, {"day": "2026-11-14", "theme": "business", "title": "Open-source AI without Jensen", "url": "https://www.interconnects.ai/p/open-source-ai-without-jensen", "hn_url": "https://news.ycombinator.com/item?id=50496590", "domain": "interconnects.ai", "score": 27, "comments": 7}, {"day": "2026-11-13", "theme": "business", "title": "Claude AI Is Down", "url": "https://news.ycombinator.com/item?id=50480941", "hn_url": "https://news.ycombinator.com/item?id=50480941", "domain": "", "score": 27, "comments": 7}], "domains": [{"domain": "github.com", "stories": 76, "engagement": 1365}, {"domain": "youtube.com", "stories": 23, "engagement": 1960}, {"domain": "nytimes.com", "stories": 9, "engagement": 237}, {"domain": "arxiv.org", "stories": 9, "engagement": 20}, {"domain": "huggingface.co", "stories": 8, "engagement": 109}, {"domain": "reuters.com", "stories": 8, "engagement": 62}, {"domain": "medium.com", "stories": 8, "engagement": 28}, {"domain": "openai.com", "stories": 7, "engagement": 217}, {"domain": "twitter.com", "stories": 7, "engagement": 57}, {"domain": "theguardian.com", "stories": 6, "engagement": 650}], "latest_digest": "https://github.com/Osceti/ai-news-radar/blob/main/digests/2026-11-16.md", "evaluation": {"accuracy": 0.73, "stories": 100}, "repo": "https://github.com/Osceti/ai-news-radar"}</script>
 <script>
 (() => {
   const D = JSON.parse(document.getElementById("radar-data").textContent);
   const THEMES = D.themes;
   const BY_SLUG = Object.fromEntries(THEMES.map(t => [t.slug, t]));
-  const state = { measure: "volume", theme: "all", shown: 12 };
+  const state = { measure: "volume", theme: "all", shown: 10 };
   const $ = id => document.getElementById(id);
   const pct = (v, d = 0) => `${(v * 100).toFixed(d)}%`;
   const int = v => v.toLocaleString("en-US");
   const day = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
   const shortDay = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+  const wd = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { weekday: "short", timeZone: "UTC" });
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  const hexA = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
-  const MEASURE = {
-    volume: "Share of AI stories posted in each theme.",
-    attention: "Share of reader engagement (points + comments) each theme received.",
+  const UNIT = { volume: "stories", attention: "points + comments" };
+  const HINT = { volume: "Showing: share of AI stories posted", attention: "Showing: share of points + comments received" };
+  const totals = m => D.totals.map(t => ({ theme: t.theme, value: m === "volume" ? t.stories : t.engagement }));
+
+  // Tooltip shared by the hand-drawn charts
+  const tip = $("tip");
+  const moveTip = e => {
+    const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
+    tip.style.left = `${Math.max(8, x)}px`; tip.style.top = `${Math.max(8, e.clientY - tip.offsetHeight - 14)}px`;
   };
+  const showTip = (html, e) => { tip.innerHTML = html; tip.classList.add("show"); moveTip(e); };
+  const hideTip = () => tip.classList.remove("show");
 
   // Static text and links
   const evalUrl = `${D.repo}#evaluation`;
   for (const id of ["repo-link", "repo-link-2"]) $(id).href = D.repo;
   for (const id of ["digest-link", "digest-link-2"]) $(id).href = D.latest_digest;
   for (const id of ["method-link", "method-link-2"]) $(id).href = evalUrl;
-  $("updated").textContent = `Live · updated ${D.generated_at}`;
+  $("updated").textContent = `Updated ${D.generated_at}`;
   $("range").textContent = `${D.days.length} complete days, ${day(D.start)} to ${day(D.end)}.`;
   $("momentum-sub").textContent = `Share in the last ${D.window} days vs the ${D.window} days before, in points.`;
   if (D.evaluation) {
     $("eval-note").innerHTML = `Themes are assigned by an LLM and are not perfect: on a held-out sample of ${D.evaluation.stories} stories they matched an independent reference ${pct(D.evaluation.accuracy)} of the time. <a href="${evalUrl}">Read the evaluation</a>.`;
   }
 
-  // Sparkline: a small area chart drawn as inline SVG.
-  function spark(values, color) {
-    const w = 92, h = 34, n = values.length;
+  // ---------- KPI cards ----------
+  function spark(values) {
+    const w = 84, h = 34, n = values.length;
     if (n < 2) return "";
     const lo = Math.min(...values), hi = Math.max(...values), span = hi - lo || 1;
-    const pts = values.map((v, i) => [(i / (n - 1)) * w, h - 3 - ((v - lo) / span) * (h - 8)]);
+    const pts = values.map((v, i) => [(i / (n - 1)) * w, h - 4 - ((v - lo) / span) * (h - 9)]);
     const line = pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("");
-    const id = "g" + Math.random().toString(36).slice(2, 8);
     const [lx, ly] = pts[n - 1];
     return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
-      <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".28"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
-      <path d="${line}L${w},${h}L0,${h}Z" fill="url(#${id})"/>
-      <path d="${line}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-      <circle cx="${lx}" cy="${ly}" r="2.6" fill="${color}"/></svg>`;
+      <path d="${line}" fill="none" stroke="#000" stroke-width="3" vector-effect="non-scaling-stroke"/>
+      <circle cx="${lx}" cy="${ly}" r="3.5" fill="#fff" stroke="#000" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>`;
   }
-  const delta = (v, unit, digits = 1) => {
-    const cls = Math.abs(v) < 0.05 ? "flat" : v > 0 ? "up" : "down";
-    const arrow = cls === "up" ? "↑" : cls === "down" ? "↓" : "→";
-    return `<span class="delta ${cls}">${arrow} ${Math.abs(v).toFixed(digits)}${unit}</span>`;
-  };
-  const ICONS = {
-    stories: '<path d="M4 6h16M4 12h16M4 18h10" stroke-width="2" stroke-linecap="round" fill="none"/>',
-    posted: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke-width="2" stroke-linecap="round" fill="none"/>',
-    discussed: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" stroke-width="2" stroke-linejoin="round" fill="none"/>',
-    rising: '<path d="M3 17l6-6 4 4 8-8M15 7h6v6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
-  };
-
   function renderKpis() {
-    const totalStories = D.totals.reduce((a, t) => a + t.stories, 0);
-    const totalEng = D.totals.reduce((a, t) => a + t.engagement, 0);
+    const tS = D.totals.reduce((a, t) => a + t.stories, 0), tE = D.totals.reduce((a, t) => a + t.engagement, 0);
     const topVol = [...D.totals].sort((a, b) => b.stories - a.stories)[0];
     const topEng = [...D.totals].sort((a, b) => b.engagement - a.engagement)[0];
     const rising = D.momentum.volume[0];
     const v = D.volume, last = v[v.length - 1], prev = v[v.length - 2];
-    const dayChange = prev ? (last - prev) / prev * 100 : 0;
-    const accent = css("--accent");
-    const tile = (icon, label, value, foot, sparkline, slug) => `
-      <div class="card kpi">
-        <div class="label"><span class="ico"><svg viewBox="0 0 24 24">${ICONS[icon]}</svg></span>${label}</div>
-        <div class="row"><div class="value num">${slug ? `<span class="dot" style="background:${BY_SLUG[slug].color}"></span>` : ""}${value}</div>${sparkline}</div>
-        <div class="kfoot num">${foot}</div>
+    const ch = prev ? (last - prev) / prev * 100 : 0;
+    const badge = (x, unit) => `<span class="tagbox ${x >= 0 ? "up" : "down"}">${x >= 0 ? "▲" : "▼"} ${Math.abs(x).toFixed(1)}${unit}</span>`;
+    const tile = (bg, label, value, foot, sparkline) => `
+      <div class="box kpi" style="background:${bg}">
+        <div class="label">${label}</div>
+        <div class="row"><div class="value num">${value}</div>${sparkline}</div>
+        <div class="kfoot">${foot}</div>
       </div>`;
     $("kpis").innerHTML =
-      tile("stories", "AI stories", int(D.total),
-        `${delta(dayChange, "%")}<span>${int(last)} on ${shortDay(D.end)} vs day before</span>`, spark(v, accent)) +
-      tile("posted", "Most posted theme", BY_SLUG[topVol.theme].label,
-        `<span>${pct(topVol.stories / totalStories)} of all stories</span>`, spark(D.share.volume[topVol.theme], BY_SLUG[topVol.theme].color), topVol.theme) +
-      tile("discussed", "Most discussed theme", BY_SLUG[topEng.theme].label,
-        `<span>${pct(topEng.engagement / totalEng)} of points + comments</span>`, spark(D.share.attention[topEng.theme], BY_SLUG[topEng.theme].color), topEng.theme) +
-      tile("rising", "Rising fastest", BY_SLUG[rising.theme].label,
-        `${delta(rising.change, " pts")}<span>over ${D.window} days</span>`, spark(D.share.volume[rising.theme], BY_SLUG[rising.theme].color), rising.theme);
+      tile(css("--yellow"), "AI stories", int(D.total), `${badge(ch, "%")}<span>${int(last)} on ${shortDay(D.end)}</span>`, spark(v)) +
+      tile(css("--blue"), "Most posted", BY_SLUG[topVol.theme].label, `<span class="tagbox">${pct(topVol.stories / tS)}</span><span>of stories</span>`, spark(D.share.volume[topVol.theme])) +
+      tile(css("--pink"), "Most discussed", BY_SLUG[topEng.theme].label, `<span class="tagbox">${pct(topEng.engagement / tE)}</span><span>of attention</span>`, spark(D.share.attention[topEng.theme])) +
+      tile(css("--green"), "Rising fastest", BY_SLUG[rising.theme].label, `${badge(rising.change, " pts")}<span>over ${D.window} days</span>`, spark(D.share.volume[rising.theme]));
   }
 
-  // Charts
+  // ---------- ECharts, brutalist style ----------
   const charts = {};
   const chart = id => charts[id] || (charts[id] = echarts.init($(id), null, { renderer: "svg" }));
+  const mono = "JetBrains Mono, monospace";
   const base = () => ({
-    textStyle: { fontFamily: "Inter, system-ui, sans-serif", color: css("--text-2") },
-    tooltip: {
-      backgroundColor: css("--surface"), borderColor: css("--border-strong"), borderWidth: 1, padding: [10, 12],
-      textStyle: { color: css("--text"), fontSize: 12.5 }, extraCssText: "border-radius:12px;box-shadow:0 12px 32px -8px rgba(0,0,0,.25);",
-    },
-    animationDuration: 600, animationEasing: "cubicOut",
+    textStyle: { fontFamily: mono, color: css("--text") },
+    tooltip: { backgroundColor: css("--ink"), borderColor: css("--ink"), borderWidth: 0, padding: [6, 10],
+      textStyle: { color: css("--paper"), fontFamily: mono, fontSize: 12, fontWeight: 700 }, extraCssText: "border-radius:0;box-shadow:none;text-transform:uppercase;" },
+    animationDuration: 800, animationEasing: "backOut",
   });
-  const axisCommon = () => ({
-    axisLine: { lineStyle: { color: css("--border") } }, axisTick: { show: false },
-    axisLabel: { color: css("--text-3"), fontSize: 11.5 }, splitLine: { lineStyle: { color: css("--grid"), type: [3, 3] } },
+  const axis = () => ({
+    axisLine: { lineStyle: { color: css("--ink"), width: 3 } }, axisTick: { show: false },
+    axisLabel: { color: css("--text"), fontFamily: mono, fontWeight: 700, fontSize: 11 },
+    splitLine: { lineStyle: { color: css("--ink"), opacity: .12, type: [4, 4], width: 1.5 } },
   });
-  const catAxis = (data, extra = {}) => ({ type: "category", data, ...axisCommon(), splitLine: { show: false }, axisLine: { show: false },
-    axisLabel: { color: css("--text-2"), fontSize: 12.5 }, ...extra });
 
   function renderShare() {
     const data = D.share[state.measure];
     const narrow = $("chart-share").clientWidth < 560;
-    $("share-sub").textContent = (state.measure === "volume" ? "Share of each day's AI stories" : "Share of each day's points + comments")
-      + ", by theme. Click the legend to hide a theme.";
+    $("share-unit").textContent = UNIT[state.measure];
     chart("chart-share").setOption({
       ...base(),
-      grid: { left: 4, right: 4, top: 8, bottom: narrow ? 104 : 60, containLabel: true },
-      legend: { bottom: 0, icon: "circle", itemWidth: 8, itemHeight: 8, itemGap: 14, textStyle: { color: css("--text-2"), fontSize: 12.5 } },
-      tooltip: { ...base().tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: css("--accent-soft") } },
-        formatter: ps => {
-          const rows = [...ps].filter(p => p.value > 0).sort((a, b) => b.value - a.value)
-            .map(p => `<div style="display:flex;justify-content:space-between;gap:20px;line-height:1.7"><span>${p.marker}${p.seriesName}</span><b>${pct(p.value)}</b></div>`).join("");
-          return `<div style="font-weight:600;margin-bottom:4px">${day(D.days[ps[0].dataIndex])}</div>${rows}`;
-        } },
-      xAxis: { type: "category", data: D.days.map(narrow ? shortDay : day), ...axisCommon(), splitLine: { show: false } },
-      yAxis: { type: "value", max: 1, ...axisCommon(), axisLine: { show: false }, axisLabel: { ...axisCommon().axisLabel, formatter: v => pct(v) } },
-      series: THEMES.map((t, i) => ({
-        name: t.label, type: "bar", stack: "share", barWidth: "58%", data: data[t.slug],
-        itemStyle: { color: t.color, borderColor: css("--surface"), borderWidth: 1.5,
-          borderRadius: i === THEMES.length - 1 ? [6, 6, 0, 0] : i === 0 ? [0, 0, 6, 6] : 0 },
+      grid: { left: 4, right: 6, top: 8, bottom: narrow ? 104 : 58, containLabel: true },
+      legend: { bottom: 0, icon: "rect", itemWidth: 12, itemHeight: 12, itemGap: 14,
+        itemStyle: { borderColor: css("--ink"), borderWidth: 2 },
+        textStyle: { color: css("--text"), fontFamily: mono, fontWeight: 800, fontSize: 11 }, formatter: n => n.toUpperCase() },
+      tooltip: { ...base().tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: "rgba(250,204,21,.25)" } },
+        formatter: ps => `<div style="border-bottom:2px solid;margin-bottom:4px">${day(D.days[ps[0].dataIndex])}</div>` +
+          [...ps].filter(p => p.value > 0).sort((a, b) => b.value - a.value)
+            .map(p => `<div style="display:flex;justify-content:space-between;gap:18px"><span>${p.marker}${p.seriesName}</span><span>${pct(p.value)}</span></div>`).join("") },
+      xAxis: { type: "category", data: D.days.map(narrow ? shortDay : day), ...axis(), splitLine: { show: false },
+        axisLabel: { ...axis().axisLabel, formatter: s => s.toUpperCase() } },
+      yAxis: { type: "value", max: 1, ...axis(), axisLine: { show: false }, axisLabel: { ...axis().axisLabel, formatter: v => pct(v) } },
+      series: THEMES.map(t => ({
+        name: t.label, type: "bar", stack: "s", barWidth: "62%", data: data[t.slug],
+        itemStyle: { color: t.color, borderColor: css("--ink"), borderWidth: 2.5 },
         emphasis: { focus: "series" },
       })),
     }, true);
@@ -404,136 +441,166 @@ ol.stories { list-style: none; margin: 14px -10px 0; padding: 0; }
 
   function renderMomentum() {
     const rows = [...D.momentum[state.measure]].sort((a, b) => a.change - b.change);
-    const reach = Math.max(1, ...rows.map(r => Math.abs(r.change))) * 1.35;
+    const reach = Math.max(1, ...rows.map(r => Math.abs(r.change))) * 1.4;
     chart("chart-momentum").setOption({
       ...base(),
-      grid: { left: 4, right: 8, top: 4, bottom: 4, containLabel: true },
-      tooltip: { ...base().tooltip, trigger: "item",
-        formatter: p => { const r = rows[p.dataIndex]; return `<div style="font-weight:600;margin-bottom:4px">${BY_SLUG[r.theme].label}</div>
-          Last ${D.window} days: <b>${pct(r.recent)}</b><br>${D.window} days before: <b>${pct(r.previous)}</b><br>${r.stories} stories recently`; } },
-      xAxis: { type: "value", min: -reach, max: reach, ...axisCommon(),
-        axisLabel: { ...axisCommon().axisLabel, showMinLabel: false, showMaxLabel: false, formatter: v => `${v > 0 ? "+" : ""}${v}` } },
-      yAxis: catAxis(rows.map(r => BY_SLUG[r.theme].label)),
-      series: [{ type: "bar", barWidth: "54%", data: rows.map(r => {
-        const c = r.change >= 0 ? css("--up") : css("--down");
-        return { value: +r.change.toFixed(1),
-          itemStyle: { color: c, borderRadius: r.change >= 0 ? [0, 5, 5, 0] : [5, 0, 0, 5] },
-          label: { show: true, position: r.change >= 0 ? "right" : "left", color: css("--text-2"), fontSize: 11.5,
-            formatter: `${r.change >= 0 ? "+" : ""}${r.change.toFixed(1)}` } };
-      }) }],
-    }, true);
-  }
-
-  function renderMix() {
-    const totalS = D.totals.reduce((a, t) => a + t.stories, 0);
-    const totalE = D.totals.reduce((a, t) => a + t.engagement, 0);
-    const rows = [...D.totals].sort((a, b) => a.stories - b.stories);
-    chart("chart-mix").setOption({
-      ...base(),
-      grid: { left: 4, right: 12, top: 28, bottom: 4, containLabel: true },
-      legend: { top: 0, left: 0, icon: "circle", itemWidth: 8, itemHeight: 8, textStyle: { color: css("--text-2"), fontSize: 12 } },
-      tooltip: { ...base().tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: css("--accent-soft") } }, valueFormatter: v => pct(v, 1) },
-      xAxis: { type: "value", ...axisCommon(), axisLabel: { ...axisCommon().axisLabel, formatter: v => pct(v) } },
-      yAxis: catAxis(rows.map(r => BY_SLUG[r.theme].label)),
-      series: [
-        { name: "Stories", type: "bar", barGap: "20%", barWidth: "32%", data: rows.map(r => r.stories / totalS),
-          itemStyle: { color: css("--border-strong"), borderRadius: [0, 3, 3, 0] } },
-        { name: "Points + comments", type: "bar", barWidth: "32%", data: rows.map(r => r.engagement / totalE),
-          itemStyle: { color: css("--accent"), borderRadius: [0, 3, 3, 0] } },
-      ],
-    }, true);
-  }
-
-  function renderVolume() {
-    const accent = css("--accent");
-    chart("chart-volume").setOption({
-      ...base(),
-      grid: { left: 4, right: 18, top: 12, bottom: 4, containLabel: true },
-      tooltip: { ...base().tooltip, trigger: "axis", formatter: ps => `<b>${day(D.days[ps[0].dataIndex])}</b><br>${ps[0].value} AI stories` },
-      xAxis: { type: "category", boundaryGap: false, data: D.days.map(shortDay), ...axisCommon(), splitLine: { show: false } },
-      yAxis: { type: "value", min: 0, ...axisCommon(), axisLine: { show: false } },
-      series: [{ type: "line", data: D.volume, smooth: 0.3, symbol: "circle", symbolSize: 7, showSymbol: true,
-        lineStyle: { width: 2.5, color: accent }, itemStyle: { color: accent, borderColor: css("--surface"), borderWidth: 2 },
-        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: hexA(accent, .28) }, { offset: 1, color: hexA(accent, 0) }]) } }],
-    }, true);
-  }
-
-  function renderDomains() {
-    const rows = [...D.domains].reverse();
-    const accent = css("--accent");
-    chart("chart-domains").setOption({
-      ...base(),
-      grid: { left: 4, right: 30, top: 4, bottom: 4, containLabel: true },
+      grid: { left: 4, right: 8, top: 6, bottom: 4, containLabel: true },
       tooltip: { ...base().tooltip, trigger: "item", formatter: p => { const r = rows[p.dataIndex];
-        return `<b>${esc(r.domain)}</b><br>${r.stories} stories · ${int(r.engagement)} points + comments`; } },
-      xAxis: { type: "value", show: false },
-      yAxis: catAxis(rows.map(r => r.domain), { axisLabel: { color: css("--text-2"), fontSize: 12, width: 132, overflow: "truncate" } }),
-      series: [{ type: "bar", barWidth: "55%", data: rows.map(r => r.stories),
-        showBackground: true, backgroundStyle: { color: css("--surface-2"), borderRadius: 4 },
-        itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: hexA(accent, .55) }, { offset: 1, color: accent }]), borderRadius: 4 },
-        label: { show: true, position: "right", color: css("--text-2"), fontSize: 11.5 } }],
+        return `${BY_SLUG[r.theme].label}<br>Last ${D.window} days: ${pct(r.recent)}<br>Before: ${pct(r.previous)}`; } },
+      xAxis: { type: "value", min: -reach, max: reach, ...axis(),
+        axisLabel: { ...axis().axisLabel, showMinLabel: false, showMaxLabel: false, formatter: v => `${v > 0 ? "+" : ""}${v}` } },
+      yAxis: { type: "category", data: rows.map(r => BY_SLUG[r.theme].label.toUpperCase()), ...axis(), splitLine: { show: false } },
+      series: [{ type: "bar", barWidth: "60%", data: rows.map(r => ({
+        value: +r.change.toFixed(1),
+        itemStyle: { color: r.change >= 0 ? css("--up") : css("--down"), borderColor: css("--ink"), borderWidth: 2.5 },
+        label: { show: true, position: r.change >= 0 ? "right" : "left", color: css("--text"), fontFamily: mono, fontWeight: 800, fontSize: 11,
+          formatter: `${r.change >= 0 ? "+" : ""}${r.change.toFixed(1)}` },
+      })) }],
     }, true);
   }
 
-  // Stories list
+  // ---------- Donut: theme mix ----------
+  function renderDonut() {
+    const rows = totals(state.measure).filter(r => r.value > 0).sort((a, b) => b.value - a.value);
+    const sum = rows.reduce((a, r) => a + r.value, 0);
+    $("donut-unit").textContent = UNIT[state.measure];
+    let acc = 0;
+    const slices = rows.map(r => {
+      const a0 = acc / sum * 2 * Math.PI, a1 = (acc += r.value) / sum * 2 * Math.PI, mid = (a0 + a1) / 2;
+      const large = a1 - a0 > Math.PI ? 1 : 0;
+      const d = `M0 0 L${Math.cos(a0).toFixed(4)} ${Math.sin(a0).toFixed(4)} A1 1 0 ${large} 1 ${Math.cos(a1).toFixed(4)} ${Math.sin(a1).toFixed(4)} Z`;
+      return `<path tabindex="0" data-theme="${r.theme}" d="${d}" fill="${BY_SLUG[r.theme].color}" data-dx="${(Math.cos(mid) * .09).toFixed(3)}" data-dy="${(Math.sin(mid) * .09).toFixed(3)}"/>`;
+    }).join("");
+    $("donut").innerHTML = `<svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true">${slices}<circle class="hole" r=".55"/></svg>
+      <div class="center"><div><b class="num" id="donut-val"></b><span id="donut-lab"></span></div></div>`;
+    $("donut-legend").innerHTML = rows.map(r =>
+      `<button type="button" data-theme="${r.theme}"><i class="sw" style="background:${BY_SLUG[r.theme].color}"></i>${BY_SLUG[r.theme].label}</button>`).join("");
+    const share = Object.fromEntries(rows.map(r => [r.theme, r.value / sum]));
+    const focus = slug => {
+      $("donut").querySelectorAll("path").forEach(p => {
+        const on = p.dataset.theme === slug;
+        p.style.transform = on ? `translate(${p.dataset.dx}px, ${p.dataset.dy}px) scale(1.05)` : "";
+        p.classList.toggle("dim", !!slug && !on);
+      });
+      $("donut-legend").querySelectorAll("button").forEach(b => {
+        b.classList.toggle("on", b.dataset.theme === slug); b.classList.toggle("dim", !!slug && b.dataset.theme !== slug);
+      });
+      $("donut-val").textContent = slug ? pct(share[slug]) : (state.measure === "volume" ? int(D.total) : "100%");
+      $("donut-lab").textContent = slug ? BY_SLUG[slug].label : (state.measure === "volume" ? "Stories" : "Total");
+    };
+    for (const el of [...$("donut").querySelectorAll("path"), ...$("donut-legend").querySelectorAll("button")]) {
+      el.addEventListener("mouseenter", () => focus(el.dataset.theme));
+      el.addEventListener("mouseleave", () => focus(null));
+      el.addEventListener("focus", () => focus(el.dataset.theme));
+      el.addEventListener("blur", () => focus(null));
+    }
+    focus(null);
+  }
+
+  // ---------- Radar: posted vs discussed ----------
+  function renderRadar() {
+    const tS = D.totals.reduce((a, t) => a + t.stories, 0), tE = D.totals.reduce((a, t) => a + t.engagement, 0);
+    const rows = D.totals.map(t => ({ theme: t.theme, s: t.stories / tS, e: t.engagement / tE }));
+    const n = rows.length, C = 120, R = 80;
+    const max = Math.max(...rows.flatMap(r => [r.s, r.e])) * 1.05 || 1;
+    const xy = (v, i, r = R) => { const a = (2 * Math.PI * i) / n - Math.PI / 2, k = (v / max) * r; return [C + k * Math.cos(a), C + k * Math.sin(a)]; };
+    const fmt = p => p.map(c => c.toFixed(1)).join(",");
+    const poly = key => rows.map((r, i) => fmt(xy(r[key], i))).join(" ");
+    const grid = [1, .75, .5, .25].map(l => `<polygon class="grid" points="${rows.map((_, i) => fmt(xy(max * l, i))).join(" ")}"/>`).join("");
+    const axes = rows.map((_, i) => { const [x, y] = xy(max, i); return `<line class="axis" x1="${C}" y1="${C}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`; }).join("");
+    const labels = rows.map((r, i) => { const [x, y] = xy(max, i, R + 14); const anchor = Math.abs(x - C) < 6 ? "middle" : x > C ? "start" : "end";
+      return `<text x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="${anchor}">${BY_SLUG[r.theme].label}</text>`; }).join("");
+    const pts = rows.map((r, i) => ["s", "e"].map(k => { const [x, y] = xy(r[k], i);
+      return `<circle class="pt" data-i="${i}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5"/>`; }).join("")).join("");
+    $("radar").innerHTML = `${grid}${axes}
+      <polygon class="poly a" points="${poly("s")}" fill="${css("--blue")}" fill-opacity=".55"/>
+      <polygon class="poly b" points="${poly("e")}" fill="${css("--yellow")}" fill-opacity=".55"/>
+      ${labels}${pts}`;
+    $("radar").querySelectorAll(".pt").forEach(p => {
+      const r = rows[+p.dataset.i];
+      p.addEventListener("mouseenter", e => { p.classList.add("on");
+        showTip(`${BY_SLUG[r.theme].label}<br>Stories ${pct(r.s)}<br>Attention ${pct(r.e)}`, e); });
+      p.addEventListener("mousemove", moveTip);
+      p.addEventListener("mouseleave", () => { p.classList.remove("on"); hideTip(); });
+    });
+  }
+
+  // ---------- Bars: stories per day ----------
+  const PALETTE = ["--yellow", "--blue", "--pink", "--green", "--purple"];
+  function renderBars() {
+    const max = Math.max(...D.volume, 1);
+    const many = D.days.length > 10;
+    $("bars").innerHTML = D.volume.map((v, i) => `<div class="bar-col"><div class="bar" data-i="${i}" style="background:${css(PALETTE[i % PALETTE.length])}">${many ? "" : `<span class="bar-label">${v}</span>`}</div></div>`).join("");
+    const step = Math.ceil(D.days.length / 7);
+    $("bar-axis").innerHTML = D.days.map((d, i) => `<span>${i % step === 0 ? (many ? shortDay(d) : wd(d)) : ""}</span>`).join("");
+    requestAnimationFrame(() => requestAnimationFrame(() =>
+      $("bars").querySelectorAll(".bar").forEach(b => { b.style.height = `${(D.volume[+b.dataset.i] / max) * 100}%`; })));
+    $("bars").querySelectorAll(".bar").forEach(b => {
+      const i = +b.dataset.i;
+      b.addEventListener("mouseenter", e => showTip(`${day(D.days[i])}<br>${D.volume[i]} AI stories`, e));
+      b.addEventListener("mousemove", moveTip);
+      b.addEventListener("mouseleave", hideTip);
+    });
+  }
+
+  // ---------- Domains ----------
+  function renderDomains() {
+    const max = Math.max(...D.domains.map(d => d.stories), 1);
+    $("domains").innerHTML = D.domains.map(d => `<li><span>${esc(d.domain)}</span><span class="num">${d.stories}</span>
+      <div class="track"><div class="fill" data-w="${(d.stories / max) * 100}"></div></div></li>`).join("");
+    requestAnimationFrame(() => requestAnimationFrame(() =>
+      $("domains").querySelectorAll(".fill").forEach(f => { f.style.width = `${f.dataset.w}%`; })));
+  }
+
+  // ---------- Stories ----------
   function renderChips() {
     const counts = {};
     for (const s of D.stories) counts[s.theme] = (counts[s.theme] || 0) + 1;
-    const chip = (slug, label, color) => `<button type="button" class="chip" data-theme="${slug}" aria-pressed="${state.theme === slug}">${color ? `<span class="dot" style="background:${color}"></span>` : ""}${label}</button>`;
+    const chip = (slug, label, color) => `<button type="button" class="chip" data-theme="${slug}" aria-pressed="${state.theme === slug}">${color ? `<i class="sw" style="background:${color}"></i>` : ""}${label}</button>`;
     $("chips").innerHTML = chip("all", "All") + THEMES.filter(t => counts[t.slug]).map(t => chip(t.slug, t.label, t.color)).join("");
   }
-
   function renderStories() {
     const list = D.stories.filter(s => state.theme === "all" || s.theme === state.theme);
     const shown = list.slice(0, state.shown);
     $("stories").innerHTML = shown.length ? shown.map((s, i) => {
       const t = BY_SLUG[s.theme];
       return `<li class="story">
-        <span class="rank mono">${i + 1}</span>
+        <span class="rank num">${i + 1}</span>
         <div>
           <a class="title" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>
-          <div class="meta"><span class="tag" style="color:${t.color};background:${hexA(t.color, .12)}">${t.label}</span>
-            <span>${esc(s.domain || "Ask HN")}</span><span>·</span><span>${day(s.day)}</span></div>
+          <div class="meta"><span class="ttag" style="background:${t.color}">${t.label}</span><span>${esc(s.domain || "Ask HN")}</span><span>${day(s.day)}</span></div>
         </div>
-        <div class="stats num">
-          <span class="n"><b>${int(s.score)}</b>points</span>
-          <span class="n"><b>${int(s.comments)}</b>comments</span>
-          <a class="hn" href="${esc(s.hn_url)}" target="_blank" rel="noopener" title="Discussion on Hacker News" aria-label="Discussion on Hacker News">Y</a>
+        <div class="stats">
+          <span class="stat"><b class="num">${int(s.score)}</b>points</span>
+          <span class="stat"><b class="num">${int(s.comments)}</b>comments</span>
+          <a class="hnbtn" href="${esc(s.hn_url)}" target="_blank" rel="noopener" title="Discussion on Hacker News" aria-label="Discussion on Hacker News">Y</a>
         </div>
       </li>`;
     }).join("") : `<li class="empty">No story in this theme among the most discussed.</li>`;
     $("more").hidden = list.length <= state.shown;
   }
 
-  // Segmented control with a sliding pill
-  function movePill() {
-    const btn = document.querySelector('#seg button[aria-pressed="true"]');
-    const pill = document.querySelector("#seg .pill");
-    pill.style.width = `${btn.offsetWidth}px`;
-    pill.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
-  }
-  document.querySelectorAll("#seg button").forEach(b => b.addEventListener("click", () => {
+  // ---------- Interactions ----------
+  document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
     state.measure = b.dataset.measure;
-    document.querySelectorAll("#seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
-    movePill();
-    $("measure-hint").textContent = MEASURE[state.measure];
-    renderShare(); renderMomentum();
+    document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    $("measure-hint").textContent = HINT[state.measure];
+    renderShare(); renderMomentum(); renderDonut();
   }));
   $("chips").addEventListener("click", e => {
     const b = e.target.closest(".chip"); if (!b) return;
-    state.theme = b.dataset.theme; state.shown = 12;
+    state.theme = b.dataset.theme; state.shown = 10;
     renderChips(); renderStories();
   });
-  $("more").addEventListener("click", () => { state.shown += 12; renderStories(); });
+  $("more").addEventListener("click", () => { state.shown += 10; renderStories(); });
 
-  function renderAll() { renderKpis(); renderShare(); renderMomentum(); renderMix(); renderVolume(); renderDomains(); }
-  $("measure-hint").textContent = MEASURE.volume;
-  renderChips(); renderStories(); renderAll(); movePill();
-  if (document.fonts) document.fonts.ready.then(movePill);
-  let resizeTimer;
+  function renderAll() { renderKpis(); renderShare(); renderMomentum(); renderDonut(); renderRadar(); renderBars(); renderDomains(); }
+  $("measure-hint").textContent = HINT.volume;
+  renderChips(); renderStories(); renderAll();
+  let t;
   window.addEventListener("resize", () => {
     Object.values(charts).forEach(c => c.resize());
-    clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderShare(); movePill(); }, 150);
+    clearTimeout(t); t = setTimeout(renderShare, 150);
   });
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderAll);
 })();

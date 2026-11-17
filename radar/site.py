@@ -17,10 +17,11 @@ from radar.storage import load_posts
 SITE_DIR = ROOT / "docs"
 TEMPLATE = Path(__file__).with_name("dashboard.html")
 REPO_URL = "https://github.com/Osceti/ai-news-radar"
+# Bright fills that read well with black text and black outlines (brutalist palette).
 THEME_COLORS = {
-    "models": "#4F7CF7", "agents": "#F2994A", "rag": "#27AE60", "dev-tools": "#9B51E0",
-    "security": "#EB5757", "research": "#2DB7B0", "business": "#E2B93B",
-    "regulation": "#A0785A", "other": "#9AA3AE",
+    "models": "#60A5FA", "agents": "#FB923C", "rag": "#4ADE80", "dev-tools": "#A78BFA",
+    "security": "#F87171", "research": "#22D3EE", "business": "#FACC15",
+    "regulation": "#F472B6", "other": "#A1A1AA",
 }
 TOP_STORIES = 60
 
