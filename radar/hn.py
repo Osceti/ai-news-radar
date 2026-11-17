@@ -99,5 +99,6 @@ def to_record(item: dict, keywords: list[str], collected_at: datetime) -> dict:
         "keywords": ";".join(keywords),
         "theme": "",
         "summary": "",
+        "prompt_version": 0,
         "collected_at": iso(collected_at),
     }

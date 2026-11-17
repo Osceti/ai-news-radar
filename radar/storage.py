@@ -17,11 +17,13 @@ COLUMNS = [
     "keywords",
     "theme",
     "summary",
+    "prompt_version",
     "collected_at",
 ]
-INT_COLUMNS = ("id", "score", "num_comments")
+INT_COLUMNS = ("id", "score", "num_comments", "prompt_version")
 # Columns produced by the classifier, kept when a story is collected again.
-CLASSIFICATION_COLUMNS = ("theme", "summary")
+# prompt_version is the classifier prompt that produced the theme (0: not classified).
+CLASSIFICATION_COLUMNS = ("theme", "summary", "prompt_version")
 
 
 def empty_posts() -> pd.DataFrame:
@@ -34,6 +36,9 @@ def load_posts(path: Path) -> pd.DataFrame:
     if not Path(path).exists():
         return empty_posts()
     df = pd.read_csv(path, dtype=str, keep_default_na=False)
+    if "prompt_version" not in df:  # files written before versions were tracked: v1
+        df["prompt_version"] = (df["theme"] != "").astype(int).astype(str)
+    df["prompt_version"] = df["prompt_version"].replace("", "0")
     for col in INT_COLUMNS:
         df[col] = df[col].astype("int64")
     return df[COLUMNS]
@@ -61,6 +66,7 @@ def merge_posts(existing: pd.DataFrame, records: list[dict]) -> pd.DataFrame:
     previous = existing.set_index("id")
     for col in CLASSIFICATION_COLUMNS:
         fresh[col] = fresh["id"].map(previous[col]).fillna(fresh[col])
+    fresh = fresh.astype({col: "int64" for col in INT_COLUMNS})
 
     kept = existing[~existing["id"].isin(fresh["id"])]
     merged = pd.concat([kept, fresh], ignore_index=True)

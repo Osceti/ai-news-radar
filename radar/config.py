@@ -12,8 +12,9 @@ DIGEST_DIR = ROOT / "digests"
 COLLECT_WINDOW_HOURS = 72
 # Number of stories in each daily digest.
 DIGEST_SIZE = 10
-# Upper bound on LLM classifications per run, to stay well inside the free tier.
-MAX_CLASSIFICATIONS_PER_RUN = 200
+# Upper bound on LLM classifications per run (25 per request), to stay well inside
+# the free tier while letting a new prompt version relabel the whole history.
+MAX_CLASSIFICATIONS_PER_RUN = 1000
 
 # Fixed list of themes: slug -> display label. Order is the order used in digests.
 THEMES = {

@@ -8,6 +8,7 @@ import logging
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
+from radar.classifier import PROMPT_VERSION
 from radar.config import COLLECT_WINDOW_HOURS, DIGEST_SIZE, MAX_CLASSIFICATIONS_PER_RUN
 from radar.digest import posts_on, render_digest, select_top
 from radar.filters import match_ai_keywords
@@ -38,12 +39,17 @@ def collect(data_path: Path, client, now: datetime,
 
 
 def classify(data_path: Path, classifier, limit: int = MAX_CLASSIFICATIONS_PER_RUN) -> tuple[int, int]:
-    """Classify stories that have no theme yet, newest first.
+    """Classify stories with no theme yet, then stories labelled by an older prompt.
 
-    Returns ``(classified, pending)``. Unclassified stories are retried next run.
+    New stories come first, newest first, so a run that hits the rate limit still
+    covers the latest digest. An outdated label is kept until it is replaced.
+    Returns ``(classified, pending)``; whatever is left is retried next run.
     """
     posts = load_posts(data_path)
-    pending = posts[posts["theme"] == ""].sort_values("created_at", ascending=False).head(limit)
+    pending = posts[(posts["theme"] == "") | (posts["prompt_version"] < PROMPT_VERSION)]
+    pending = (pending.assign(new=pending["theme"] == "")
+               .sort_values(["new", "created_at"], ascending=False)
+               .head(limit))
     if pending.empty:
         log.info("Nothing to classify")
         return 0, 0
@@ -57,8 +63,10 @@ def classify(data_path: Path, classifier, limit: int = MAX_CLASSIFICATIONS_PER_R
         mask = posts["id"] == post_id
         posts.loc[mask, "theme"] = result["theme"]
         posts.loc[mask, "summary"] = result["summary"]
+        posts.loc[mask, "prompt_version"] = PROMPT_VERSION
     save_posts(posts, data_path)
-    log.info("Classified %d of %d pending stories", len(results), len(pending))
+    log.info("Classified %d of %d pending stories (prompt v%d)", len(results), len(pending),
+             PROMPT_VERSION)
     return len(results), len(pending)
 
 

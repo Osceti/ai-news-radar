@@ -46,6 +46,37 @@ def test_full_run_and_rerun(tmp_path):
     assert classify(data, classifier) == (0, 0)
 
 
+def test_classify_relabels_stories_from_an_older_prompt(tmp_path):
+    from radar.classifier import PROMPT_VERSION
+
+    data = tmp_path / "posts.csv"
+    collect(data, FakeHNClient(ITEMS), NOW)
+    classify(data, FakeClassifier(theme="models"))
+    posts = load_posts(data)
+    assert (posts["prompt_version"] == PROMPT_VERSION).all()
+
+    # Story 2 was labelled by an older prompt and story 6 is new: the new one goes first.
+    posts.loc[posts["id"] == 2, "prompt_version"] = PROMPT_VERSION - 1
+    posts.to_csv(data, index=False)
+    collect(data, FakeHNClient(ITEMS + [make_item(6, "New LLM story", hours_ago=10)]), NOW)
+    classifier = FakeClassifier(theme="agents")
+    assert classify(data, classifier) == (2, 2)
+    assert [p["id"] for p in classifier.calls[0]] == [6, 2]
+    posts = load_posts(data).set_index("id")
+    assert posts.loc[1, "theme"] == "models"  # up to date: untouched
+    assert posts.loc[2, "theme"] == "agents" and posts.loc[2, "prompt_version"] == PROMPT_VERSION
+
+
+def test_load_posts_without_prompt_version_column(tmp_path):
+    data = tmp_path / "posts.csv"
+    collect(data, FakeHNClient(ITEMS), NOW)
+    classify(data, FakeClassifier(theme="models"))
+    legacy = load_posts(data).drop(columns="prompt_version")
+    legacy.loc[legacy["id"] == 2, "theme"] = ""
+    legacy.to_csv(data, index=False)
+    assert load_posts(data).set_index("id")["prompt_version"].to_dict() == {1: 1, 2: 0}
+
+
 def test_cli_digest_for_a_given_date(tmp_path, capsys):
     data, digests = tmp_path / "posts.csv", tmp_path / "digests"
     collect(data, FakeHNClient(ITEMS), NOW)
