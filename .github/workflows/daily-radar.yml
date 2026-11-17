@@ -2,8 +2,15 @@ name: Daily radar
 
 on:
   schedule:
-    - cron: "0 20 * * *" # every day at 20:00 UTC
+    # 06:00 UTC: reports on the previous UTC day. Scheduled runs often start hours
+    # late; any start time on the next day still produces the right digest.
+    - cron: "0 6 * * *"
   workflow_dispatch:
+    inputs:
+      date:
+        description: "UTC day to (re)build, YYYY-MM-DD (empty: yesterday)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -32,9 +39,12 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
-        run: python -m radar run
+          DIGEST_DATE: ${{ inputs.date }}
+        run: python -m radar run ${DIGEST_DATE:+--date "$DIGEST_DATE"}
 
       - name: Commit data and digest
+        env:
+          DIGEST_DATE: ${{ inputs.date }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -43,6 +53,6 @@ jobs:
             echo "Nothing to commit"
             exit 0
           fi
-          git commit -m "data: daily radar $(date -u +%F)"
+          git commit -m "data: daily radar ${DIGEST_DATE:-$(date -u -d yesterday +%F)}"
           git pull --rebase
           git push

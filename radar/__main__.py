@@ -3,11 +3,12 @@
 import argparse
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 from radar.classifier import DEFAULT_MODEL, GeminiClassifier
-from radar.config import DATA_FILE, DIGEST_DIR, WINDOW_HOURS
+from radar.config import COLLECT_WINDOW_HOURS, DATA_FILE, DIGEST_DIR
+from radar.digest import previous_day
 from radar.hn import HackerNewsClient
 from radar.pipeline import classify, collect, make_digest
 
@@ -41,19 +42,24 @@ def main(argv: list[str] | None = None) -> int:
                         help="'run' chains collect, classify and digest")
     parser.add_argument("--data", type=Path, default=DATA_FILE, help="posts CSV file")
     parser.add_argument("--digests", type=Path, default=DIGEST_DIR, help="digest directory")
-    parser.add_argument("--window-hours", type=int, default=WINDOW_HOURS,
-                        help="collect and rank stories posted in the last N hours")
+    parser.add_argument("--window-hours", type=int, default=COLLECT_WINDOW_HOURS,
+                        help="collect stories posted in the last N hours (default: %(default)s)")
+    parser.add_argument("--date", type=date.fromisoformat, default=None,
+                        help="UTC day of the digest, YYYY-MM-DD (default: yesterday)")
     args = parser.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     now = datetime.now(timezone.utc).replace(microsecond=0)
+    day = args.date or previous_day(now)
+    if day >= now.date():
+        warn(f"{day} is not over yet (UTC): its digest will be incomplete.")
 
     if args.command in ("collect", "run"):
         collect(args.data, HackerNewsClient(), now, args.window_hours)
     if args.command in ("classify", "run"):
         run_classification(args.data)
     if args.command in ("digest", "run"):
-        print(make_digest(args.data, args.digests, now, args.window_hours))
+        print(make_digest(args.data, args.digests, day))
     return 0
 
 

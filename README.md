@@ -23,17 +23,17 @@ dataset, so trends (which themes rise or fade over time) can be analysed later.
 
 ```mermaid
 flowchart LR
-    A["Hacker News API<br/>top + new + best stories"] --> B["Keyword filter<br/>AI titles, last 24 h"]
+    A["Hacker News API<br/>top + new + best stories"] --> B["Keyword filter<br/>AI titles, last 72 h"]
     B --> C[("data/posts.csv")]
     C --> D["Gemini<br/>theme + one-line summary"]
     D --> C
-    C --> E["digests/YYYY-MM-DD.md<br/>top 10 by points + comments"]
+    C --> E["digests/YYYY-MM-DD.md<br/>top 10 of the day"]
 ```
 
 1. **Collect** ([`radar/hn.py`](radar/hn.py), [`radar/filters.py`](radar/filters.py)).
    The official API has no search endpoint, so the radar reads the ids of the current
    top, new and best stories (about 1,000 unique ids), fetches each item concurrently and
-   keeps stories posted in the last 24 hours whose title matches a curated list of AI
+   keeps stories posted in the last 72 hours whose title matches a curated list of AI
    keywords (acronyms such as `LLM` or `RAG` are matched case-sensitively to avoid false
    positives like "rag" or "Ai Weiwei").
 2. **Store** ([`radar/storage.py`](radar/storage.py)). Stories are upserted into
@@ -46,12 +46,17 @@ flowchart LR
    regulation, other) plus a one-sentence summary written only from the title and the
    link domain. Rate-limit errors are retried with exponential backoff, and stories that
    still fail are retried on the next run.
-4. **Digest** ([`radar/digest.py`](radar/digest.py)). The ten stories of the last 24 hours
-   with the most points + comments are written to `digests/YYYY-MM-DD.md`, grouped by
-   theme, with the link, the summary and the Hacker News discussion.
+4. **Digest** ([`radar/digest.py`](radar/digest.py)). The ten stories posted on the
+   previous UTC day (00:00 to 24:00) with the most points + comments are written to
+   `digests/YYYY-MM-DD.md`, grouped by theme, with the link, the summary and the Hacker
+   News discussion.
 
-The [daily workflow](.github/workflows/daily-radar.yml) runs at 20:00 UTC: it runs the
-test suite, then the pipeline, then commits the updated CSV and the new digest.
+The [daily workflow](.github/workflows/daily-radar.yml) is scheduled at 06:00 UTC: it runs
+the test suite, then the pipeline, then commits the updated CSV and the new digest.
+GitHub often starts scheduled runs hours late, so each digest is tied to the day it
+covers rather than to the time of the run, and the 72-hour collection window means a late
+run loses nothing. A missed day can be rebuilt from **Actions → Daily radar → Run
+workflow** by entering its date.
 A [CI workflow](.github/workflows/ci.yml) runs the tests on every push and pull request.
 
 ### Data
@@ -126,8 +131,9 @@ python -m radar run
 ```
 
 Each step can also run on its own: `python -m radar collect`, `python -m radar classify`,
-`python -m radar digest`. Use `--data` and `--digests` to write somewhere else, and
-`--window-hours` to change the 24-hour window.
+`python -m radar digest`. Use `--date YYYY-MM-DD` to build the digest of a given UTC day
+(default: yesterday), `--window-hours` to change the 72-hour collection window, and
+`--data` and `--digests` to write somewhere else.
 
 ### Configuration
 
@@ -167,11 +173,12 @@ theme matches the human label, with a confusion matrix and a review of the error
 - Only titles are filtered, so an AI story with a title that names no AI keyword is
   missed, and a few generic matches (for example "AI" in a non-AI story) get through.
 - The Hacker News API exposes the latest 500 new stories, which covers roughly the last
-  half day; older stories from the 24-hour window are found through the top and best lists,
-  which favours the popular ones, exactly the ones a digest needs.
+  half day; older stories are found through the top and best lists, which favours the
+  popular ones, exactly the ones a digest needs. Since runs happen once a day, a few
+  low-scoring stories are never seen.
 - Summaries are written from the title and domain only, without reading the article.
-- Points and comments are a snapshot at collection time, so a story posted just before a
-  run is ranked on its early score.
+- Points and comments are a snapshot at collection time, so a story posted late in the
+  day is ranked on a score only a few hours old.
 
 ## Roadmap
 

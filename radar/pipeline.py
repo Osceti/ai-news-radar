@@ -5,11 +5,11 @@ External clients are passed in, which keeps the steps easy to test.
 """
 
 import logging
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
-from radar.config import DIGEST_SIZE, MAX_CLASSIFICATIONS_PER_RUN, WINDOW_HOURS
-from radar.digest import recent_posts, render_digest, select_top
+from radar.config import COLLECT_WINDOW_HOURS, DIGEST_SIZE, MAX_CLASSIFICATIONS_PER_RUN
+from radar.digest import posts_on, render_digest, select_top
 from radar.filters import match_ai_keywords
 from radar.hn import created_at, is_live_story, to_record
 from radar.storage import load_posts, merge_posts, save_posts
@@ -17,7 +17,8 @@ from radar.storage import load_posts, merge_posts, save_posts
 log = logging.getLogger(__name__)
 
 
-def collect(data_path: Path, client, now: datetime, window_hours: int = WINDOW_HOURS) -> int:
+def collect(data_path: Path, client, now: datetime,
+            window_hours: int = COLLECT_WINDOW_HOURS) -> int:
     """Fetch recent AI stories from Hacker News and upsert them. Returns their count."""
     items = client.items(client.story_ids())
     cutoff = now - timedelta(hours=window_hours)
@@ -61,14 +62,16 @@ def classify(data_path: Path, classifier, limit: int = MAX_CLASSIFICATIONS_PER_R
     return len(results), len(pending)
 
 
-def make_digest(data_path: Path, digest_dir: Path, now: datetime,
-                window_hours: int = WINDOW_HOURS, size: int = DIGEST_SIZE) -> Path:
-    """Write ``digests/YYYY-MM-DD.md`` for the window ending at ``now``."""
+def make_digest(data_path: Path, digest_dir: Path, day: date, size: int = DIGEST_SIZE) -> Path:
+    """Write ``digests/YYYY-MM-DD.md`` for the stories posted on ``day`` (UTC).
+
+    Running it again for the same day rewrites the file with the latest scores.
+    """
     posts = load_posts(data_path)
-    top = select_top(posts, now, window_hours, size)
-    total = len(recent_posts(posts, now, window_hours))
-    path = Path(digest_dir) / f"{now:%Y-%m-%d}.md"
+    top = select_top(posts, day, size)
+    total = len(posts_on(posts, day))
+    path = Path(digest_dir) / f"{day:%Y-%m-%d}.md"
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(render_digest(top, now, total, window_hours), encoding="utf-8")
+    path.write_text(render_digest(top, day, total), encoding="utf-8")
     log.info("Wrote %s (%d stories)", path, len(top))
     return path
