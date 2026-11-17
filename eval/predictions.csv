@@ -1,0 +1,101 @@
+id,llm_theme,llm_summary
+50457150,agents,A user demonstrates how Claude reverse engineered their 32-year-old Jeep and started controlling it.
+50457693,business,Discourse positions itself for the AI search era compared to Reddit.
+50457706,dev-tools,Nuketorch introduces Pipeline Parallelism claiming it is faster than Apple's fine-tuning.
+50457822,other,An individual shares how thinking differently might be assisted by AI.
+50457964,dev-tools,"A guide discusses token usage, limits, and savings for Claude Code and Codex."
+50458324,dev-tools,This repository lets you play SNES games while working with Claude.
+50459020,other,Several Independent Games Festival jurors released a public statement regarding the usage of AI.
+50459106,dev-tools,Forchetta is a macOS application that consolidates all Claude Code sessions into a single window.
+50459119,dev-tools,An AI-assisted RP2040 audio board was successfully designed and built on the first try in five days.
+50459151,other,A user discovered a new dwarf planet in our solar system using Claude.
+50459445,dev-tools,Hugging Face released two hundred WebGPU kernels designed for running local AI workloads.
+50460269,dev-tools,A GitHub tool that displays Claude usage directly in your menu bar.
+50460287,agents,A GitHub repository providing agent skills and plugins for managing Google Ads campaigns.
+50460968,other,An opinion piece arguing that people should feel panic regarding the advancement of AI.
+50462153,business,An article discusses whether commercial stage-gates can keep enterprise AI pilots out of procurement stalls.
+50463558,dev-tools,An article discussing approaches toward verifiable LLM infrastructure.
+50464363,agents,The Open Agentic Web Challenge invites developers to help build the open agentic web.
+50470137,dev-tools,An article discussing why the hard part of AI coding is the second change.
+50470160,agents,Perplexity Teammates are always-on AI agents that message coworkers in Slack.
+50471151,dev-tools,InferSSD demonstrates running 800B-parameter LLMs on consumer hardware.
+50471652,business,The Guardian reports on the rise and fall of Jensen Huang from washing dishes to AI rockstar.
+50472179,dev-tools,A test build for local AI chat on iPhone is built on a custom engine.
+50473390,dev-tools,"An analysis compares the context costs of MCP, CLI, and Skills."
+50473715,dev-tools,Agentic Commits introduces agentic workflows to code repositories.
+50473926,dev-tools,A discussion asks whether AI coding has changed who builds internal tools.
+50474813,business,Top Chinese AI labs built their newest models on Nvidia's Blackwell chips.
+50474852,business,Nvidia faced pressure to boost its AI backstop before Huang's exit.
+50474883,business,Chinese frontier AI models reportedly carry the fingerprint of export-controlled GPUs.
+50474942,agents,OpenAI reportedly wants agents to tell websites where users are located.
+50475735,business,An article from The Economist discusses why readers should expect an AI crash.
+50475982,dev-tools,Agentview Chat provides a dedicated chat user interface for Claude Code background sessions.
+50476219,dev-tools,"AxiomStory is a tool designed to keep stories consistent across AI text, images, and video."
+50476441,other,An essay questions whether AI development timelines have suddenly moved forward.
+50480936,other,Users are experiencing Claude OAuth failures.
+50483765,models,The first version of Llama.cpp has been released.
+50485228,dev-tools,A discussion asks whether AI coding has changed who builds internal tools.
+50485745,dev-tools,A team explains how they review four times more AI code without reading every line.
+50486914,models,DeepSeek Ultrafast is hosted on GitHub.
+50487198,security,Schneier on Security discusses how AI does not have to go rogue to break the world.
+50487216,business,"Stripe Economics discusses AI, work from home, and the young-graduate job market."
+50487611,business,Jensen Huang's resignation from Nvidia creates uncertainty and worry within the artificial intelligence startup ecosystem.
+50488562,models,A newly introduced diffusion language model offers significantly higher efficiency for translation tasks.
+50488716,other,An article exploring the historical concept of ghost writing before modern artificial intelligence.
+50488774,research,A LessWrong post discusses orienting to one-year AGI timelines.
+50488911,other,An opinion piece on Medium expresses disillusionment with software conferences due to AI.
+50489240,other,An opinion piece argues that using LLMs outside of reflection is an anti-pattern.
+50489463,other,A free AI image gallery is shared on Skynett Studio.
+50489631,business,Evidence shows Chinese AI labs built their newest models on Nvidia's Blackwell chips.
+50491417,other,An article discusses the anti-marketing aspect of the Gemini network.
+50493079,business,A financial report noting Sam Bankman-Fried would have made nearly 40 billion in an Anthropic IPO.
+50496084,dev-tools,A Model Context Protocol tool to ask Claude why your Mac is running slowly.
+50496147,other,A report on engagement with the AI Level Framework.
+50496205,agents,An observation that Claude Code never loads AGENTS.md in a significant portion of repositories.
+50496350,security,A fail-closed guard hook for Claude Code called Bright Lines.
+50496631,agents,Timon is an open-source AI workstation for coordinating agents.
+50497578,dev-tools,ML Modules for Mere Mortals is discussed on thunderseethe.dev.
+50497744,business,Jensen Huang's exit from Nvidia impacts China's AI supply chain according to restofworld.org.
+50498051,business,Reports suggest the smuggling of AI GPUs could be linked to management changes.
+50499588,research,An author details their experience trying every large language model architecture change since 2020.
+50499787,business,An article discusses tactical team changes resulting from AI.
+50500656,other,An MIT Sloan article explores what AI does to humans.
+50500966,business,A Microsoft blog post discusses moving from AI ambition to business impact.
+50506796,models,"Europa, an open EU AI model, aims for nearly one trillion parameters."
+50506919,agents,A tool lets your AI agent call you over the Model Context Protocol.
+50507199,security,Amazon Threat Intelligence observes threat actor campaigns utilizing ARTEX AI agents.
+50507303,other,An opinion piece argues that all AI-generated code should be open source.
+50507449,security,FlashVMM allows you to jail your AI agent in a MicroVM that boots in 18 ms.
+50507517,business,A human reads the Anthropic IPO filing as reported by the New York Times.
+50507702,other,The author shares their experience letting large language models play a 1988 detective gamebook hundreds of times.
+50507971,agents,Pizza is an event-driven AI agent that avoids while true loops.
+50508576,dev-tools,"Factum offers human-first, AI-native modeling for VS Code."
+50508977,other,Pocket Garden provides a player interface to over 130 AI based web games.
+50509195,business,A Hacker News discussion reflects on the costs of handing our lives over to closed software and AI.
+50510433,dev-tools,Inference Gateway Desktop is an AI client designed for any model provider.
+50510760,dev-tools,Minute is an offline meeting notetaker that uses local LLMs.
+50510788,security,CloakPrompt offers a local browser firewall to scrub PII and keys before they reach ChatGPT or Claude.
+50510872,models,"An overview covers LLM releases, token limits, and pricing since GPT 3.5."
+50511337,regulation,Delaware is considering AI-managed companies.
+50511622,security,Thales launches Sentinel Envelope Plus to protect software from AI-assisted hacking.
+50512047,business,Reddit's traffic has declined partly due to AI Overviews according to businessinsider.com.
+50520568,business,A YouTube video features Al Vigier discussing sovereign defense AI.
+50520896,research,Databricks shares an AI Index on developers.databricks.com.
+50521694,models,Benchmarks for document tasks focus on local AI models.
+50522069,dev-tools,An academic paper discusses evolving infrastructure for agent-adaptive LLM serving at scale.
+50522268,dev-tools,A new implementation runs LLMs through Nvidia GPUs natively on Apple Silicon.
+50522562,regulation,Trump's plan for AI supremacy fuels resistance in the Philippines according to the New York Times.
+50522602,dev-tools,An open-source Claude Meetings alternative works with any agent or call.
+50523835,dev-tools,Apache TVM discusses building a Rust-native and cross-language foundation for agentic machine learning compilers.
+50524598,other,A web app challenges users to identify whether dating profile photos are AI-generated.
+50525014,regulation,The state of California has filed a lawsuit against OpenAI regarding hacking risks.
+50526094,other,A personal blog post shares experiences about working with Claude as an annoying coworker.
+50526734,research,Directly editing a VLA model's weights improved its performance without any fine-tuning.
+50526969,models,A video explaining various aspects of post-training for large language models.
+50527557,dev-tools,A design canvas tool that can be driven by coding assistants over MCP.
+50528233,dev-tools,Building a Rust-native foundation for agentic machine learning compilers is discussed.
+50528364,agents,A forty-domain study analyzes Shopify stores regarding their exposure of endpoints and agent configurations.
+50529310,business,Chinese entities use United States AI models to train domestic rivals amid chip curbs.
+50529624,other,A board game adaptation is themed around the artificial intelligence race.
+50530124,regulation,California files a lawsuit against OpenAI concerning Hugging Face.
+50530141,agents,A Show HN project presents a software project management tool for humans and AI agents.
