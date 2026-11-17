@@ -17,6 +17,8 @@ from radar.filters import is_ai_related, match_ai_keywords
     "EU AI Act enforcement begins",
     "Gemini 3 Flash is now generally available",
     "Building a vector database from scratch",
+    "Gemini Decisions API",
+    "Scaling ML training on spot instances",
 ])
 def test_ai_titles_match(title):
     assert is_ai_related(title)
@@ -29,6 +31,9 @@ def test_ai_titles_match(title):
     "Rust 2.0 released",
     "Exploring Gemini protocol capsules",
     "A tour of gemini://geminiprotocol.net",
+    "The anti-marketing aspect of the Gemini network",
+    "ML Modules for Mere Mortals",
+    "Type inference in Standard ML",
     "The MAIL command in SMTP",
     "",
 ])

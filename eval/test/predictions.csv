@@ -1,0 +1,101 @@
+id,llm_theme,llm_summary
+50451102,other,Open source software projects are beginning to ban AI-generated contributions.
+50451820,business,OpenAI continues to suffer heavy financial losses as its revenue rises to 10 billion dollars.
+50452466,research,An essay argues that we need more science in the judgment of AI systems.
+50456668,business,Anthropic reports a key AI safety alarm triggered days before its IPO.
+50457164,business,Retirement savings are supposedly fueling the AI bubble according to an analysis from lpeproject.org.
+50457760,business,"An article explores Starlight, described as a Bitcoin-native AI app store."
+50457853,models,Gemini Decision 1 is now available for free on Google AI Studio.
+50458124,research,An analysis explores the feasibility of implementing a hardwired pause on frontier AI training.
+50458331,dev-tools,"Friday is an open-source tool that combines Claude Code, Codex, and Cursor to work together as one team."
+50458761,dev-tools,"Outlier offers supervised fine-tuning services tailored for software, AI, systems, and science professionals."
+50459075,business,Pundit Claims is an open-source register of AI claims maintained by Gary Marcus and Ed Zitron.
+50459496,dev-tools,CodeGraphy v2.1 introduces eleven MCP tools and an interactive architecture graph while reducing LLM tokens by eighty-five percent.
+50462217,dev-tools,An application blocking OpenAI model usage after a reset due to subscription sharing limits.
+50463399,agents,A video demonstrates Claude Code and Codex reverse engineering a Jeep ECU over an Arduino.
+50463935,models,OpenPocket is an iOS app for running LLMs like Qwen3.5 and LFM completely offline.
+50464055,models,An article discussing why every AI model will eventually ship as a torrent.
+50464872,dev-tools,"Pi GPUI is a native GUI for the pi coding agent, built with Rust and GPUI."
+50467880,other,AI Red Lines is a project where users write down what would make them act on AI.
+50468888,dev-tools,An effort to make LLMs work on small and old devices.
+50470911,dev-tools,A developer explains how they optimized their library for coding agents.
+50471431,models,The Google blog discusses Gemini 4 Hydrogen.
+50471658,models,Air-LLM discusses broadcasting AI weights for edge LLM inference via RF computing on arXiv.
+50471825,models,"Artificial Analysis provides an intelligence, performance, and price analysis of Gemini 4 Hydrogen."
+50472194,regulation,Australian companies face AI washing claims following job cuts and offshoring.
+50472260,models,Google discusses Gemini 4 Hydrogen and Orchestrator.
+50472615,security,"ArxCloud offers turnkey cloud SASE, AI and web DLP, and a zero-port LAN relay."
+50472831,other,An article discusses what Cold War lessons can teach us about the AI age.
+50473801,dev-tools,Claude Meetings provides updates related to meetings within the Claude ecosystem.
+50474186,security,The Dougan leak exposes a concerted effort to infect AI.
+50474320,agents,Telltale Bot is a tool for detecting agentic web traffic.
+50475128,other,An industry perspective explains what end-to-end AI systems mean for the future of automated driving.
+50475713,models,Edge0-145B brings frontier AI capabilities to your own computer.
+50476231,research,An article explores what it describes as the fundamental flaw in the ongoing race toward AGI.
+50476232,business,"Dario Amodei predicts that AI will cure cancer, Alzheimer's, and heart disease within ten years."
+50477649,dev-tools,The Brave Search API now accepts agentic payments using the x402 protocol.
+50481321,research,A look into what thousands of internal conversations look like inside a language model.
+50482661,agents,This article highlights that AI agents face a major problem because nobody wants to let them in.
+50484426,other,A Hacker News thread asks users to name anything new that AI has done.
+50485334,business,Anthropic is reportedly refusing to take money from Chinese firms in an upcoming IPO.
+50485419,business,Amazon outlines a plan to own product data and fight AI shopping agents.
+50486450,models,A report reveals that one in four third-party AI endpoints underperform their advertised models.
+50486789,agents,Blink Cash explores giving frontier AI models capital and access to onchain markets.
+50486913,other,A blog post discusses the NitrousTracker AI disclosure.
+50487510,agents,OpenAI launches a new ChatGPT Wallet enabling autonomous AI agents to pay for purchases.
+50488351,business,Nvidia begins searching for a successor following the exit of CEO Jensen Huang.
+50488565,dev-tools,A beginner guide providing Jax examples to help understand machine learning fundamentals.
+50488769,other,This manifesto discusses the impact and rejection of AI generated content online.
+50488940,agents,Mellonbot is an AI agent that finds the root cause of server issues and fixes them.
+50489574,dev-tools,Copper-KiCad provides an MCP to design PCBs in KiCad better and cheaper.
+50491384,business,The FAA is implementing an 875 million dollar AI tool to help manage air traffic congestion.
+50491841,models,MeditionBench evaluates large language models for mediation and conflict resolution.
+50496885,research,A visual explanation of reinforcement learning is provided by aatishb.com.
+50496985,other,"Vyrma shares 100 percent AI music, visuals, and audio showing what is possible on YouTube."
+50497161,models,A new access to justice benchmark reveals leading AI models miss critical legal details.
+50498325,security,An introduction to analysis by synthesis for preventing an AI catastrophe.
+50498553,regulation,An Ask HN question about whether you own code written with AI help.
+50498921,dev-tools,Custom themes available for Claude Code.
+50499448,other,An essay discusses the ontological divergence of artificial intelligence.
+50499499,other,AI school bus cameras are generating cash by catching drivers who fail to stop.
+50500018,models,Wojak-Bench 3D benchmarks various AI models to see which is best at 3D printing.
+50500089,rag,Loft is an offline Q&A tool using llama.cpp for local files with citations.
+50502097,other,AI submissions have caused the end of a game coding contest.
+50507726,business,"Jake Wharton explains layoffs, artificial intelligence, and Google in relation to Kotlin 2026."
+50508076,agents,An article explores lessons learned from Picasso when building AI agents.
+50508089,dev-tools,Hacker News users discuss what building hardware with AI looks like.
+50508283,models,Claudette is a project bringing Mistral models into Claude Code.
+50508427,other,An author explains why they are opposed to AI writing but not AI coding.
+50508890,other,Victoria University lecturers steer students away from AI use in education.
+50509044,dev-tools,Hacker News users discuss what instructions they include for AI coding assistants like Claude.
+50509052,business,Deutsche Welle reports on how artificial intelligence is likely to change Germany's job market.
+50509129,dev-tools,Google Developers blog explains catching Go bugs that fuzzing misses using Gemini and a constraint solver.
+50509489,research,A research paper discusses the peril and promise of artificial intelligence through weak-link asymmetry.
+50509807,other,A YouTube video explains ten years of large language models in nineteen minutes.
+50509997,other,An Ask HN discussion asks if ChatGPT is currently broken for other users.
+50510133,business,The Telegraph reports that Britain faces painful job losses due to artificial intelligence according to the OBR.
+50510353,business,The AXI Framework is presented as a solution for the cost crisis in AI.
+50510540,other,An Ask HN discussion asks what coding interviews look like in the age of AI.
+50511508,other,"An article on cosmonautmag.com discusses technocracy, AI, and the end of the world."
+50512000,models,GLM models cut AI coding costs significantly for thousands of engineers.
+50514224,other,A Reddit post discusses whether the Google AI Ultra subscription is worth it.
+50517797,security,The Register reports that an AI agent turned a security patch into an exploit without human help.
+50520212,dev-tools,Hugging Face and OpenRouter partner to make open-weight models easier to run.
+50520686,research,A research paper on arXiv benchmarks coding agents under evolving requirements.
+50521390,security,"AI agents are becoming identities in their own right, and security needs to catch up."
+50522070,agents,An exploration into why AI agents are all saying the same thing.
+50522709,models,OpenAI announces a milestone in expanding access to AI.
+50523346,business,Gizmodo reports that the Federal Reserve is worried AI agents could trigger a bank run.
+50523359,regulation,California is suing OpenAI over its rogue AI agent hack.
+50524523,regulation,California has filed a lawsuit against OpenAI concerning various AI safety issues.
+50524875,dev-tools,CopySpeech is a GitHub project providing AI text-to-speech functionality for your clipboard.
+50525082,regulation,Google has updated its privacy rules and support documentation for Gemini Apps.
+50526152,security,A blog post discusses running coding agents without handing over user credentials.
+50526341,other,The AI Ascent explores topics related to artificial intelligence.
+50527299,dev-tools,A technical blog post about using external sandboxes for coding agents.
+50528011,business,Pimco states that AI bond spreads may tighten as the data center boom slows down.
+50528235,research,OpenScientist is an open AI system that automates biomedical research.
+50529056,regulation,OpenAI is being sued by California over a Hugging Face attack.
+50529117,agents,An intention specification proposes a workflow for the agentic development cycle.
+50529537,business,NATO reportedly uses hundreds of billions of OpenAI tokens monthly for cyber defense.
+50530209,business,An analysis discusses who will capture the economic value generated by artificial intelligence.

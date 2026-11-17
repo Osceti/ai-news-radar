@@ -21,16 +21,25 @@ API_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:gener
 DEFAULT_MODEL = "gemini-flash-lite-latest"
 RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 
+# Version of the theme definitions and prompt below. v2 narrowed dev-tools after the
+# evaluation showed it absorbing consumer AI apps and essays on AI coding.
+PROMPT_VERSION = 2
+
 THEME_GUIDE = {
-    "models": "releases, updates, benchmarks or comparisons of specific AI models, open-weight models",
-    "agents": "autonomous or tool-using AI agents, agent frameworks, computer use, multi-agent systems",
+    "models": "releases, updates, benchmarks or comparisons of specific AI models, open-weight models"
+              " (not tutorials or explainers about how models work)",
+    "agents": "AI agents themselves: autonomous or tool-using agents, agent frameworks and protocols"
+              " such as MCP, computer use, multi-agent systems, how agents behave",
     "rag": "retrieval-augmented generation, embeddings, vector databases, search over documents",
-    "dev-tools": "libraries, SDKs, coding assistants, IDEs, inference servers and infrastructure for building with AI",
+    "dev-tools": "tools whose users are software developers: libraries, SDKs, APIs, coding assistants"
+                 " and their integrations, inference servers, training and serving infrastructure",
     "security": "prompt injection, jailbreaks, vulnerabilities, data leaks, misuse and AI safety incidents",
-    "research": "papers, scientific results, new techniques, interpretability and alignment research",
+    "research": "papers, scientific results (including discoveries made with AI), new techniques,"
+                " interpretability and alignment research",
     "business": "companies, funding, acquisitions, pricing, hardware supply, jobs and the AI market",
     "regulation": "laws, policy, lawsuits, copyright and government action on AI",
-    "other": "opinion, culture, education and anything that fits no other theme",
+    "other": "opinion and essays (including about AI-assisted coding), apps for end users that use AI,"
+             " projects built with AI help, culture, education and anything that fits no other theme",
 }
 
 PROMPT = """You label Hacker News stories for a daily AI newsletter.
@@ -43,6 +52,12 @@ For each story, return an object with:
 
 Themes:
 {themes}
+
+How to choose:
+- Label the story's main subject, not the fact that AI is involved.
+- Software that uses AI is dev-tools only if its users are developers building software;
+  an app for end users (chat, notes, meetings, writing, media) is other.
+- A discussion, essay or Ask HN about AI coding is other, unless it presents a specific tool.
 
 Stories (JSON):
 {stories}

@@ -8,6 +8,7 @@ from radar import __main__ as cli
 from radar.evaluation import (
     NOT_AI,
     annotation_prompt,
+    classify_sample,
     create_sample,
     draw_sample,
     evaluate,
@@ -42,6 +43,35 @@ def test_draw_sample_is_reproducible_and_blind():
     assert "theme" not in labels.columns and "llm_theme" not in labels.columns
     assert (labels["human_theme"] == "").all()
     assert set(predictions.columns) == {"id", "llm_theme", "llm_summary"}
+
+
+def test_draw_sample_can_exclude_an_earlier_sample():
+    posts = classified_posts()
+    first, _ = draw_sample(posts, n=10, seed=1)
+    second, _ = draw_sample(posts, n=10, seed=2, exclude_ids=set(first["id"]))
+    assert not set(first["id"]) & set(second["id"])
+
+
+def test_classify_sample_writes_versioned_predictions(tmp_path):
+    from conftest import FakeClassifier
+
+    from radar.classifier import PROMPT_VERSION
+
+    create_sample(classified_posts(), tmp_path, n=5)
+    path = classify_sample(tmp_path, FakeClassifier(theme="agents"))
+    assert path.name == f"predictions_v{PROMPT_VERSION}.csv"
+    predictions = read_csv(path)
+    assert len(predictions) == 5 and (predictions["llm_theme"] == "agents").all()
+
+
+def test_classify_sample_fails_when_stories_are_missing(tmp_path):
+    class Partial:
+        def classify(self, posts):
+            return {posts[0]["id"]: {"theme": "models", "summary": ""}}
+
+    create_sample(classified_posts(), tmp_path, n=3)
+    with pytest.raises(RuntimeError):
+        classify_sample(tmp_path, Partial())
 
 
 def test_create_sample_refuses_to_overwrite_labels(tmp_path):
@@ -185,3 +215,13 @@ def test_cli_evaluation_flow(tmp_path, capsys):
     assert cli.main(["eval-report", *args, "--reference", str(reference),
                      "--annotator", "model X"]) == 0
     assert "labelled by model X" in (eval_dir / "report.md").read_text()
+
+    # Another predictions file and report name; a held-out sample excludes the first.
+    predictions.to_csv(eval_dir / "predictions_v9.csv", index=False)
+    assert cli.main(["eval-report", *args, "--predictions", "predictions_v9.csv",
+                     "--report", "report_v9.md"]) == 0
+    assert "`predictions_v9.csv`" in (eval_dir / "report_v9.md").read_text()
+    test_dir = tmp_path / "test"
+    assert cli.main(["eval-sample", "--data", str(data), "--eval-dir", str(test_dir),
+                     "--exclude", str(eval_dir / "labels.csv"), "--seed", "7"]) == 0
+    assert not set(read_csv(test_dir / "labels.csv")["id"]) & set(labels["id"])

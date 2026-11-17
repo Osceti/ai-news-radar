@@ -15,7 +15,8 @@ _KEYWORDS: list[tuple[str, str, bool]] = [
     ("LLM", r"\bLLMs?\b", True),
     ("GPT", r"\bGPT(?:s|-?\d[\w.]*)?\b", True),
     ("RAG", r"\bRAG\b", True),
-    ("ML", r"\bML\b", True),
+    # ML is also a family of programming languages (Standard ML, "ML modules").
+    ("ML", r"(?<!Standard )\bML\b(?!\s+(?i:modules?|functors?|signatures?|family)\b)", True),
     ("NLP", r"\bNLP\b", True),
     ("MCP", r"\bMCP\b", True),
     ("RLHF", r"\bRLHF\b", True),
@@ -44,7 +45,7 @@ _KEYWORDS: list[tuple[str, str, bool]] = [
     ("Anthropic", r"\bAnthropic\b", False),
     ("Claude", r"\bClaude\b", False),
     # Exclude the Gemini protocol (gemini://), a small-web project often on HN.
-    ("Gemini", r"\bGemini\b(?!\s*(?:protocol|capsule)|://)", False),
+    ("Gemini", r"\bGemini\b(?!\s*(?:protocol|capsules?|network|space|browser|client)\b|://)", False),
     ("DeepMind", r"\bDeepMind\b|\bAlpha(?:Fold|Go|Zero)\b", False),
     ("DeepSeek", r"\bDeepSeek\b", False),
     ("Mistral", r"\bMistral\b", False),

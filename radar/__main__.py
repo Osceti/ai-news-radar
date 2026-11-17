@@ -19,7 +19,7 @@ from radar.pipeline import classify, collect, make_digest
 from radar.storage import load_posts
 
 PIPELINE_COMMANDS = ["collect", "classify", "digest", "run"]
-EVAL_COMMANDS = ["eval-sample", "eval-label", "eval-prompt", "eval-report"]
+EVAL_COMMANDS = ["eval-sample", "eval-label", "eval-prompt", "eval-classify", "eval-report"]
 
 log = logging.getLogger("radar")
 
@@ -37,20 +37,28 @@ def run_classification(data_path: Path) -> None:
         warn("GEMINI_API_KEY is not set: stories are stored unclassified and will be "
              "classified on the next run that has a key.")
         return
-    model = os.environ.get("GEMINI_MODEL", "").strip() or DEFAULT_MODEL
-    log.info("Classifying with %s", model)
-    classified, pending = classify(data_path, GeminiClassifier(api_key, model=model))
+    classified, pending = classify(data_path, make_classifier(api_key))
     if classified < pending:
         warn(f"Only {classified} of {pending} stories were classified; "
              "the rest will be retried on the next run.")
 
 
-def run_evaluation(command: str, data_path: Path, eval_dir: Path,
-                   reference_path: Path | None = None, annotator: str = "hand") -> int:
+def make_classifier(api_key: str) -> GeminiClassifier:
+    model = os.environ.get("GEMINI_MODEL", "").strip() or DEFAULT_MODEL
+    log.info("Classifying with %s", model)
+    return GeminiClassifier(api_key, model=model)
+
+
+def run_evaluation(args: argparse.Namespace) -> int:
+    command, eval_dir = args.command, args.eval_dir
     labels_path = eval_dir / evaluation.LABELS_NAME
     if command == "eval-sample":
+        exclude: set[int] = set()
+        for path in args.exclude:
+            exclude |= set(evaluation.read_csv(path)["id"])
         try:
-            path = evaluation.create_sample(load_posts(data_path), eval_dir)
+            path = evaluation.create_sample(load_posts(args.data), eval_dir, seed=args.seed,
+                                            exclude_ids=exclude)
         except FileExistsError as exc:
             log.error("%s", exc)
             return 1
@@ -69,19 +77,33 @@ def run_evaluation(command: str, data_path: Path, eval_dir: Path,
         count = evaluation.label_interactively(labels_path)
         print(f"\n{count} stories labelled this session; progress saved to {labels_path}")
         return 0
+    if command == "eval-classify":
+        api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+        if not api_key:
+            log.error("GEMINI_API_KEY is not set")
+            return 1
+        try:
+            path = evaluation.classify_sample(eval_dir, make_classifier(api_key))
+        except RuntimeError as exc:
+            log.error("%s", exc)
+            return 1
+        print(f"Predictions written to {path}")
+        return 0
 
     try:
-        reference = evaluation.load_reference(labels_path, reference_path)
+        reference = evaluation.load_reference(labels_path, args.reference)
     except ValueError as exc:
         log.error("%s", exc)
         return 1
-    ev = evaluation.evaluate(reference,
-                             evaluation.read_csv(eval_dir / evaluation.PREDICTIONS_NAME))
+    predictions_path = eval_dir / (args.predictions or evaluation.PREDICTIONS_NAME)
+    ev = evaluation.evaluate(reference, evaluation.read_csv(predictions_path))
     for row in ev.invalid.itertuples(index=False):
         warn(f"Unknown label {row.human_theme!r} for story {row.id} ({row.title[:60]}): "
              f"use 0-9 or one of {', '.join(evaluation.KEYS.values())}. Ignored.")
-    report_path = eval_dir / evaluation.REPORT_NAME
-    report_path.write_text(evaluation.render_report(ev, annotator), encoding="utf-8")
+    report_path = eval_dir / (args.report or evaluation.REPORT_NAME)
+    report_path.write_text(
+        evaluation.render_report(ev, args.annotator, classifier=predictions_path.name),
+        encoding="utf-8")
     low, high = ev.interval
     print(f"{ev.labelled} labelled, {len(ev.not_ai)} not about AI. "
           f"Theme accuracy {ev.accuracy:.0%} ({ev.correct}/{ev.total}), "
@@ -105,12 +127,20 @@ def main(argv: list[str] | None = None) -> int:
                         help="eval-report: CSV id,theme,note to use instead of the hand labels")
     parser.add_argument("--annotator", default="hand",
                         help="eval-report: who produced the reference labels (default: %(default)s)")
+    parser.add_argument("--predictions", default=None,
+                        help="eval-report: predictions file in --eval-dir (default: predictions.csv, "
+                             "the labels stored in the data when the sample was drawn)")
+    parser.add_argument("--report", default=None,
+                        help="eval-report: report file name in --eval-dir (default: report.md)")
+    parser.add_argument("--exclude", type=Path, nargs="*", default=[],
+                        help="eval-sample: labels files whose stories must not be drawn again")
+    parser.add_argument("--seed", type=int, default=evaluation.SEED,
+                        help="eval-sample: random seed (default: %(default)s)")
     args = parser.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     if args.command in EVAL_COMMANDS:
-        return run_evaluation(args.command, args.data, args.eval_dir,
-                              args.reference, args.annotator)
+        return run_evaluation(args)
 
     now = datetime.now(timezone.utc).replace(microsecond=0)
     day = args.date or previous_day(now)

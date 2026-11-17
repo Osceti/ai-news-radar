@@ -1,0 +1,123 @@
+You are annotating Hacker News stories to build a reference set for evaluating an AI news classifier.
+
+For each story below, choose the ONE theme that best describes what the story is about, judging from its title and link domain (you may use your knowledge of the site). If the story is not really about artificial intelligence (the title only mentions AI in passing, or uses an AI keyword with another meaning), use not-ai.
+
+Themes:
+- models: releases, updates, benchmarks or comparisons of specific AI models, open-weight models (not tutorials or explainers about how models work)
+- agents: AI agents themselves: autonomous or tool-using agents, agent frameworks and protocols such as MCP, computer use, multi-agent systems, how agents behave
+- rag: retrieval-augmented generation, embeddings, vector databases, search over documents
+- dev-tools: tools whose users are software developers: libraries, SDKs, APIs, coding assistants and their integrations, inference servers, training and serving infrastructure
+- security: prompt injection, jailbreaks, vulnerabilities, data leaks, misuse and AI safety incidents
+- research: papers, scientific results (including discoveries made with AI), new techniques, interpretability and alignment research
+- business: companies, funding, acquisitions, pricing, hardware supply, jobs and the AI market
+- regulation: laws, policy, lawsuits, copyright and government action on AI
+- other: opinion and essays (including about AI-assisted coding), apps for end users that use AI, projects built with AI help, culture, education and anything that fits no other theme
+- not-ai: the story is not about artificial intelligence
+
+Rules:
+- Use exactly one of these labels: models, agents, rag, dev-tools, security, research, business, regulation, other, not-ai.
+- When a story fits several themes, pick the one a reader would consider its main subject.
+- Add a short note (at most 12 words, no commas) only when you hesitated between themes; otherwise leave it empty.
+- Answer with a single CSV code block and nothing else: the header line id,theme,note followed by exactly 100 rows, one per story, in the same order as below, keeping each id unchanged.
+
+Stories (id | title | domain):
+50451102 | OSS projects banning AI-generated contributions | osssaysno.com
+50451820 | OpenAI Continues to Suffer Heavy Losses as Revenue Rises to $10B | wsj.com
+50452466 | We need more science in the judgment of AI | livingsystems.substack.com
+50456668 | Anthropic says a key AI safety alarm has been triggered, days before its IPO | finance.yahoo.com
+50457164 | Retirement Savings Are Fueling the AI Bubble | lpeproject.org
+50457760 | The Wish Economy: Inside Starlight, the Bitcoin-Native AI App Store | starlight-ai.freemyip.com
+50457853 | Gemini Decision 1 is Free on Google AI Studio | aistudio.google.com
+50458124 | The Feasibility of a Hardwired Pause of Frontier AI Training | hardwired-pause.ai
+50458331 | Show HN: Friday, Claude Code, Codex and Cursor as one team (open source) | github.com
+50458761 | SFT for professionals in software, AI, systems, science and others | app.outlier.ai
+50459075 | Pundit Claims – Open-Source Register of AI Claims by Gary Marcus and Ed Zitron | punditclaims.ai
+50459496 | CodeGraphy v2.1: 11 MCP tools, interactive architecture graph, -85% LLM tokens | github.com
+50462217 | Subscription Sharing usage limit on app blocking OpenAI model usage after reset | github.com
+50463399 | Claude Code and Codex reverse engineered my 1994 Jeep's ECU over a $3 Arduino [video] | youtube.com
+50463935 | Show HN: OpenPocket – iOS app for running Qwen3.5, LFM and other LLMs offline | apps.apple.com
+50464055 | Why Every AI Model Will Ship as a Torrent | pirateface.co
+50464872 | Pi GPUI: A native GUI for the pi coding agent, built with Rust and GPUI. | pi-gpui.dev
+50467880 | Show HN: AI Red Lines – write down what would make you act on AI | yourairedlines.com
+50468888 | I'm making LLMs work on small and old devices | github.com
+50470911 | How I optimized my library for coding agents | paolino.me
+50471431 | Gemini 4 Hydrogen | blog.google
+50471658 | Air-LLM: Broadcasting AI Weights for Edge LLM Inference via RF Computing | arxiv.org
+50471825 | Gemini 4 Hydrogen (Xhigh) Intelligence, Performance and Price Analysis | artificialanalysis.ai
+50472194 | Australian companies face 'AI washing' claims after wave of job cuts, offshoring | reuters.com
+50472260 | Gemini 4 Hydrogen and Orchestrator | antigravity.google
+50472615 | ArxCloud – Turnkey Cloud SASE, AI/Web DLP, and Zero-Port LAN Relay | demo.arxcloud.io
+50472831 | Cold War lessons for the AI age | 2tinteractive.com
+50473801 | Claude Meetings | claude.com
+50474186 | Dougan Leak Exposes Concerted Effort to Infect AI | newsguardrealitycheck.com
+50474320 | Show HN: Telltale Bot, detecting agentic web traffic | telltale.bot
+50475128 | What end-to-end AI systems mean for the future of automated driving | aptiv.com
+50475713 | Edge0-145B: Frontier AI Capabilities on Your Own Computer | edge0.ai
+50476231 | The Fundamental Flaw in the Race to AGI | project507.substack.com
+50476232 | Dario Amodei says AI will cure cancer, Alzheimer's, heart disease in 10 years | garymarcus.substack.com
+50477649 | Brave Search API now accepts agentic payments via the x402 protocol | brave.com
+50481321 | What thousands of conversations look like inside a language model | operator0x.com
+50482661 | AI agents have a big problem: Nobody wants to let them in | pcworld.com
+50484426 | Ask HN: Can anyone name anything new that AI has done? | news.ycombinator.com
+50485334 | Anthropic refusing to take money from Chinese Firms in IPO | bloomberg.com
+50485419 | Amazon's plan to own the product data and fight AI shopping agents | reuters.com
+50486450 | 1 in 4 3rd Party AI Endpoints Underperform Their Advertised Models | hermes-ai.net
+50486789 | Show HN: Giving frontier AI models capital and access to onchain markets | blink.cash
+50486913 | The NitrousTracker AI Disclosure Post | blog.asie.pl
+50487510 | OpenAI launches ChatGPT Wallet, AI agents pay for purchase | reuters.com
+50488351 | Nvidia looks for successor after exit of CEO Jensen Huang, shake the AI industry | news.northeastern.edu
+50488565 | Jax Examples for Beginners (Dive into ML Fundamentals) | github.com
+50488769 | No AI Slop: A Manifesto | slopmanifesto.com
+50488940 | Mellonbot An AI agent that finds the root cause of server issues and fixes them | mellonbot.app
+50489574 | Show HN: Copper-KiCad – MCP to design PCBs in KiCad better and cheaper | github.com
+50491384 | FAA tees up $875M AI tool to help manage air traffic congestion | arstechnica.com
+50491841 | Show HN: Feedback/AMA MeditionBench; LLMs for mediation and conflict resolution | news.ycombinator.com
+50496885 | A visual explanation of reinforcement learning | aatishb.com
+50496985 | Vyrma – Herhlaup (100% AI music/visuals/audio showing what's possible) [video] | youtube.com
+50497161 | New 'Access to Justice' Benchmark: Leading AI Models Miss Critical Legal Details | epyhia.com
+50498325 | Preventing an AI catastrophe, a brief into to analysis by synthesis | shukla.io
+50498553 | Ask HN: Do I own the code I write with the help of AI? | news.ycombinator.com
+50498921 | Show HN: Themes for Claude Code | tessera.shiptiffin.app
+50499448 | The Ontological Divergence of Artificial Intelligence | medium.com
+50499499 | AI School Bus Cameras Cash in on Drivers Who Fail to Stop | techspot.com
+50500018 | Wojak-Bench 3D: Which AI is best at 3D printing? | wojak-bench.dev.pion.dev
+50500089 | Show HN: Loft – offline Q&A over your local files, with citations (llama.cpp) | github.com
+50502097 | AI submissions cause end of game coding contest | pcgamer.com
+50507726 | Kotlin 2026: Layoffs, AI, Google – Is the Golden Age Over? Jake Wharton Explains | youtube.com
+50508076 | What Picasso taught me about building AI Agents | claramap.com
+50508089 | Ask HN: What does building hardware with AI look like? | news.ycombinator.com
+50508283 | Show HN: Claudette - Mistral models in Claude Code | github.com
+50508427 | Why I'm opposed to AI writing but not AI coding | josh.earth
+50508890 | Victoria University lecturers steer students away from AI use in education | rnz.co.nz
+50509044 | Ask HN: What do you include in your Claude/Codex instructions? | news.ycombinator.com
+50509052 | How AI is likely to change Germany's job market | dw.com
+50509129 | Catch Go Bugs That Fuzzing Misses with Gemini and a Constraint Solver | developers.googleblog.com
+50509489 | The Weak-Link Asymmetry: AI's Peril and Promise [pdf] | christophertonetti.com
+50509807 | In 19 Minutes, You will understand 10 years of LLMs [video] | youtube.com
+50509997 | Ask HN: ChatGPT broken, is it just me? | news.ycombinator.com
+50510133 | OBR: Britain faces 'painful' job losses from AI | telegraph.co.uk
+50510353 | AXI Framework: The Cure for the Cost Crisis in AI | zenodo.org
+50510540 | Ask HN: What do coding interviews look like in the age of AI? | news.ycombinator.com
+50511508 | Technocracy, AI, and the End of the World | cosmonautmag.com
+50512000 | GLM Models Cut AI Coding Costs 90% for 2k Engineers | finance.biggo.com
+50514224 | Google AI Ultra Subscription Not Worth It | reddit.com
+50517797 | Google: AI agent turned a security patch into a exploit with no human help | theregister.com
+50520212 | Hugging Face and OpenRouter join forces to make open-weight models easy to run | huggingface.co
+50520686 | Benchmarking Coding Agents Under Evolving Requirements | arxiv.org
+50521390 | AI agents are becoming identities in their own right, security needs to catch up | digitaljournal.com
+50522070 | AI Agents, Why Are You All Saying the Same Thing? | zmistandcopy.com
+50522709 | A milestone in expanding access to AI | openai.com
+50523346 | The Fed Is Worried AI Agents Could Trigger a Bank Run | gizmodo.com
+50523359 | California is suing OpenAI over its 'rogue' AI agent hack | calmatters.org
+50524523 | California Sues OpenAI over A.I. Safety Issues | nytimes.com
+50524875 | CopySpeech – AI text-to-speech for your clipboard | github.com
+50525082 | New privacy rules for Google's Gemini Apps (updated November 16, 2026) | support.google.com
+50526152 | Running coding agents without handing them my credentials | blog.antonio.cx
+50526341 | The AI Ascent | medium.com
+50527299 | External Sandboxes for Coding Agents | blog.primeradiant.com
+50528011 | Pimco Says AI Bond Spreads May Tighten as Data Center Boom Slows | bloomberg.com
+50528235 | OpenScientist: An Open AI System That Automates Biomedical Research | nature.com
+50529056 | OpenAI sued by California over Hugging Face attack | bbc.com
+50529117 | An intention spec – workflow for the agentic dev cycle | djordjepuzic.com
+50529537 | NATO uses 300B OpenAI tokens a month for cyber defence | foxandlion.pub
+50530209 | Who Will Capture AI's Value? | michaelhillaert1.substack.com

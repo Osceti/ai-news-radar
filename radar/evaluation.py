@@ -6,6 +6,9 @@
 2. ``label_interactively`` shows each story in the terminal and records a theme,
    or ``not-ai`` when the keyword filter let through a story that is not about AI.
 3. ``evaluate`` compares the two files and ``render_report`` writes the results.
+
+``classify_sample`` re-classifies a sample with the current prompt
+(``predictions_v<N>.csv``), so prompt versions can be compared on the same stories.
 """
 
 import io
@@ -15,7 +18,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from radar.classifier import THEME_GUIDE
+from radar.classifier import PROMPT_VERSION, THEME_GUIDE
 from radar.config import ROOT, THEMES
 
 EVAL_DIR = ROOT / "eval"
@@ -32,10 +35,14 @@ SEED = 42
 
 # --- Sampling -----------------------------------------------------------------
 
-def draw_sample(posts: pd.DataFrame, n: int = SAMPLE_SIZE,
-                seed: int = SEED) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Random sample of classified stories: ``(labels to fill, frozen predictions)``."""
-    classified = posts[posts["theme"] != ""]
+def draw_sample(posts: pd.DataFrame, n: int = SAMPLE_SIZE, seed: int = SEED,
+                exclude_ids=frozenset()) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Random sample of classified stories: ``(labels to fill, frozen predictions)``.
+
+    ``exclude_ids`` keeps stories of an earlier sample out, e.g. to draw a held-out
+    test set after tuning the prompt on a first sample.
+    """
+    classified = posts[(posts["theme"] != "") & ~posts["id"].isin(set(exclude_ids))]
     sample = classified.sample(n=min(n, len(classified)), random_state=seed).sort_values("id")
     labels = sample[["id", "title", "domain", "url"]].assign(human_theme="", note="")
     predictions = sample[["id", "theme", "summary"]].rename(
@@ -44,16 +51,33 @@ def draw_sample(posts: pd.DataFrame, n: int = SAMPLE_SIZE,
 
 
 def create_sample(posts: pd.DataFrame, eval_dir: Path, n: int = SAMPLE_SIZE,
-                  seed: int = SEED) -> Path:
+                  seed: int = SEED, exclude_ids=frozenset()) -> Path:
     eval_dir = Path(eval_dir)
     labels_path = eval_dir / LABELS_NAME
     if labels_path.exists():
         raise FileExistsError(f"{labels_path} already exists; delete it to draw a new sample")
-    labels, predictions = draw_sample(posts, n, seed)
+    labels, predictions = draw_sample(posts, n, seed, exclude_ids)
     eval_dir.mkdir(parents=True, exist_ok=True)
     labels.to_csv(labels_path, index=False)
     predictions.to_csv(eval_dir / PREDICTIONS_NAME, index=False)
     return labels_path
+
+
+def classify_sample(eval_dir: Path, classifier) -> Path:
+    """Classify the sample's stories with the current prompt into predictions_v<N>.csv."""
+    labels = read_csv(Path(eval_dir) / LABELS_NAME)
+    stories = [{"id": int(row.id), "title": row.title, "domain": row.domain}
+               for row in labels.itertuples(index=False)]
+    results = classifier.classify(stories)
+    missing = set(labels["id"]) - set(results)
+    if missing:
+        raise RuntimeError(f"{len(missing)} stories were not classified: {sorted(missing)[:10]}")
+    predictions = pd.DataFrame(
+        [{"id": i, "llm_theme": results[i]["theme"], "llm_summary": results[i]["summary"]}
+         for i in labels["id"]])
+    path = Path(eval_dir) / f"predictions_v{PROMPT_VERSION}.csv"
+    predictions.to_csv(path, index=False)
+    return path
 
 
 def read_csv(path: Path) -> pd.DataFrame:
@@ -260,12 +284,14 @@ def _pct(value: float) -> str:
     return "–" if math.isnan(value) else f"{value:.0%}"
 
 
-def render_report(ev: Evaluation, annotator: str = "hand") -> str:
+def render_report(ev: Evaluation, annotator: str = "hand",
+                  classifier: str = PREDICTIONS_NAME) -> str:
     low, high = ev.interval
     lines = [
         "# Classifier evaluation",
         "",
         f"{ev.labelled} stories labelled by {annotator}, blind to Gemini's answer.",
+        f"Gemini's labels: `{classifier}`.",
         "",
         "## Summary",
         "",
