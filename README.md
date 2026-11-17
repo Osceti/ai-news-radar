@@ -164,22 +164,33 @@ digests/          one Markdown digest per day
 
 ## Evaluation
 
-**Method.** 100 classified stories were drawn at random (seed 42) from the first week of
-data. They were labelled blind (without Gemini's answer) by an independent LLM from
-another vendor, given the same theme definitions as Gemini and the extra option `not-ai`
-to flag stories the keyword filter should not have kept. The prompt is in
-[`eval/annotation_prompt.txt`](eval/annotation_prompt.txt), the reference labels in
-[`eval/judge_labels.csv`](eval/judge_labels.csv) and the full report, with the confusion
-matrix and every disagreement, in [`eval/report.md`](eval/report.md).
+**Method.** Two disjoint samples of 100 classified stories were drawn at random from the
+first week of data: a *tuning* sample ([`eval/`](eval/), seed 42), used to find errors and
+improve the prompt, and a held-out *test* sample ([`eval/test/`](eval/test/), seed 2026),
+used only to measure the result. Each was labelled blind (without Gemini's answer) by an
+independent LLM from another vendor, given the theme definitions and the extra option
+`not-ai` to flag stories the keyword filter should not have kept. Each folder holds the
+annotation prompt, the reference labels (`judge_labels.csv`), Gemini's labels per prompt
+version (`predictions.csv` for v1, `predictions_v2.csv`) and full reports with the
+confusion matrix and every disagreement.
 
-| Metric | Result |
-| --- | --- |
-| Keyword filter precision (stories really about AI) | **97%** (97/100) |
-| Theme accuracy on AI stories | **77%** (75/97), 95% CI 68–85% |
-| Best themes (precision / recall) | security 100/100, regulation 100/100, business 95/95 |
-| Weakest theme | dev-tools: 57% precision (28 predicted, 20 in the reference) |
+**Results on the held-out test sample** ([v1 report](eval/test/report_v1.md),
+[v2 report](eval/test/report_v2.md)):
 
-**Where Gemini goes wrong.**
+| | Prompt v1 | Prompt v2 |
+| --- | --- | --- |
+| Theme accuracy | 69% (69/100), 95% CI 59–77% | **73%** (73/100), 95% CI 64–81% |
+| *other*: recall | 52% | **74%** |
+| *models*: precision | 53% (15 predicted, 8 in the reference) | **78%** |
+| Keyword filter precision | 100% (100/100) | 100% |
+
+On the tuning sample, v1 scored 77% and v2 79%; the keyword filter kept 97% of real AI
+stories (97/100). Prompt v2 fixed 11 test stories and broke 7: the gain is consistent
+with what it was designed to fix, but with 100 stories it is not statistically
+significant (exact McNemar test, p = 0.48). The reference for the test sample was given
+the v2 definitions, which slightly favours v2.
+
+**What v1 got wrong (tuning sample, [report](eval/report.md)).**
 
 - **"dev-tools" is a catch-all.** 9 of the 22 disagreements are stories the reference put
   in *other* that Gemini called *dev-tools*: consumer apps built on LLMs (a local chat app
@@ -192,21 +203,35 @@ matrix and every disagreement, in [`eval/report.md`](eval/report.md).
   The reverse also happens: a story about finding a dwarf planet with Claude is
   *research* for the reference and *other* for Gemini.
 - **Keyword filter.** The 3 false positives are a post about the Gemini small-web
-  network (the filter excludes "Gemini protocol" but not "Gemini network"), "ML Modules"
+  network (the filter excluded "Gemini protocol" but not "Gemini network"), "ML Modules"
   (ML the programming language) and a board game named "AI Race".
+
+**What changed in v2.** dev-tools is limited to tools whose users are developers;
+end-user AI apps and essays on AI-assisted coding go to *other*; MCP belongs to *agents*;
+explainers are not *models*. The prompt adds three tie-break rules ("label the main
+subject, not the fact that AI is involved"). The filter now ignores "Gemini network" and
+ML the language. Stories collected before the change keep their v1 label.
+
+**What v2 still gets wrong (test sample).** The remaining errors are mostly about which
+angle of a story matters: company news about AI safety or cyber defence labelled
+*business* instead of *security*, opinion pieces labelled *business* or *research*
+instead of *other*, and pricing or hiring stories labelled *other* instead of *business*.
+Agent tools exposed through MCP still split between *agents* and *dev-tools*.
 
 **Limits of this evaluation.**
 
 - The reference is another LLM, not a human. Where both models make the same mistake, it
-  goes unnoticed, so 77% is closer to an upper bound. The one story also labelled by hand
-  illustrates this: both models chose *agents* for "Claude reverse engineered my Jeep",
-  the human chose *models*.
-- With 100 stories the interval is wide (±9 points), and rare themes are barely measured:
-  the sample contains no *rag* story and only 4 *research* ones.
+  goes unnoticed, so these scores are closer to upper bounds. The one story also labelled
+  by hand illustrates this: both models chose *agents* for "Claude reverse engineered my
+  Jeep", the human chose *models*.
+- With 100 stories per sample the intervals are wide (about ±9 points), and rare themes
+  are barely measured: the two samples hold a single *rag* story.
 
-Reproduce with `python -m radar eval-sample`, `python -m radar eval-prompt` (or
-`eval-label` to label by hand in the terminal) and
-`python -m radar eval-report --reference eval/judge_labels.csv --annotator "an independent LLM"`.
+Reproduce with `python -m radar eval-sample` (`--exclude eval/labels.csv --seed 2026`
+for the test sample), `eval-prompt` (or `eval-label` to label by hand in the terminal),
+the **Evaluate classifier** workflow (re-classifies the samples with the current prompt,
+using the repository secret) and
+`python -m radar eval-report --eval-dir eval/test --reference eval/test/judge_labels.csv --predictions predictions_v2.csv`.
 
 ## Limitations
 
@@ -224,7 +249,7 @@ Reproduce with `python -m radar eval-sample`, `python -m radar eval-prompt` (or
 
 - [x] Daily collection, Gemini classification and digest
 - [x] Evaluation of the classifier on 100 stories
-- [ ] Tighter theme definitions for dev-tools, then re-evaluate
+- [x] Tighter theme definitions (prompt v2), measured on a held-out sample
 - [ ] Notebook on how themes evolve over time
 - [ ] Streamlit dashboard
 
