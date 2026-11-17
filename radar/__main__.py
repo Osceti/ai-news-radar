@@ -65,6 +65,9 @@ def run_evaluation(command: str, data_path: Path, eval_dir: Path) -> int:
 
     ev = evaluation.evaluate(evaluation.read_csv(labels_path),
                              evaluation.read_csv(eval_dir / evaluation.PREDICTIONS_NAME))
+    for row in ev.invalid.itertuples(index=False):
+        warn(f"Unknown label {row.human_theme!r} for story {row.id} ({row.title[:60]}): "
+             f"use 0-9 or one of {', '.join(evaluation.KEYS.values())}. Ignored.")
     report_path = eval_dir / evaluation.REPORT_NAME
     report_path.write_text(evaluation.render_report(ev), encoding="utf-8")
     low, high = ev.interval

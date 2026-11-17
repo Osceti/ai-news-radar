@@ -11,6 +11,7 @@ from radar.evaluation import (
     draw_sample,
     evaluate,
     label_interactively,
+    normalize_label,
     read_csv,
     render_report,
     wilson_interval,
@@ -74,6 +75,35 @@ def test_label_interactively_stops_on_end_of_input(tmp_path):
         raise EOFError
 
     assert label_interactively(path, input_fn=closed, print_fn=lambda *_: None) == 0
+
+
+@pytest.mark.parametrize("typed, expected", [
+    ("4", "dev-tools"), ("0", NOT_AI), (" Models ", "models"), ("dev tools", "dev-tools"),
+    ("not ai", NOT_AI), ("", ""), ("modles", None), ("10", None),
+])
+def test_normalize_label(typed, expected):
+    assert normalize_label(typed) == expected
+
+
+def test_read_csv_from_a_french_excel_export(tmp_path):
+    path = tmp_path / "labels.csv"
+    content = "id;title;domain;url;human_theme;note\n42;Café, IA et LLM;x.fr;u;7;levée\n"
+    path.write_bytes(content.encode("cp1252"))
+    df = read_csv(path)
+    assert df.loc[0, "id"] == 42 and df.loc[0, "human_theme"] == "7"
+    assert df.loc[0, "title"] == "Café, IA et LLM"
+
+    path.write_bytes('id,title,domain,url,human_theme,note\n42,"Café, IA",x.fr,u,7,\n'
+                     .encode("utf-8-sig"))  # Excel "CSV UTF-8" adds a BOM
+    df = read_csv(path)
+    assert df.columns[0] == "id" and df.loc[0, "title"] == "Café, IA"
+
+
+def test_evaluate_reports_invalid_labels():
+    labels, predictions = frames([(1, "7", "business"), (2, "modles", "models")])
+    ev = evaluate(labels, predictions)
+    assert (ev.correct, ev.total) == (1, 1)
+    assert ev.invalid["id"].tolist() == [2]
 
 
 def test_wilson_interval():

@@ -8,8 +8,9 @@
 3. ``evaluate`` compares the two files and ``render_report`` writes the results.
 """
 
+import io
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import pandas as pd
@@ -56,9 +57,36 @@ def create_sample(posts: pd.DataFrame, eval_dir: Path, n: int = SAMPLE_SIZE,
 
 
 def read_csv(path: Path) -> pd.DataFrame:
-    df = pd.read_csv(path, dtype=str, keep_default_na=False)
-    df["id"] = df["id"].astype("int64")
+    """Read an evaluation CSV, also as saved by a spreadsheet app.
+
+    Excel with a French locale saves with ``;`` and may add a BOM or use a
+    legacy encoding; ids and labels are ASCII, so all of these read the same.
+    """
+    raw = Path(path).read_bytes()
+    try:
+        text = raw.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        text = raw.decode("latin-1")
+    header = text.splitlines()[0] if text else ""
+    sep = ";" if ";" in header and "," not in header else ","
+    df = pd.read_csv(io.StringIO(text), sep=sep, dtype=str, keep_default_na=False)
+    df.columns = [col.strip() for col in df.columns]
+    df["id"] = df["id"].str.strip().astype("int64")
     return df
+
+
+_ALIASES = {"not ai": NOT_AI, "notai": NOT_AI, "non-ai": NOT_AI, "no": NOT_AI,
+            "dev tools": "dev-tools", "devtools": "dev-tools", "dev-tool": "dev-tools"}
+
+
+def normalize_label(value: str) -> str | None:
+    """Map a typed label to a theme slug: accepts the 0-9 keys, any case and a few
+    spellings. Returns ``""`` for a blank cell and ``None`` for an unknown label."""
+    label = " ".join(str(value).split()).lower()
+    if not label:
+        return ""
+    label = KEYS.get(label) or _ALIASES.get(label) or label
+    return label if label in THEMES or label == NOT_AI else None
 
 
 # --- Labelling ----------------------------------------------------------------
@@ -127,6 +155,8 @@ class Evaluation:
     per_theme: pd.DataFrame
     confusion: pd.DataFrame
     errors: pd.DataFrame
+    # Rows whose human label is not a known theme; left out of every metric.
+    invalid: pd.DataFrame = field(default_factory=pd.DataFrame)
 
     @property
     def accuracy(self) -> float:
@@ -138,6 +168,10 @@ class Evaluation:
 
 
 def evaluate(labels: pd.DataFrame, predictions: pd.DataFrame) -> Evaluation:
+    labels = labels.copy()
+    normalized = labels["human_theme"].map(normalize_label)
+    invalid = labels[normalized.isna()]
+    labels["human_theme"] = normalized.fillna("")
     done = labels[labels["human_theme"] != ""].merge(predictions, on="id", how="inner")
     not_ai = done[done["human_theme"] == NOT_AI]
     ai = done[done["human_theme"] != NOT_AI]
@@ -165,6 +199,7 @@ def evaluate(labels: pd.DataFrame, predictions: pd.DataFrame) -> Evaluation:
         per_theme=pd.DataFrame(rows),
         confusion=confusion,
         errors=ai[~hit],
+        invalid=invalid,
     )
 
 
