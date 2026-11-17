@@ -82,25 +82,22 @@ An excerpt of [`digests/2026-11-12.md`](digests/2026-11-12.md), the first digest
 
 > # AI News Radar — 2026-11-12
 >
-> Top 10 of 125 AI-related stories posted on Hacker News in the 24 hours to 08:43 UTC, ranked by points + comments and grouped by theme.
+> Top 10 of 147 AI-related stories posted on Hacker News on Thursday 12 November 2026 (UTC), ranked by points + comments and grouped by theme.
+>
+> ## Models
+>
+> - **[Gemini 4 Hydrogen](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/)** (blog.google)\
+>   The Google blog discusses Gemini 4 Hydrogen.\
+>   572 points · 353 comments · [discussion](https://news.ycombinator.com/item?id=50471431)
+> - **[Edge0-145B: Frontier AI Capabilities on Your Own Computer](https://edge0.ai/blog/introducing-edge0-145b-frontier-ai-capabilities-on-your-own-computer)** (edge0.ai)\
+>   Edge0-145B brings frontier AI capabilities to your own computer.\
+>   357 points · 105 comments · [discussion](https://news.ycombinator.com/item?id=50475713)
 >
 > ## Agents
 >
-> - **[My AI agents found an unmapped Maya site?](https://pietromiotti.com/latest/maya-site)** (pietromiotti.com)\
->   AI agents allegedly found an unmapped Maya site according to a personal blog post.\
->   980 points · 357 comments · [discussion](https://news.ycombinator.com/item?id=50452455)
->
-> ## RAG
->
-> - **[Faster Retrieval for Better, More Efficient RAG](https://machinelearning.apple.com/research/faster-retrieval)** (machinelearning.apple.com)\
->   Apple machine learning researchers explore faster retrieval methods for more efficient RAG.\
->   204 points · 37 comments · [discussion](https://news.ycombinator.com/item?id=50455633)
->
-> ## Business
->
-> - **[United Airlines bans AI agents from booking flights on behalf of travelers](https://www.cbsnews.com/news/united-airlines-bans-ai-agents-booking-flights/)** (cbsnews.com)\
->   United Airlines has banned AI agents from booking flights on behalf of travelers.\
->   538 points · 522 comments · [discussion](https://news.ycombinator.com/item?id=50458900)
+> - **[Claude Code and Codex reverse engineered my 1994 Jeep's ECU over a $3 Arduino \[video\]](https://www.youtube.com/watch?v=WPj3aQ-xxpI)** (youtube.com)\
+>   A video demonstrates Claude Code and Codex reverse engineering a Jeep ECU over an Arduino.\
+>   453 points · 239 comments · [discussion](https://news.ycombinator.com/item?id=50463399)
 >
 > *…*
 
