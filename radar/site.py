@@ -5,7 +5,7 @@ only draws them. The data is embedded in the page as JSON, so it needs no server
 """
 
 import json
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -24,6 +24,7 @@ THEME_COLORS = {
     "regulation": "#F472B6", "other": "#A1A1AA",
 }
 TOP_STORIES = 60
+WEEK_DAYS = 7  # the GitHub section covers the last 7 complete days
 
 
 def _evaluation_accuracy(eval_dir: Path) -> dict | None:
@@ -44,7 +45,34 @@ def _shares(table: pd.DataFrame, days: list) -> dict[str, list[float]]:
     return {slug: [round(v, 4) for v in table[slug]] for slug in THEMES}
 
 
-def build_payload(posts: pd.DataFrame, today: date, eval_dir: Path | None = None) -> dict | None:
+def github_week(df_all: pd.DataFrame, start: date, end: date, client=None) -> dict:
+    """Best GitHub repositories of the week: discussed on HN, and new AI repos by stars.
+
+    Without a client (no network), the HN ranking is still built, without stars.
+    """
+    week_start = max(start, end - timedelta(days=WEEK_DAYS - 1))
+    on_hn = []
+    for r in trends.top_github_repos(trends.between(df_all, week_start, end), n=10).itertuples(index=False):
+        info = client.repo(r.repo) if client else None
+        on_hn.append({
+            "repo": r.repo,
+            "url": info["url"] if info else f"https://github.com/{r.repo}",
+            "description": info["description"] if info else "",
+            "stars": info["stars"] if info else None,
+            "language": info["language"] if info else "",
+            "stories": int(r.stories), "score": int(r.score), "comments": int(r.num_comments),
+            "title": r.title, "hn_url": r.hn_url,
+        })
+    return {
+        "start": week_start.isoformat(),
+        "end": end.isoformat(),
+        "on_hn": on_hn,
+        "new": client.new_ai_repos(since=week_start) if client else [],
+    }
+
+
+def build_payload(posts: pd.DataFrame, today: date, eval_dir: Path | None = None,
+                  github=None) -> dict | None:
     """Everything the page shows, as plain JSON-serialisable data."""
     df_all = trends.prepare(posts)
     days_range = trends.complete_days(df_all, today)
@@ -89,6 +117,7 @@ def build_payload(posts: pd.DataFrame, today: date, eval_dir: Path | None = None
         "domains": trends.top_domains(df, n=10).to_dict("records"),
         "latest_digest": f"{REPO_URL}/blob/main/digests/{end.isoformat()}.md",
         "evaluation": _evaluation_accuracy(eval_dir) if eval_dir else None,
+        "github": github_week(df_all, start, end, github),
         "repo": REPO_URL,
     }
 
@@ -99,8 +128,9 @@ def render(payload: dict) -> str:
     return TEMPLATE.read_text(encoding="utf-8").replace("__RADAR_DATA__", data)
 
 
-def write_site(data_path: Path, out_dir: Path, today: date, eval_dir: Path | None = None) -> Path | None:
-    payload = build_payload(load_posts(data_path), today, eval_dir)
+def write_site(data_path: Path, out_dir: Path, today: date, eval_dir: Path | None = None,
+               github=None) -> Path | None:
+    payload = build_payload(load_posts(data_path), today, eval_dir, github)
     if payload is None:
         return None
     out_dir = Path(out_dir)

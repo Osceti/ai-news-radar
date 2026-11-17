@@ -39,6 +39,8 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          # Automatic token, no secret to create: raises the GitHub API rate limits.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DIGEST_DATE: ${{ inputs.date }}
         run: python -m radar run ${DIGEST_DATE:+--date "$DIGEST_DATE"}
 

@@ -1,5 +1,8 @@
 # AI News Radar
 
+**AI news and the best GitHub of the week**, from Hacker News, updated daily.
+**[→ Open the dashboard](https://osceti.github.io/ai-news-radar/)**
+
 [![CI](https://github.com/Osceti/ai-news-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/Osceti/ai-news-radar/actions/workflows/ci.yml)
 [![Daily radar](https://github.com/Osceti/ai-news-radar/actions/workflows/daily-radar.yml/badge.svg)](https://github.com/Osceti/ai-news-radar/actions/workflows/daily-radar.yml)
 
@@ -8,7 +11,9 @@ Every day a GitHub Action collects the AI stories posted on Hacker News, asks an
 (Gemini) to label each one with a theme and a one-sentence summary, and commits a
 Markdown digest of the ten most important stories to [`digests/`](digests/). A
 [dashboard](https://osceti.github.io/ai-news-radar/) shows which themes are posted about,
-which ones readers actually discuss, and how that changes from day to day.
+which ones readers actually discuss, and how that changes from day to day, plus the
+**best GitHub repositories of the week**: the ones Hacker News discussed most, and the new
+AI repositories collecting the most stars.
 
 ## The problem
 
@@ -17,9 +22,10 @@ more than a hundred AI-related stories go by, mixed with everything else on the 
 Following it closely takes time, and skimming the front page misses stories that were
 popular overnight.
 
-AI News Radar answers one question each day: *what were the ten AI stories that people
-on Hacker News cared about most, and what are they about?* It also keeps every story in a
-dataset, so trends (which themes rise or fade over time) can be analysed later.
+AI News Radar answers two questions: *what were the ten AI stories that people on Hacker
+News cared about most yesterday, and what are they about?* and *which GitHub repositories
+are worth a look this week?* It also keeps every story in a dataset, so trends (which
+themes rise or fade over time) can be analysed.
 
 ## How it works
 
@@ -31,6 +37,7 @@ flowchart LR
     D --> C
     C --> E["digests/YYYY-MM-DD.md<br/>top 10 of the day"]
     C --> F["docs/index.html<br/>trend dashboard"]
+    G["GitHub API<br/>repo details + search"] --> F
 ```
 
 1. **Collect** ([`radar/hn.py`](radar/hn.py), [`radar/filters.py`](radar/filters.py)).
@@ -57,7 +64,26 @@ flowchart LR
    Theme shares per day, rising and falling themes, posted-about versus discussed themes
    and the most discussed stories are computed in Python and embedded in a single static
    page, [`docs/index.html`](docs/index.html), served by GitHub Pages. The page draws the
-   charts with ECharts and needs no server.
+   charts with ECharts and hand-made SVG, and needs no server.
+6. **Best GitHub of the week** ([`radar/github.py`](radar/github.py)). Two lists over the
+   last 7 complete days, refreshed by the same daily run:
+   - **Hot on Hacker News**: GitHub links found in the week's AI stories are reduced to
+     their `owner/repo`, grouped (a repository posted twice adds up its points and
+     comments) and ranked by points + comments, then enriched with stars, language and
+     description from the GitHub REST API.
+   - **New & starred**: repositories created during the week with an AI topic (`llm`,
+     `ai-agents`, `rag`, `generative-ai`, `mcp`, `machine-learning`), ranked by stars. The
+     search API cannot combine topics with OR, so each topic is searched and the results
+     merged.
+
+   New-repository rankings are polluted by **star farming**: on the first run, 8 of the
+   top 10 were swarms of look-alike repositories ("Gemini-Config-Checker-",
+   "blender-ai-copilot-studio", "-flow", "-lab"...) pushed by throwaway accounts, a known
+   lure for malware. Candidates are therefore filtered before ranking, cheapest test
+   first: no detected language; a name stem shared by 3 or more owners in the same
+   results; nearly as many watchers as stars (bots star and watch at once); an owner
+   account under 60 days old with fewer than 5 followers. The API calls use the
+   workflow's automatic `GITHUB_TOKEN`, so no extra secret is needed.
 
 The [daily workflow](.github/workflows/daily-radar.yml) is scheduled at 06:00 UTC: it runs
 the test suite, then the pipeline, then commits the updated CSV, the new digest and the dashboard.
@@ -156,6 +182,7 @@ jupyter notebook notebooks/trends.ipynb
 | --- | --- | --- | --- |
 | `GEMINI_API_KEY` | environment / repository secret | none | Gemini API key, never stored in the code |
 | `GEMINI_MODEL` | environment / repository variable | `gemini-flash-lite-latest` | Gemini model used for classification |
+| `GITHUB_TOKEN` | environment (automatic in Actions) | none | Optional, raises GitHub API rate limits; locally `export GITHUB_TOKEN=$(gh auth token)` |
 
 To run the daily workflow on a fork, add `GEMINI_API_KEY` under **Settings → Secrets and
 variables → Actions → New repository secret**, then start **Actions → Daily radar → Run
@@ -175,6 +202,7 @@ radar/
   evaluation.py   sampling, blind labelling and metrics for the classifier
   trends.py       theme shares, momentum and rankings for the notebook and dashboard
   site.py         builds the static dashboard from dashboard.html
+  github.py       GitHub API client, repo parsing and star-farming filter
   __main__.py     command line interface
 tests/            pytest suite (no network access needed)
 eval/             evaluation sample, reference labels and report
@@ -266,6 +294,12 @@ using the repository secret) and
 - Summaries are written from the title and domain only, without reading the article.
 - Points and comments are a snapshot at collection time, so a story posted late in the
   day is ranked on a score only a few hours old.
+- GitHub has no API for its Trending page. "New & starred" ranks repositories created
+  this week by their total stars, which favours repositories created early in the week,
+  and the star-farming filter is a heuristic: it can miss a well-disguised campaign or,
+  rarely, drop a genuine repository from a brand-new account.
+- "Hot on Hacker News" only sees GitHub links that are the story's URL, not links
+  mentioned in the comments.
 
 ## Roadmap
 
@@ -274,6 +308,7 @@ using the repository secret) and
 - [x] Tighter theme definitions (prompt v2), measured on a held-out sample
 - [x] Notebook on how themes evolve over time
 - [x] Static HTML dashboard, rebuilt daily
+- [x] Best GitHub of the week: repositories discussed on HN, new AI repositories by stars
 - [ ] Week-over-week trends once a month of data is in
 
 ## License

@@ -16,6 +16,7 @@ from radar import evaluation
 from radar.digest import previous_day
 from radar.hn import HackerNewsClient
 from radar.pipeline import classify, collect, make_digest
+from radar.github import GitHubClient
 from radar.site import SITE_DIR, write_site
 from radar.storage import load_posts
 
@@ -158,7 +159,9 @@ def main(argv: list[str] | None = None) -> int:
         print(make_digest(args.data, args.digests, day))
     if args.command in ("site", "run"):
         # The dashboard quotes the accuracy measured on the held-out test sample.
-        path = write_site(args.data, args.site_dir, now.date(), evaluation.EVAL_DIR / "test")
+        token = os.environ.get("GITHUB_TOKEN", "").strip() or None
+        path = write_site(args.data, args.site_dir, now.date(), evaluation.EVAL_DIR / "test",
+                          github=GitHubClient(token))
         print(path or "Not enough complete days yet for the dashboard")
     return 0
 

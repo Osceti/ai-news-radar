@@ -10,6 +10,7 @@ from datetime import date, timedelta
 import pandas as pd
 
 from radar.config import THEMES
+from radar.github import parse_repo
 
 
 def prepare(posts: pd.DataFrame) -> pd.DataFrame:
@@ -92,6 +93,23 @@ def top_domains(df: pd.DataFrame, n: int = 10) -> pd.DataFrame:
     linked = df[df["domain"] != ""]
     table = linked.groupby("domain").agg(stories=("id", "size"), engagement=("engagement", "sum"))
     return table.sort_values(["stories", "engagement"], ascending=False).head(n).reset_index()
+
+
+def top_github_repos(df: pd.DataFrame, n: int = 10) -> pd.DataFrame:
+    """GitHub repositories linked from the stories, ranked by points + comments.
+
+    A repository posted several times adds up its stories; the best one is kept as
+    the discussion to link to.
+    """
+    columns = ["repo", "stories", "engagement", "score", "num_comments", "title", "hn_url", "day"]
+    linked = df.assign(repo=df["url"].map(parse_repo)).dropna(subset=["repo"])
+    if linked.empty:
+        return pd.DataFrame(columns=columns)
+    best = linked.sort_values("engagement", ascending=False).drop_duplicates("repo")
+    totals = linked.groupby("repo").agg(stories=("id", "size"), engagement=("engagement", "sum"),
+                                        score=("score", "sum"), num_comments=("num_comments", "sum"))
+    table = best[["repo", "title", "hn_url", "day"]].merge(totals, on="repo")
+    return table.sort_values(["engagement", "repo"], ascending=[False, True]).head(n)[columns].reset_index(drop=True)
 
 
 def top_stories(df: pd.DataFrame, n: int = 10) -> pd.DataFrame:
