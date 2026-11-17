@@ -45,7 +45,8 @@ def run_classification(data_path: Path) -> None:
              "the rest will be retried on the next run.")
 
 
-def run_evaluation(command: str, data_path: Path, eval_dir: Path) -> int:
+def run_evaluation(command: str, data_path: Path, eval_dir: Path,
+                   reference_path: Path | None = None, annotator: str = "hand") -> int:
     labels_path = eval_dir / evaluation.LABELS_NAME
     if command == "eval-sample":
         try:
@@ -69,13 +70,18 @@ def run_evaluation(command: str, data_path: Path, eval_dir: Path) -> int:
         print(f"\n{count} stories labelled this session; progress saved to {labels_path}")
         return 0
 
-    ev = evaluation.evaluate(evaluation.read_csv(labels_path),
+    try:
+        reference = evaluation.load_reference(labels_path, reference_path)
+    except ValueError as exc:
+        log.error("%s", exc)
+        return 1
+    ev = evaluation.evaluate(reference,
                              evaluation.read_csv(eval_dir / evaluation.PREDICTIONS_NAME))
     for row in ev.invalid.itertuples(index=False):
         warn(f"Unknown label {row.human_theme!r} for story {row.id} ({row.title[:60]}): "
              f"use 0-9 or one of {', '.join(evaluation.KEYS.values())}. Ignored.")
     report_path = eval_dir / evaluation.REPORT_NAME
-    report_path.write_text(evaluation.render_report(ev), encoding="utf-8")
+    report_path.write_text(evaluation.render_report(ev, annotator), encoding="utf-8")
     low, high = ev.interval
     print(f"{ev.labelled} labelled, {len(ev.not_ai)} not about AI. "
           f"Theme accuracy {ev.accuracy:.0%} ({ev.correct}/{ev.total}), "
@@ -95,11 +101,16 @@ def main(argv: list[str] | None = None) -> int:
                         help="UTC day of the digest, YYYY-MM-DD (default: yesterday)")
     parser.add_argument("--eval-dir", type=Path, default=evaluation.EVAL_DIR,
                         help="directory of the evaluation files")
+    parser.add_argument("--reference", type=Path, default=None,
+                        help="eval-report: CSV id,theme,note to use instead of the hand labels")
+    parser.add_argument("--annotator", default="hand",
+                        help="eval-report: who produced the reference labels (default: %(default)s)")
     args = parser.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     if args.command in EVAL_COMMANDS:
-        return run_evaluation(args.command, args.data, args.eval_dir)
+        return run_evaluation(args.command, args.data, args.eval_dir,
+                              args.reference, args.annotator)
 
     now = datetime.now(timezone.utc).replace(microsecond=0)
     day = args.date or previous_day(now)

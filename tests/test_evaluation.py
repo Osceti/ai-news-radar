@@ -175,3 +175,13 @@ def test_cli_evaluation_flow(tmp_path, capsys):
     assert cli.main(["eval-report", *args]) == 0
     assert "Theme accuracy 100%" in capsys.readouterr().out
     assert (eval_dir / "report.md").exists()
+
+    # An outside reference replaces the hand labels; it must cover the whole sample.
+    reference = eval_dir / "judge.csv"
+    rows = [f"{i},other," for i in predictions["id"]]
+    reference.write_text("id,theme,note\n" + "\n".join(rows[1:]) + "\n")
+    assert cli.main(["eval-report", *args, "--reference", str(reference)]) == 1
+    reference.write_text("id,theme,note\n" + "\n".join(rows) + "\n")
+    assert cli.main(["eval-report", *args, "--reference", str(reference),
+                     "--annotator", "model X"]) == 0
+    assert "labelled by model X" in (eval_dir / "report.md").read_text()

@@ -89,6 +89,29 @@ def normalize_label(value: str) -> str | None:
     return label if label in THEMES or label == NOT_AI else None
 
 
+def load_reference(labels_path: Path, reference_path: Path | None = None) -> pd.DataFrame:
+    """Reference labels for the sample.
+
+    By default the hand labels of ``labels.csv``. With ``reference_path`` (a CSV
+    ``id,theme,note``, e.g. from an independent model), those labels are used
+    instead, with titles and links still taken from ``labels.csv``.
+    """
+    labels = read_csv(labels_path)
+    if reference_path is None:
+        return labels
+    reference = read_csv(reference_path)
+    missing = set(labels["id"]) - set(reference["id"])
+    extra = set(reference["id"]) - set(labels["id"])
+    if missing or extra or reference["id"].duplicated().any():
+        raise ValueError(f"{reference_path} must have one row per sampled story "
+                         f"(missing: {sorted(missing)}, unknown: {sorted(extra)})")
+    reference = reference.rename(columns={"theme": "human_theme"})
+    if "note" not in reference:
+        reference["note"] = ""
+    return labels.drop(columns=["human_theme", "note"]).merge(
+        reference[["id", "human_theme", "note"]], on="id")
+
+
 # --- Labelling ----------------------------------------------------------------
 
 def theme_menu() -> str:
@@ -237,12 +260,12 @@ def _pct(value: float) -> str:
     return "–" if math.isnan(value) else f"{value:.0%}"
 
 
-def render_report(ev: Evaluation) -> str:
+def render_report(ev: Evaluation, annotator: str = "hand") -> str:
     low, high = ev.interval
     lines = [
         "# Classifier evaluation",
         "",
-        f"{ev.labelled} stories labelled by hand, blind to Gemini's answer.",
+        f"{ev.labelled} stories labelled by {annotator}, blind to Gemini's answer.",
         "",
         "## Summary",
         "",
@@ -256,7 +279,7 @@ def render_report(ev: Evaluation) -> str:
         "",
         "## Per theme",
         "",
-        "| Theme | Human labels | Gemini labels | Precision | Recall |",
+        "| Theme | Reference labels | Gemini labels | Precision | Recall |",
         "| --- | ---: | ---: | ---: | ---: |",
     ]
     for row in ev.per_theme.itertuples(index=False):
@@ -264,7 +287,7 @@ def render_report(ev: Evaluation) -> str:
                      f"{_pct(row.precision)} | {_pct(row.recall)} |")
 
     lines += ["", "## Confusion matrix", "",
-              "Rows: human label. Columns: Gemini's label.", "",
+              "Rows: reference label. Columns: Gemini's label.", "",
               "| | " + " | ".join(THEMES) + " |",
               "| --- |" + " ---: |" * len(THEMES)]
     for theme, counts in ev.confusion.iterrows():
@@ -272,7 +295,7 @@ def render_report(ev: Evaluation) -> str:
             f"**{c}**" if col == theme and c else str(c) for col, c in counts.items()) + " |")
 
     lines += ["", f"## Disagreements ({len(ev.errors)})", "",
-              "| Story | Human | Gemini | Note |", "| --- | --- | --- | --- |"]
+              "| Story | Reference | Gemini | Reference note |", "| --- | --- | --- | --- |"]
     for row in ev.errors.sort_values(["human_theme", "llm_theme"]).itertuples(index=False):
         lines.append(f"| [{_cell(row.title)}]({row.url}) | {row.human_theme} | "
                      f"{row.llm_theme} | {_cell(row.note)} |")

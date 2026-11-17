@@ -154,16 +154,59 @@ radar/
   classifier.py   Gemini classification and summaries
   digest.py       ranking and Markdown rendering
   pipeline.py     collect, classify and digest steps
+  evaluation.py   sampling, blind labelling and metrics for the classifier
   __main__.py     command line interface
 tests/            pytest suite (no network access needed)
+eval/             evaluation sample, reference labels and report
 data/posts.csv    every AI story collected so far
 digests/          one Markdown digest per day
 ```
 
 ## Evaluation
 
-*In progress.* About 100 stories will be labelled by hand to measure how often Gemini's
-theme matches the human label, with a confusion matrix and a review of the errors.
+**Method.** 100 classified stories were drawn at random (seed 42) from the first week of
+data. They were labelled blind (without Gemini's answer) by an independent LLM from
+another vendor, given the same theme definitions as Gemini and the extra option `not-ai`
+to flag stories the keyword filter should not have kept. The prompt is in
+[`eval/annotation_prompt.txt`](eval/annotation_prompt.txt), the reference labels in
+[`eval/judge_labels.csv`](eval/judge_labels.csv) and the full report, with the confusion
+matrix and every disagreement, in [`eval/report.md`](eval/report.md).
+
+| Metric | Result |
+| --- | --- |
+| Keyword filter precision (stories really about AI) | **97%** (97/100) |
+| Theme accuracy on AI stories | **77%** (75/97), 95% CI 68–85% |
+| Best themes (precision / recall) | security 100/100, regulation 100/100, business 95/95 |
+| Weakest theme | dev-tools: 57% precision (28 predicted, 20 in the reference) |
+
+**Where Gemini goes wrong.**
+
+- **"dev-tools" is a catch-all.** 9 of the 22 disagreements are stories the reference put
+  in *other* that Gemini called *dev-tools*: consumer apps built on LLMs (a local chat app
+  for iPhone, offline meeting notetakers) and opinion pieces or Ask HN threads *about* AI
+  coding. Gemini reads "software that uses AI" as "a tool for building with AI".
+- **agents vs dev-tools.** MCP servers and agent-oriented project tools land on either
+  side depending on the annotator; the definitions overlap for tools *used by* agents.
+- **Commentary vs substance.** An educational video on post-training was labelled
+  *models*, and an essay on AGI timelines *research*; the reference saw both as *other*.
+  The reverse also happens: a story about finding a dwarf planet with Claude is
+  *research* for the reference and *other* for Gemini.
+- **Keyword filter.** The 3 false positives are a post about the Gemini small-web
+  network (the filter excludes "Gemini protocol" but not "Gemini network"), "ML Modules"
+  (ML the programming language) and a board game named "AI Race".
+
+**Limits of this evaluation.**
+
+- The reference is another LLM, not a human. Where both models make the same mistake, it
+  goes unnoticed, so 77% is closer to an upper bound. The one story also labelled by hand
+  illustrates this: both models chose *agents* for "Claude reverse engineered my Jeep",
+  the human chose *models*.
+- With 100 stories the interval is wide (±9 points), and rare themes are barely measured:
+  the sample contains no *rag* story and only 4 *research* ones.
+
+Reproduce with `python -m radar eval-sample`, `python -m radar eval-prompt` (or
+`eval-label` to label by hand in the terminal) and
+`python -m radar eval-report --reference eval/judge_labels.csv --annotator "an independent LLM"`.
 
 ## Limitations
 
@@ -180,7 +223,8 @@ theme matches the human label, with a confusion matrix and a review of the error
 ## Roadmap
 
 - [x] Daily collection, Gemini classification and digest
-- [ ] Hand-labelled evaluation of the classifier
+- [x] Evaluation of the classifier on 100 stories
+- [ ] Tighter theme definitions for dev-tools, then re-evaluate
 - [ ] Notebook on how themes evolve over time
 - [ ] Streamlit dashboard
 
