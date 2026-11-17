@@ -80,7 +80,7 @@ def build_payload(posts: pd.DataFrame, today: date, eval_dir: Path | None = None
         return None
     start, end = days_range
     df = trends.between(df_all, start, end)
-    days = [start + pd.Timedelta(days=i) for i in range((end - start).days + 1)]
+    days = [start + timedelta(days=i) for i in range((end - start).days + 1)]
     window = max(1, min(7, len(days) // 2))
 
     totals = pd.DataFrame({
