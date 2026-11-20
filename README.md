@@ -1,5 +1,8 @@
 # AI News Radar
 
+**AI news and the best GitHub of the week**, from Hacker News, updated daily.
+**[→ Open the dashboard](https://osceti.github.io/ai-news-radar/)**
+
 [![CI](https://github.com/Osceti/ai-news-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/Osceti/ai-news-radar/actions/workflows/ci.yml)
 [![Daily radar](https://github.com/Osceti/ai-news-radar/actions/workflows/daily-radar.yml/badge.svg)](https://github.com/Osceti/ai-news-radar/actions/workflows/daily-radar.yml)
 
@@ -9,8 +12,10 @@ Action collects the AI stories from the [Hacker News API](https://github.com/Hac
 Gemini gives each one a theme and a one-line summary, and the ten biggest stories of the day
 end up in a Markdown digest in [`digests/`](digests/).
 
-Everything is kept in a CSV, so I can also look at trends over time. There's a
-[dashboard](https://osceti.github.io/ai-news-radar/) for that.
+Everything is kept in a CSV, so I can also look at trends over time on the
+[dashboard](https://osceti.github.io/ai-news-radar/). It also lists the best GitHub
+repositories of the week: the ones Hacker News discussed most, and the new AI repositories
+collecting the most stars.
 
 ## How it works
 
@@ -22,6 +27,7 @@ flowchart LR
     D --> C
     C --> E["digests/YYYY-MM-DD.md"]
     C --> F["docs/index.html"]
+    G["GitHub API"] --> F
 ```
 
 - **Collect** (`radar/hn.py`, `radar/filters.py`): the API has no search, so I fetch the
@@ -39,6 +45,18 @@ flowchart LR
   comments, grouped by theme.
 - **Dashboard** (`radar/site.py`, `radar/trends.py`): a single static page with ECharts,
   rebuilt every day and served by GitHub Pages.
+- **Best GitHub of the week** (`radar/github.py`): two lists over the last 7 days.
+  *Hot on Hacker News* takes the GitHub links from the week's AI stories, groups them by
+  repository and ranks them by points + comments. *New & starred* searches repositories
+  created this week with an AI topic (`llm`, `ai-agents`, `rag`, `mcp`...) and ranks them
+  by stars. Stars, language and description come from the GitHub API, using the
+  workflow's automatic `GITHUB_TOKEN`.
+
+  The new-repository ranking was a surprise: on the first run, 8 of the top 10 were
+  swarms of look-alike repos pushed by throwaway accounts, a known way to spread malware.
+  So candidates are filtered first: no language detected, a name stem shared by 3+
+  owners, almost as many watchers as stars (bots star and watch at the same time), or an
+  account under 60 days old with fewer than 5 followers.
 
 The workflow is scheduled at 06:00 UTC, but GitHub regularly starts scheduled jobs hours
 late. That's why each digest is tied to the day it covers, not to when the job runs, and
@@ -94,7 +112,9 @@ python -m radar run
 Without a key it still collects and writes the digest, the stories just stay unlabelled
 until a run that has one. Each step also runs on its own (`collect`, `classify`,
 `digest`, `site`), and `--date YYYY-MM-DD` builds the digest of a given day. The model can
-be changed with `GEMINI_MODEL` (default `gemini-flash-lite-latest`).
+be changed with `GEMINI_MODEL` (default `gemini-flash-lite-latest`). `GITHUB_TOKEN` is
+optional locally and only raises the GitHub API rate limit
+(`export GITHUB_TOKEN=$(gh auth token)`).
 
 For the notebook: `pip install -r requirements-analysis.txt`, then open
 `notebooks/trends.ipynb`.
@@ -151,6 +171,11 @@ the current prompt.
   the top and best lists, which is fine for a top 10 but means a few small stories are
   never seen.
 - Scores are a snapshot: a story posted late in the day is ranked on a few hours of votes.
+- GitHub has no API for its Trending page. *New & starred* ranks by total stars, which
+  favours repos created early in the week, and the star-farming filter is a heuristic: it
+  can miss a well-disguised campaign or, rarely, drop a real repo from a new account.
+- *Hot on Hacker News* only sees GitHub links that are the story's URL, not links in the
+  comments.
 
 ## Next
 
