@@ -1,3 +1,4 @@
+import pytest
 from conftest import NOW, FakeResponse, make_item
 
 from radar.hn import HackerNewsClient, is_live_story, to_record
@@ -22,6 +23,39 @@ class FakeSession:
 def test_story_ids_union_without_duplicates():
     session = FakeSession({"topstories": [3, 1], "newstories": [5, 3], "beststories": [1, 7]}, {})
     assert HackerNewsClient(session=session).story_ids() == [3, 1, 5, 7]
+
+
+class FailingFeedSession(FakeSession):
+    def __init__(self, feeds, failing_feeds):
+        super().__init__(feeds, {})
+        self.failing_feeds = set(failing_feeds)
+
+    def get(self, url, timeout=None):
+        path = url.split("/v0/", 1)[1].removesuffix(".json")
+        if path in self.failing_feeds:
+            return FakeResponse(status_code=500)
+        return super().get(url, timeout)
+
+
+def test_story_ids_survives_one_failing_feed():
+    session = FailingFeedSession(
+        {"topstories": [3, 1], "newstories": [5], "beststories": [1, 7]}, {"newstories"}
+    )
+    assert HackerNewsClient(session=session).story_ids() == [3, 1, 7]
+
+
+def test_story_ids_raises_when_all_feeds_fail():
+    session = FailingFeedSession({}, {"topstories", "newstories", "beststories"})
+    with pytest.raises(RuntimeError, match="All Hacker News feeds failed"):
+        HackerNewsClient(session=session).story_ids()
+
+
+def test_to_record_none_score_and_comments_become_zero():
+    item = make_item(5, "LLM news")
+    item["score"] = None
+    item["descendants"] = None
+    record = to_record(item, [], NOW)
+    assert (record["score"], record["num_comments"]) == (0, 0)
 
 
 def test_items_skips_missing_and_failing_items():

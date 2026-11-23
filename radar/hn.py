@@ -45,9 +45,18 @@ class HackerNewsClient:
     def story_ids(self, feeds: tuple[str, ...] = FEEDS) -> list[int]:
         """Union of the ids listed in ``feeds``, without duplicates, in feed order."""
         ids: dict[int, None] = {}
+        failed = 0
         for feed in feeds:
-            for item_id in self._get(feed) or []:
+            try:
+                feed_ids = self._get(feed) or []
+            except requests.RequestException as exc:
+                log.warning("Could not fetch feed %s: %s", feed, exc)
+                failed += 1
+                continue
+            for item_id in feed_ids:
                 ids.setdefault(item_id, None)
+        if feeds and failed == len(feeds):
+            raise RuntimeError(f"All Hacker News feeds failed ({', '.join(feeds)})")
         return list(ids)
 
     def item(self, item_id: int) -> dict | None:
@@ -93,8 +102,8 @@ def to_record(item: dict, keywords: list[str], collected_at: datetime) -> dict:
         "url": url,
         "domain": domain,
         "hn_url": discussion,
-        "score": int(item.get("score", 0)),
-        "num_comments": int(item.get("descendants", 0)),
+        "score": int(item.get("score") or 0),
+        "num_comments": int(item.get("descendants") or 0),
         "author": item.get("by", ""),
         "keywords": ";".join(keywords),
         "theme": "",
