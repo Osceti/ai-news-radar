@@ -43,8 +43,10 @@ flowchart LR
   article itself isn't read.
 - **Digest** (`radar/digest.py`): top 10 stories of the previous UTC day by points +
   comments, grouped by theme.
-- **Dashboard** (`radar/site.py`, `radar/trends.py`): a single static page with ECharts,
-  rebuilt every day and served by GitHub Pages.
+- **Dashboard** (`radar/site.py`, `radar/trends.py`, template `radar/dashboard.html`): a
+  single static page with ECharts, rebuilt every day and served by GitHub Pages. The
+  generated `docs/index.html` comes from `radar/dashboard.html` (`python -m radar site`),
+  so edit the template, not `docs/index.html`: manual changes are overwritten on the next build.
 - **Best GitHub of the week** (`radar/github.py`): two lists over the last 7 days.
   *Hot on Hacker News* takes the GitHub links from the week's AI stories, groups them by
   repository and ranks them by points + comments. *New & starred* searches repositories
