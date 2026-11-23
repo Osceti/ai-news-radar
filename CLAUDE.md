@@ -21,3 +21,4 @@ Radar quotidien des news IA : récupère les posts depuis l'API Hacker News, les
 - Pas de `Co-Authored-By` ni de mention de Claude dans les commits et les PR.
 - Une branche par ticket, jamais de commit sur `main`.
 - Ne pas toucher aux fichiers hors du périmètre du ticket.
+- PR : écrire la description dans un fichier temporaire hors du repo et la passer avec `gh pr create --body-file <fichier>`, jamais avec `--body "..."` (les backticks seraient échappés).
