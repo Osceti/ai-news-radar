@@ -62,6 +62,18 @@ def test_render_groups_by_theme_in_fixed_order():
     assert "## RAG" not in text  # empty themes are omitted
 
 
+def test_render_escapes_parentheses_in_urls():
+    rec = to_record(
+        make_item(1, "Foo", 1, 10, 2, url="https://en.wikipedia.org/wiki/Foo_(bar)"), ["AI"], NOW
+    )
+    rec.update(theme="models", summary="")
+    df = merge_posts(empty_posts(), [rec])
+    text = render_digest(select_top(df, DAY), DAY, total=1)
+
+    assert "- **[Foo](https://en.wikipedia.org/wiki/Foo_\\(bar\\))** (en.wikipedia.org)\\" in text
+    assert "(https://en.wikipedia.org/wiki/Foo_(bar))" not in text
+
+
 def test_render_empty_day():
     text = render_digest(posts_frame([]), DAY, total=0)
     assert "No AI-related stories" in text
