@@ -57,3 +57,13 @@ def test_write_site(tmp_path):
     path = write_site(data, tmp_path / "docs", TODAY)
     assert path.name == "index.html" and (tmp_path / "docs" / ".nojekyll").exists()
     assert write_site(data, tmp_path / "empty", date(2026, 11, 12)) is None
+
+
+def test_single_theme_payload_renders_a_full_donut():
+    df = posts()
+    df = df[df["theme"] != "business"]  # day one (partial) + agents: one theme left on the complete day
+    payload = build_payload(df, TODAY)
+    assert {s["theme"] for s in payload["stories"]} == {"agents"}
+    html = render(payload)
+    # a lone theme must be drawn as a full circle: a full-turn arc is not drawn by browsers
+    assert "rows.length === 1" in html and '<circle tabindex="0"' in html

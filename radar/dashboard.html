@@ -523,6 +523,8 @@ ol.repos { list-style: none; margin: 14px 0 0; padding: 0; }
     let acc = 0;
     const slices = rows.map(r => {
       const a0 = acc / sum * 2 * Math.PI, a1 = (acc += r.value) / sum * 2 * Math.PI, mid = (a0 + a1) / 2;
+      if (rows.length === 1) // a full-turn arc starts and ends at the same point and is not drawn
+        return `<circle tabindex="0" data-theme="${r.theme}" r="1" fill="${BY_SLUG[r.theme].color}" data-dx="0" data-dy="0"/>`;
       const large = a1 - a0 > Math.PI ? 1 : 0;
       const d = `M0 0 L${Math.cos(a0).toFixed(4)} ${Math.sin(a0).toFixed(4)} A1 1 0 ${large} 1 ${Math.cos(a1).toFixed(4)} ${Math.sin(a1).toFixed(4)} Z`;
       return `<path tabindex="0" data-theme="${r.theme}" d="${d}" fill="${BY_SLUG[r.theme].color}" data-dx="${(Math.cos(mid) * .09).toFixed(3)}" data-dy="${(Math.sin(mid) * .09).toFixed(3)}"/>`;
@@ -533,7 +535,7 @@ ol.repos { list-style: none; margin: 14px 0 0; padding: 0; }
       `<button type="button" data-theme="${r.theme}"><i class="sw" style="background:${BY_SLUG[r.theme].color}"></i>${BY_SLUG[r.theme].label}</button>`).join("");
     const share = Object.fromEntries(rows.map(r => [r.theme, r.value / sum]));
     const focus = slug => {
-      $("donut").querySelectorAll("path").forEach(p => {
+      $("donut").querySelectorAll("[data-theme]").forEach(p => {
         const on = p.dataset.theme === slug;
         p.style.transform = on ? `translate(${p.dataset.dx}px, ${p.dataset.dy}px) scale(1.05)` : "";
         p.classList.toggle("dim", !!slug && !on);
@@ -544,7 +546,7 @@ ol.repos { list-style: none; margin: 14px 0 0; padding: 0; }
       $("donut-val").textContent = slug ? pct(share[slug]) : (state.measure === "volume" ? int(D.total) : "100%");
       $("donut-lab").textContent = slug ? BY_SLUG[slug].label : (state.measure === "volume" ? "Stories" : "Total");
     };
-    for (const el of [...$("donut").querySelectorAll("path"), ...$("donut-legend").querySelectorAll("button")]) {
+    for (const el of [...$("donut").querySelectorAll("[data-theme]"),...$("donut-legend").querySelectorAll("button")]) {
       el.addEventListener("mouseenter", () => focus(el.dataset.theme));
       el.addEventListener("mouseleave", () => focus(null));
       el.addEventListener("focus", () => focus(el.dataset.theme));
