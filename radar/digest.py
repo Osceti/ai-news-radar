@@ -14,6 +14,14 @@ def escape_md(text: str) -> str:
     return _MARKDOWN_SPECIAL.sub(r"\\\1", text)
 
 
+def escape_url(url: str) -> str:
+    """Backslash-escape parentheses so the URL cannot close a ``[text](url)`` link early.
+
+    CommonMark unescapes them when rendering, so the link target stays the original URL.
+    """
+    return re.sub(r"([\\()])", r"\\\1", url)
+
+
 def previous_day(now: datetime) -> date:
     """The last complete UTC day before ``now``: the day a run should report on."""
     return (now.astimezone(timezone.utc) - timedelta(days=1)).date()
@@ -35,13 +43,13 @@ def select_top(df: pd.DataFrame, day: date, limit: int = DIGEST_SIZE) -> pd.Data
 
 def _render_post(post) -> list[str]:
     domain = f" ({post.domain})" if post.domain else ""
-    lines = [f"- **[{escape_md(post.title)}]({post.url})**{domain}"]
+    lines = [f"- **[{escape_md(post.title)}]({escape_url(post.url)})**{domain}"]
     if post.summary:
         lines[-1] += "\\"
         lines.append(f"  {escape_md(post.summary)}")
     lines[-1] += "\\"
     lines.append(
-        f"  {post.score} points · {post.num_comments} comments · [discussion]({post.hn_url})"
+        f"  {post.score} points · {post.num_comments} comments · [discussion]({escape_url(post.hn_url)})"
     )
     return lines
 
