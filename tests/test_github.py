@@ -105,6 +105,23 @@ def test_repo_details_and_failures():
     assert "Authorization" not in session.calls[0][2]
 
 
+def test_non_json_200_response_returns_none_and_warns(caplog):
+    class BadJsonSession:
+        def get(self, url, **kwargs):
+            response = FakeResponse(status_code=200, text="<html>proxy error</html>")
+
+            def boom():
+                raise ValueError("Expecting value")
+
+            response.json = boom
+            return response
+
+    client = GitHubClient(session=BadJsonSession())
+    with caplog.at_level("WARNING", logger="radar.github"):
+        assert client._get("/repos/a/b") is None
+    assert "invalid JSON" in caplog.text
+
+
 def hn_posts():
     specs = [  # id, hours before NOW, url, score, comments
         (1, 2, "https://github.com/acme/agent", 300, 100),

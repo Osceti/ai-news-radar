@@ -71,7 +71,11 @@ class GitHubClient:
         if response.status_code != 200:
             log.warning("GitHub request %s returned HTTP %s", path, response.status_code)
             return None
-        return response.json()
+        try:
+            return response.json()
+        except ValueError as exc:  # requests.JSONDecodeError subclasses ValueError
+            log.warning("GitHub request %s returned invalid JSON: %s", path, exc)
+            return None
 
     def repo(self, full_name: str) -> dict | None:
         """Stars, language and description of ``owner/name``; None if unavailable."""
