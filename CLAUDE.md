@@ -11,7 +11,7 @@ Radar quotidien des news IA : récupère les posts depuis l'API Hacker News, les
 - `radar/` : code du pipeline (hn, filters, storage, classifier, digest, site, trends, github)
 - `tests/` : tests pytest
 - `data/posts.csv` et `digests/` : générés par l'Action, ne pas éditer à la main
-- `docs/` : dashboard statique
+- `docs/index.html` : dashboard généré depuis `radar/dashboard.html` par `python -m radar site`, ne pas éditer à la main (modifier le template)
 - `eval/` et `notebooks/` : évaluation du classifieur
 
 ## Linear
