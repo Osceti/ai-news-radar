@@ -131,7 +131,8 @@ def parse_response(payload: dict, expected_ids: set[int]) -> dict[int, dict]:
 class GeminiClassifier:
     def __init__(self, api_key: str, model: str = DEFAULT_MODEL, session=None,
                  batch_size: int = 25, max_retries: int = 4, backoff: float = 5.0,
-                 pause: float = 4.0, timeout: float = 90.0, sleep=time.sleep):
+                 pause: float = 4.0, timeout: float = 90.0, sleep=time.sleep,
+                 max_failed_batches: int = 3):
         if not api_key:
             raise ValueError("A Gemini API key is required")
         self.api_key = api_key
@@ -143,10 +144,16 @@ class GeminiClassifier:
         self.pause = pause  # between batches, to respect the free-tier rate limit
         self.timeout = timeout
         self.sleep = sleep
+        self.max_failed_batches = max_failed_batches
 
     def classify(self, posts: list[dict]) -> dict[int, dict]:
-        """Classify ``posts``; batches that keep failing are logged and skipped."""
+        """Classify ``posts``; failing batches are logged and skipped.
+
+        After ``max_failed_batches`` failures in a row, stop: the remaining
+        stories stay unclassified and are picked up by the next run.
+        """
         results: dict[int, dict] = {}
+        failed_in_a_row = 0
         for start in range(0, len(posts), self.batch_size):
             batch = posts[start:start + self.batch_size]
             if start:
@@ -154,8 +161,16 @@ class GeminiClassifier:
             try:
                 payload = self._generate(build_request(batch))
                 results.update(parse_response(payload, {int(p["id"]) for p in batch}))
+                failed_in_a_row = 0
             except ClassificationError as exc:
                 log.error("Batch of %d stories not classified: %s", len(batch), exc)
+                failed_in_a_row += 1
+                if failed_in_a_row >= self.max_failed_batches:
+                    remaining = len(posts) - (start + len(batch))
+                    log.error("Stopping after %d failed batches in a row; %d stories left "
+                              "unclassified, they will be retried at the next run",
+                              failed_in_a_row, remaining)
+                    break
         return results
 
     def _generate(self, body: dict) -> dict:
@@ -171,7 +186,10 @@ class GeminiClassifier:
                 error = str(exc)
             else:
                 if response.status_code == 200:
-                    return response.json()
+                    try:
+                        return response.json()
+                    except ValueError as exc:  # includes requests.JSONDecodeError
+                        raise ClassificationError(f"Response is not valid JSON: {exc}") from exc
                 error = f"HTTP {response.status_code}: {response.text[:300]}"
                 if response.status_code not in RETRYABLE_STATUS or last_try:
                     raise ClassificationError(error)
