@@ -19,6 +19,12 @@ from radar.filters import is_ai_related, match_ai_keywords
     "Building a vector database from scratch",
     "Gemini Decisions API",
     "Scaling ML training on spot instances",
+    "Better embeddings for search",
+    "Fast text embedding on CPU",
+    "Word embedding models explained",
+    "Sentence embeddings for semantic search",
+    "Vector embedding of images",
+    "Text-embedding techniques for search",
 ])
 def test_ai_titles_match(title):
     assert is_ai_related(title)
@@ -34,6 +40,8 @@ def test_ai_titles_match(title):
     "The anti-marketing aspect of the Gemini network",
     "ML Modules for Mere Mortals",
     "Type inference in Standard ML",
+    "Starlark Language for Embedding",
+    "Embedding a scripting language in your application",
     "The MAIL command in SMTP",
     "",
 ])
