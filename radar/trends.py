@@ -13,9 +13,12 @@ from radar.config import THEMES
 from radar.github import parse_repo
 
 
-def prepare(posts: pd.DataFrame) -> pd.DataFrame:
-    """Classified stories with ``day`` (UTC date) and ``engagement`` columns."""
-    df = posts[posts["theme"].isin(list(THEMES))].copy()
+def prepare(posts: pd.DataFrame, classified_only: bool = True) -> pd.DataFrame:
+    """Stories with ``day`` (UTC date) and ``engagement`` columns.
+
+    By default only the classified ones; ``classified_only=False`` keeps every story.
+    """
+    df = posts[posts["theme"].isin(list(THEMES))].copy() if classified_only else posts.copy()
     df["day"] = pd.to_datetime(df["created_at"], utc=True).dt.date
     df["engagement"] = df["score"] + df["num_comments"]
     return df

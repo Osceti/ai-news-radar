@@ -415,7 +415,8 @@ ol.repos { list-style: none; margin: 14px 0 0; padding: 0; }
   for (const id of ["digest-link", "digest-link-2"]) $(id).href = D.latest_digest;
   for (const id of ["method-link", "method-link-2"]) $(id).href = evalUrl;
   $("updated").textContent = `Updated ${D.generated_at}`;
-  $("range").textContent = `${D.days.length} complete days, ${day(D.start)} to ${day(D.end)}.`;
+  $("range").textContent = `${D.days.length} complete days, ${day(D.start)} to ${day(D.end)}.` +
+    (D.unclassified > 0 ? ` ${int(D.unclassified)} stories not yet classified.` : "");
   $("momentum-sub").textContent = `Share in the last ${D.window} days vs the ${D.window} days before, in points.`;
   if (D.evaluation) {
     $("eval-note").innerHTML = `Themes are assigned by an LLM and are not perfect: on a held-out sample of ${D.evaluation.stories} stories they matched an independent reference ${pct(D.evaluation.accuracy)} of the time. <a href="${evalUrl}">Read the evaluation</a>.`;
@@ -543,7 +544,7 @@ ol.repos { list-style: none; margin: 14px 0 0; padding: 0; }
       $("donut-legend").querySelectorAll("button").forEach(b => {
         b.classList.toggle("on", b.dataset.theme === slug); b.classList.toggle("dim", !!slug && b.dataset.theme !== slug);
       });
-      $("donut-val").textContent = slug ? pct(share[slug]) : (state.measure === "volume" ? int(D.total) : "100%");
+      $("donut-val").textContent = slug ? pct(share[slug]) : (state.measure === "volume" ? int(D.total - D.unclassified) : "100%");
       $("donut-lab").textContent = slug ? BY_SLUG[slug].label : (state.measure === "volume" ? "Stories" : "Total");
     };
     for (const el of [...$("donut").querySelectorAll("[data-theme]"),...$("donut-legend").querySelectorAll("button")]) {
