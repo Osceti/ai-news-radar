@@ -67,3 +67,22 @@ def test_single_theme_payload_renders_a_full_donut():
     html = render(payload)
     # a lone theme must be drawn as a full circle: a full-turn arc is not drawn by browsers
     assert "rows.length === 1" in html and '<circle tabindex="0"' in html
+
+
+def test_unclassified_stories_count_in_daily_volume():
+    records = []
+    for item_id, theme in [(10, "agents"), (11, ""), (12, "")]:
+        rec = to_record(make_item(item_id, f"Story {item_id}", hours_ago=2), ["AI"], NOW)
+        rec.update(theme=theme)
+        records.append(rec)
+    payload = build_payload(merge_posts(posts(), records), TODAY)
+    assert payload["volume"] == [6]  # 4 classified + 2 not yet classified
+    assert payload["total"] == 6
+    assert payload["unclassified"] == 2
+    assert build_payload(posts(), TODAY)["unclassified"] == 0
+
+
+def test_payload_is_none_when_nothing_is_classified():
+    rec = to_record(make_item(20, "Unlabelled", hours_ago=2), ["AI"], NOW)
+    rec.update(theme="")
+    assert build_payload(merge_posts(empty_posts(), [rec]), TODAY) is None

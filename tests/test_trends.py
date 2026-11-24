@@ -85,3 +85,11 @@ def test_volume_domains_and_top_stories():
     domains = top_domains(DATA)
     assert domains["domain"].tolist() == ["a.com", "b.com"]  # self post excluded
     assert top_stories(DATA, n=2)["title"].tolist() == ["AI 1", "AI 3"]
+
+
+def test_prepare_can_keep_unclassified_stories():
+    rec = to_record(make_item(99, "Unlabelled", hours_ago=2), ["AI"], NOW)
+    rec.update(theme="")
+    posts = merge_posts(empty_posts(), [rec])
+    assert len(prepare(posts)) == 0
+    assert len(prepare(posts, classified_only=False)) == 1

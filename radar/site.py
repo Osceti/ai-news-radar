@@ -74,12 +74,16 @@ def github_week(df_all: pd.DataFrame, start: date, end: date, client=None) -> di
 def build_payload(posts: pd.DataFrame, today: date, eval_dir: Path | None = None,
                   github=None) -> dict | None:
     """Everything the page shows, as plain JSON-serialisable data."""
-    df_all = trends.prepare(posts)
-    days_range = trends.complete_days(df_all, today)
+    every = trends.prepare(posts, classified_only=False)  # classified or not
+    df_all = every[every["theme"].isin(list(THEMES))]
+    days_range = trends.complete_days(every, today)
     if days_range is None:
         return None
     start, end = days_range
     df = trends.between(df_all, start, end)
+    if df.empty:  # nothing classified yet in the range: no theme statistics to draw
+        return None
+    df_every = trends.between(every, start, end)
     days = [start + timedelta(days=i) for i in range((end - start).days + 1)]
     window = max(1, min(7, len(days) // 2))
 
@@ -95,14 +99,15 @@ def build_payload(posts: pd.DataFrame, today: date, eval_dir: Path | None = None
                 for r in table.itertuples(index=False)]
 
     top = trends.top_stories(df, n=TOP_STORIES)
-    volume = trends.daily_volume(df).reindex(days, fill_value=0)
+    volume = trends.daily_volume(df_every).reindex(days, fill_value=0)
 
     return {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "start": start.isoformat(),
         "end": end.isoformat(),
         "days": [d.isoformat() for d in days],
-        "total": int(len(df)),
+        "total": int(len(df_every)),
+        "unclassified": int(len(df_every) - len(df)),
         "themes": [{"slug": s, "label": label, "color": THEME_COLORS[s]} for s, label in THEMES.items()],
         "volume": [int(v) for v in volume],
         "share": {"volume": _shares(trends.theme_share(df, "volume"), days),
