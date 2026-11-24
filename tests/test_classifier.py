@@ -104,6 +104,35 @@ def test_classify_skips_batch_on_permanent_error():
     assert classifier.classify(POSTS) == {}
 
 
+class NotJsonResponse:
+    status_code = 200
+    text = "<html>oops</html>"
+
+    def json(self):
+        raise requests.exceptions.JSONDecodeError("Expecting value", "<html>", 0)
+
+
+def test_classify_stops_after_three_failed_batches_in_a_row(caplog):
+    posts = [{"id": i, "title": f"T{i}", "domain": "x.com"} for i in range(1, 6)]
+    session = FakeGeminiSession([FakeResponse(status_code=503, text="down")] * 20)
+    classifier = GeminiClassifier("k", session=session, batch_size=1, max_retries=0,
+                                  sleep=lambda s: None)
+    with caplog.at_level("ERROR"):
+        assert classifier.classify(posts) == {}
+    assert len(session.requests) == 3
+    assert "2 stories left" in caplog.text
+
+
+def test_classify_non_json_200_fails_the_batch_not_the_run():
+    session = FakeGeminiSession([
+        NotJsonResponse(),
+        FakeResponse(gemini_payload([{"id": 2, "theme": "rag", "summary": "S2."}])),
+    ])
+    classifier = GeminiClassifier("k", session=session, batch_size=1, sleep=lambda s: None)
+    assert classifier.classify(POSTS) == {2: {"theme": "rag", "summary": "S2."}}
+    assert len(session.requests) == 2
+
+
 def test_classifier_requires_a_key():
     with pytest.raises(ValueError):
         GeminiClassifier("")
