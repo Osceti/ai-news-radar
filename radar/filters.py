@@ -30,7 +30,8 @@ _KEYWORDS: list[tuple[str, str, bool]] = [
     ("language model", r"\blanguage models?\b", False),
     ("transformer", r"\btransformer (?:models?|architectures?)\b", False),
     ("diffusion", r"\bdiffusion models?\b|\bstable diffusion\b", False),
-    ("embeddings", r"\bembeddings?\b", False),
+    # Singular "embedding" alone is too broad ("Starlark Language for Embedding").
+    ("embeddings", r"\bembeddings\b|\b(?:text|vector|word|sentence|image)[- ]embeddings?\b", False),
     ("vector database", r"\bvector (?:databases?|dbs?|stores?|search)\b", False),
     ("retrieval-augmented", r"\bretrieval[- ]augmented\b", False),
     ("fine-tuning", r"\bfine[- ]?tun(?:e|ed|es|ing)\b", False),
