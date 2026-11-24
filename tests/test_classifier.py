@@ -120,7 +120,7 @@ def test_classify_stops_after_three_failed_batches_in_a_row(caplog):
     with caplog.at_level("ERROR"):
         assert classifier.classify(posts) == {}
     assert len(session.requests) == 3
-    assert "2 stories left" in caplog.text
+    assert "5 stories left" in caplog.text
 
 
 def test_classify_non_json_200_fails_the_batch_not_the_run():

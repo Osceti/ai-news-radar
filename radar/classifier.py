@@ -166,7 +166,7 @@ class GeminiClassifier:
                 log.error("Batch of %d stories not classified: %s", len(batch), exc)
                 failed_in_a_row += 1
                 if failed_in_a_row >= self.max_failed_batches:
-                    remaining = len(posts) - (start + len(batch))
+                    remaining = len(posts) - len(results)
                     log.error("Stopping after %d failed batches in a row; %d stories left "
                               "unclassified, they will be retried at the next run",
                               failed_in_a_row, remaining)
